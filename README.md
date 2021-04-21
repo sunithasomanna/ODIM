@@ -19,8 +19,6 @@
 
 # Introduction 
 
-Welcome to Resource Aggregator for Open Distributed Infrastructure Management!
-
 Resource Aggregator for Open Distributed Infrastructure Management (ODIMRA) is a modular, open framework for
 simplified management and orchestration of distributed physical infrastructure. It provides a unified management platform for
 converging multivendor hardware equipment. By exposing a standards-based programming interface, it enables easy and
