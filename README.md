@@ -9,7 +9,7 @@
 - [Resource Aggregator for ODIM compatibility matrix](#resource-aggregator-for-odim-compatibility-matrix)
 - [Predeployment procedures](#predeployment-procedures)
   * [Setting up environment](#setting-up-environment)
-  * [Pull the Docker images of all the Kubernetes microservices](#Pulling the Docker images of all the Kubernetes microservices).
+  * [Pull the Docker images of all the Kubernetes microservices](#pulling-the-docker-images-of-all-the-kubernetes-microservices).
   * [Building Docker images of all the services](#building-docker-images-of-all-the-services)
   * [Generating an encrypted node password](#generating-an-encrypted-node-password)
 - [Deploying Resource Aggregator for ODIM](#deploying-resource-aggregator-for-odim)
@@ -87,7 +87,7 @@ Resource Aggregator for ODIM comprises the following two key components:
      -   Listen to similar events from multiple southbound resources.
 
  -    One or more plugins:
- 
+
       The plugins abstract, translate, and expose southbound resource information to the resource aggregator through RESTful APIs. Resource Aggregator for ODIM supports:
 
        -  Generic Redfish plugin for ODIM (The GRF plugin): Generic Redfish plugin that can be used as a plugin for any Redfish-compliant device.
@@ -196,14 +196,14 @@ The following is a list of considerations to be made while deploying Resource Ag
         <blockquote>
         NOTE: The total number of nodes in a cluster must be odd.
         </blockquote>
-	 
+	
     To convert an existing one-node cluster into a three-node cluster, you must reset the one-node deployment first and then modify the necessary parameters in the odim-controller configuration file accordingly.
 
-     
+    
 	 <blockquote>
      NOTE: Resetting the existing deployment clears all data related to it.
      </blockquote>
-	 
+	
 -   Controller nodes of a Kubernetes cluster must not be removed.
 
 -   The GRF plugin is not meant to be used in a production environment. Use it as reference while developing third-party plugins.
@@ -259,7 +259,7 @@ The following table lists the software components and their versions that are co
 
 
 1. Download and install Ubuntu 18.04 LTS on the deployment node and all the cluster nodes. 
-  During installation, configure the IP addresses of cluster nodes to reach the management VLANs where devices are connected. Ensure that there is no firewall or switches blocking the connections and ports.
+    During installation, configure the IP addresses of cluster nodes to reach the management VLANs where devices are connected. Ensure that there is no firewall or switches blocking the connections and ports.
 
    <blockquote>
     IMPORTANT: Ensure to create the same nonroot username and password on all the cluster nodes during the installation of OS.
@@ -331,7 +331,7 @@ The following table lists the software components and their versions that are co
 4. [Download and install go](#downloading-and-installing-go) on th deployment node.
 5. [Configure Docker proxy](#configuring-docker-proxy) on the deployment node.
 6. [Install Docker](#installing-docker) on the deployment node.
-    
+   
 4. Install Helm package on the deployment node: 
     1. Create a directory called helm to store the Helm tool installation script and navigate to it: 
 
@@ -401,11 +401,10 @@ The following table lists the software components and their versions that are co
    |nginx|1.19 |nginx.tar |
    |quay.io/coreos/etcd|v3.4.3 |quay.io_coreos_etcd.tar |
    
-   
 2. Verify that the images are successfully pulled using the following command:
    ```
    $ docker images
-   ```   
+   ```
 3. Save each Docker image to a tar archive using the following command:
     ```
     $ sudo docker save -o <image_name.tar> <image_name:tag>
@@ -430,7 +429,7 @@ The following table lists the software components and their versions that are co
           for image in "${images_list[@]}"; do
           docker load -i ${image}.tar
           done
-          ```	
+          ```
        4. Run the following commands on each cluster node:
           ```
           $ chmod +x load_images.sh
@@ -440,8 +439,8 @@ The following table lists the software components and their versions that are co
           ```
    2. Copy each tar archive to a directory called `kubernetes_images` on the deployment node. Update `kubernetesImagePath` to the path of the `kubernetes_images` directory in `kube_deploy_nodes.yaml`. The images are automatically installed on all the cluster nodes during deployment.   
       <blockquote>
-	  NOTE: Check the permissions of the archived tar files of the Docker images; the privilage of all the files must be `user:user`.
-	  
+	    NOTE: Check the permissions of the archived tar files of the Docker images; the privilage of all the files must be `user:user`.
+	
 	  
    
 ## Building Docker images of all the services
@@ -456,19 +455,20 @@ To build Docker images, do the following on the deployment node:
       ```
    3. ```
       $ export ODIMRA_USER_ID=2021
-	  ```
+	   ```
+     ```
    4. ```
-      $ export ODIMRA_GROUP_ID=2021
-	  ```
+	   $ export ODIMRA_GROUP_ID=2021
+     ```
    5. ```
       $ ./build_images.sh
       ```
    6. ```
       $ sudo docker images
-      ```
-	  If the images are built successfully, you will receive an output which is similar to the following sample:
+	   ```
+	    If the images are built successfully, you will receive an output which is similar to the following sample:
 	  ```
-	  REPOSITORY                                TAG                                      IMAGE ID                   CREATED                     SIZE
+     REPOSITORY                                TAG                                      IMAGE ID                   CREATED                     SIZE
       consul                                    1.6                                       33ff2311df24               4 hours ago                  185MB
       odim_zookeeper                            1.0                                      981d43f6c8b4              22 hours ago                 278MB
       update                                    1.0                                      2cfb65430181              22 hours ago                 128MB
@@ -482,7 +482,7 @@ To build Docker images, do the following on the deployment node:
       events                                    1.0                                     860a9202a483              22 hours ago                  130MB
       api                                       1.0                                     effab530ede5                22 hours ago                  130MB
       aggregation                               1.0                                     354f67a857b6               22 hours ago                  130MB
-      account-session                           1.0                                     a7eb07e69395              22 hours ago                  129MB
+	   account-session                           1.0                                     a7eb07e69395              22 hours ago                  129MB
 	  ```
 2. Save each Docker image to a tar archive using the following command:
     ```
@@ -509,7 +509,7 @@ To build Docker images, do the following on the deployment node:
           for image in "${images_list[@]}"; do
           docker load -i ${image}.tar
           done
-          ```	
+          ```
        4. Run the following commands on each cluster node:
           ```
           $ chmod +x load_images.sh
@@ -529,7 +529,7 @@ To build Docker images, do the following on the deployment node:
 Encrypting the password of the local nonroot user on the Kubernetes cluster nodes makes the deployment process noninteractive. If the encrypted password is not available during deployment, you will be prompted to enter the password for the first time.
 
 Resource Aggregator for ODIM uses the odim-vault tool to encrypt and decrypt passwords.
-   
+
 
 1. Navigate to ~/ODIM/odim-controller/scripts: 
 
@@ -692,7 +692,7 @@ Ensure that all the [Predeployment procedures](#predeployment-procedures) are co
     ```
 
     The following parameters in this template must be updated compulsorily. The other parameters are either empty or have default values. You can optionally update them to different values based on your requirements. To know more about each parameter, see [Odim-controller configuration parameters](#odim-controller-configuration-parameters).
-    
+   
      1. deploymentID
      2. nodePasswordFilePath
      3. nodes
@@ -949,24 +949,24 @@ Ensure that all the [Predeployment procedures](#predeployment-procedures) are co
     <Comma-seperated_list_of_IP_addresses_of_the_cluster_nodes>"
     ```
     </blockquote>
-   
-   
+
+
     ```
     curl --cacert \ 
     {path_of_rootCA.crt} \ 
     'https://{odim_host}:{port}/redfish/v1'
     ```
-
+    
     Replace `{path_of_rootCA.crt}` with the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file - `<odimcertsPath>/rootCA.crt`. The `rootCA.crt` file is required for secure SSL communication.
     
         - `{odim_host}` is the virtual IP address of the Kubernetes cluster.
-
+    
           <blockquote>
           NOTE: To use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
           </blockquote>
-
+    
         - `{port}` is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
-
+    
     If you are running curl commands on a different server, perform the following steps to provide the `rootCA.crt` file.
     
     1. Navigate to the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file on the deployment node.
@@ -988,71 +988,72 @@ Ensure that all the [Predeployment procedures](#predeployment-procedures) are co
         ```
         curl --cacert rootCA.crt 'https://{odim_host}:{port}/redfish/v1'
         ```
-
+    
     <blockquote>
-	
+    
     NOTE:
     - To avoid using the `--cacert` flag in every curl command, add `rootCA.crt` in the `ca-certificates.crt` file available in this path: `/etc/ssl/certs/ca-certificates.crt`.
     
-	- You can access the base URL using a REST client. To access it using a REST client, add the rootCA.crt file of HPE Resource Aggregator for ODIM to the browser where the REST client is launched.
-    
-	
+    - You can access the base URL using a REST client. To access it using a REST client, add the rootCA.crt file of HPE Resource Aggregator for ODIM to the browser where the REST client is launched.
+
+
+​	
 	</blockquote>
 	
-    The following JSON response is returned:
-
-    ```
-    {
-       "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
-       "@odata.id":"/redfish/v1/",
-       "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
-       "Id":"RootService",
-       "Registries":{
-          "@odata.id":"/redfish/v1/Registries"
-       },
-       "SessionService":{
-          "@odata.id":"/redfish/v1/SessionService"
-       },
-       "AccountService":{
-          "@odata.id":"/redfish/v1/AccountService"
-       },
-       "EventService":{
-          "@odata.id":"/redfish/v1/EventService"
-       },
-       "Tasks":{
-          "@odata.id":"/redfish/v1/TaskService"
-       },
-       "AggregationService":{
-          "@odata.id":"/redfish/v1/AggregationService"
-       },
-       "Systems":{
-          "@odata.id":"/redfish/v1/Systems"
-       },
-       "Chassis":{
-          "@odata.id":"/redfish/v1/Chassis"
-       },
-       "Fabrics":{
-          "@odata.id":"/redfish/v1/Fabrics"
-       },
-       "Managers":{
-          "@odata.id":"/redfish/v1/Managers"
-       },
-       "UpdateService":{
-          "@odata.id":"/redfish/v1/UpdateService"
-       },
-       "Links":{
-          "Sessions":{
-             "@odata.id":"/redfish/v1/SessionService/Sessions"
-          }
-       },
-       "Name":"Root Service",
-       "Oem":{
-    
-       },
-       "RedfishVersion":"1.11.1",
-       "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
-    }
-    ```
+	The following JSON response is returned:
+	
+	```
+	{
+	   "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
+	   "@odata.id":"/redfish/v1/",
+	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
+	   "Id":"RootService",
+	   "Registries":{
+	      "@odata.id":"/redfish/v1/Registries"
+	   },
+	   "SessionService":{
+	      "@odata.id":"/redfish/v1/SessionService"
+	   },
+	   "AccountService":{
+	      "@odata.id":"/redfish/v1/AccountService"
+	   },
+	   "EventService":{
+	      "@odata.id":"/redfish/v1/EventService"
+	   },
+	   "Tasks":{
+	      "@odata.id":"/redfish/v1/TaskService"
+	   },
+	   "AggregationService":{
+	      "@odata.id":"/redfish/v1/AggregationService"
+	   },
+	   "Systems":{
+	      "@odata.id":"/redfish/v1/Systems"
+	   },
+	   "Chassis":{
+	      "@odata.id":"/redfish/v1/Chassis"
+	   },
+	   "Fabrics":{
+	      "@odata.id":"/redfish/v1/Fabrics"
+	   },
+	   "Managers":{
+	      "@odata.id":"/redfish/v1/Managers"
+	   },
+	   "UpdateService":{
+	      "@odata.id":"/redfish/v1/UpdateService"
+	   },
+	   "Links":{
+	      "Sessions":{
+	         "@odata.id":"/redfish/v1/SessionService/Sessions"
+	      }
+	   },
+	   "Name":"Root Service",
+	   "Oem":{
+	
+	   },
+	   "RedfishVersion":"1.11.1",
+	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
+	}
+	```
 
 6. Change the password of the default administrator account of Resource Aggregator for ODIM:
   
@@ -1384,7 +1385,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       $ helm package dellplugin
       ```
       The Helm package for the Dell plugin is created in the tar format.
-	  
+	
 7. Copy the Helm package, `dellplugin.tgz`, and `dellplugin.tar` to `~/plugins/dellplugin`.
 
 6. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the GRF plugin](#configuring-proxy-server-for-a-plugin-version). 
@@ -1396,6 +1397,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     $ python3 odim-controller.py --config \
      /home/${USER}/ODIM/odim-controller/scripts\
     /kube_deploy_nodes.yaml --add plugin --plugin dellplugin
+    ```
 
 
 8. Verify that the Dell plugin pod is up and running: 
@@ -1514,26 +1516,26 @@ The plugin you want to add is successfully deployed.
 
    <blockquote>
     NOTE: To generate a base64 encoded string of `{odim_username:odim_password}`, run the following command:
-    
+   
     ```
     $ echo -n '{odim_username}:{odim_password}' | base64 -w0
     ```
-    
+   
     Replace `{base64_encoded_string_of_[odim_username:odim_password]}` with the generated base64 encoded string in the curl command.
 
    </blockquote>
     You will receive:
 
     -   An HTTP `202 Accepted` status code.
-    
+   
     -   A link to the task monitor associated with this operation in the response header.
 
     To know the status of this task, perform HTTP `GET` on the `taskmon` URI until the task is complete. If the plugin is added successfully, you will receive an HTTP `200 OK` status code.
-    
+   
     After the plugin is successfully added, it will also be available as a manager resource at:
-    
+   
     `/redfish/v1/Managers`.
-    
+   
     For more information, refer to "Adding a plugin" in [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
 
 2. To verify that the added plugin is active and running, do the following: 
@@ -1696,7 +1698,7 @@ To upgrade or downgrade firmware of a system, perform HTTP `POST` on the followi
 
 
 -  `/redfish/v1/UpdateService/Actions/UpdateService.StartUpdate`
- 
+
 
 
 Simple update action creates an update request or directly updates a software or a firmware component.
@@ -1827,7 +1829,7 @@ The odim-controller command-line interface \(CLI\) offers commands to support th
      $ python3 odim-controller.py --config \
     ~/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml \
     --scale --svc threenodecluster --replicas 3
-   ``` 
+   ```
 For more examples, see [Postdeployment operations](#postdeployment-operations).
 
 
@@ -1867,7 +1869,6 @@ Following are the two ways of scaling up the resources and services of Resource 
     
     Before adding a node, ensure that time on the node is same as the time on all the other existing nodes. To know how to set time sync, see [Setting up time sync across nodes](#setting-up-time-sync-across-nodes).
     
-
 2. Log in to each cluster node and update all the configuration files inside `/opt/nginx/servers` with the new node details. 
 3. Run the following command on each cluster node: 
 
@@ -2079,7 +2080,7 @@ NOTE: When you upgrade the Resource Aggregator for ODIM deployment, the new conf
         
 # Appendix
 ## Setting proxy configuration
- 
+
 1. Open the `/etc/environment` file to edit. 
 
     ```
@@ -2281,13 +2282,17 @@ NOTE: Before performing the following steps, ensure that `http_proxy`, `https_pr
 
    1. Check if the Docker group exists using the following command:
       ```
-	  $ getent group docker
+	    $ getent group docker
+	  ```
 	  ```
 	  
-	  Example output: `docker:x:998:<username>`
+     Example output: `docker:x:998:<username>`
    2. Create the Docker group using the following command:
-      ```
+	  ```
 	  $ sudo groupadd docker
+	
+	  ```
+	
 	  ```
 4. Configure to use Docker CLI without sudo access:
    ```
@@ -2471,7 +2476,7 @@ Perform the following steps on each cluster node:
     ```
     $ sudo /bin/bash -n /opt/keepalived/bin/action_script.sh
     ```
-    
+   
     If there are syntax errors, resolve them before saving the file.
    </blockquote>
 6.  Change the script permissions and ownership: 
@@ -3438,7 +3443,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       $ helm package grfplugin
       ```
       The Helm package for the GRF plugin is created in the tar format.
-	  
+	
 7. Copy the Helm package, `grfplugin.tgz`, and `grfplugin.tar` to `~/plugins/grfplugin`.
 
 6. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the GRF plugin](#configuring-proxy-server-for-a-plugin-version). 
@@ -3509,7 +3514,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     ```
 
 13. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
- 
+
 
 ## Replacing an unreachable controller node with a new one
 
