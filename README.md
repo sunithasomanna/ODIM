@@ -29,6 +29,9 @@
   * [Viewing network fabrics](#viewing-network-fabrics)
   * [Creating and deleting volumes](#creating-and-deleting-volumes)
   * [Removing a server from the resource inventory](#removing-a-server-from-the-resource-inventory)
+  * [CI Process](#ci-process)
+  * [GitHub action workflow details](#GitHub-action-workflow-details)
+  * [Screenshots of the checks after execution](#Screenshots-of-the-checks-after-execution)
 - [Using odim-controller command-line interface](#using-odim-controller-command-line-interface)
 - [Postdeployment operations](#postdeployment-operations)
   * [Scaling up the resources and services of Resource Aggregator for ODIM](#scaling-up-the-resources-and-services-of-resource-aggregator-for-odim)
@@ -68,7 +71,6 @@
 # Introduction
 
 What is Resource Aggregator for Open Distributed Infrastructure Management™?
-    
 
 Resource Aggregator for Open Distributed Infrastructure Management \(ODIM™\) is a modular, open framework for simplified management and orchestration of distributed physical infrastructure.
 
@@ -274,7 +276,7 @@ The following table lists the software components and their versions that are co
       ```
 
    2. ```
-      $ sudo apt-get install sshpass=1.06-1 -y
+      $ sudo apt-get install sshpass=1.406-1 -y
       ```
 
    3. ```
@@ -328,7 +330,7 @@ The following table lists the software components and their versions that are co
        $ sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
        ```
 
-4. [Download and install go](#downloading-and-installing-go) on th deployment node.
+4. [Download and install go](#downloading-and-installing-go) on the deployment node.
 5. [Configure Docker proxy](#configuring-docker-proxy) on the deployment node.
 6. [Install Docker](#installing-docker) on the deployment node.
    
@@ -998,62 +1000,62 @@ Ensure that all the [Predeployment procedures](#predeployment-procedures) are co
 
 
 ​	
-	</blockquote>
-	
-	The following JSON response is returned:
-	
-	```
-	{
-	   "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
-	   "@odata.id":"/redfish/v1/",
-	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
-	   "Id":"RootService",
-	   "Registries":{
-	      "@odata.id":"/redfish/v1/Registries"
-	   },
-	   "SessionService":{
-	      "@odata.id":"/redfish/v1/SessionService"
-	   },
-	   "AccountService":{
-	      "@odata.id":"/redfish/v1/AccountService"
-	   },
-	   "EventService":{
-	      "@odata.id":"/redfish/v1/EventService"
-	   },
-	   "Tasks":{
-	      "@odata.id":"/redfish/v1/TaskService"
-	   },
-	   "AggregationService":{
-	      "@odata.id":"/redfish/v1/AggregationService"
-	   },
-	   "Systems":{
-	      "@odata.id":"/redfish/v1/Systems"
-	   },
-	   "Chassis":{
-	      "@odata.id":"/redfish/v1/Chassis"
-	   },
-	   "Fabrics":{
-	      "@odata.id":"/redfish/v1/Fabrics"
-	   },
-	   "Managers":{
-	      "@odata.id":"/redfish/v1/Managers"
-	   },
-	   "UpdateService":{
-	      "@odata.id":"/redfish/v1/UpdateService"
-	   },
-	   "Links":{
-	      "Sessions":{
-	         "@odata.id":"/redfish/v1/SessionService/Sessions"
-	      }
-	   },
-	   "Name":"Root Service",
-	   "Oem":{
-	
-	   },
-	   "RedfishVersion":"1.11.1",
-	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
-	}
-	```
+​	</blockquote>
+​	
+​	The following JSON response is returned:
+​	
+​	```
+​	{
+​	   "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
+​	   "@odata.id":"/redfish/v1/",
+​	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
+​	   "Id":"RootService",
+​	   "Registries":{
+​	      "@odata.id":"/redfish/v1/Registries"
+​	   },
+​	   "SessionService":{
+​	      "@odata.id":"/redfish/v1/SessionService"
+​	   },
+​	   "AccountService":{
+​	      "@odata.id":"/redfish/v1/AccountService"
+​	   },
+​	   "EventService":{
+​	      "@odata.id":"/redfish/v1/EventService"
+​	   },
+​	   "Tasks":{
+​	      "@odata.id":"/redfish/v1/TaskService"
+​	   },
+​	   "AggregationService":{
+​	      "@odata.id":"/redfish/v1/AggregationService"
+​	   },
+​	   "Systems":{
+​	      "@odata.id":"/redfish/v1/Systems"
+​	   },
+​	   "Chassis":{
+​	      "@odata.id":"/redfish/v1/Chassis"
+​	   },
+​	   "Fabrics":{
+​	      "@odata.id":"/redfish/v1/Fabrics"
+​	   },
+​	   "Managers":{
+​	      "@odata.id":"/redfish/v1/Managers"
+​	   },
+​	   "UpdateService":{
+​	      "@odata.id":"/redfish/v1/UpdateService"
+​	   },
+​	   "Links":{
+​	      "Sessions":{
+​	         "@odata.id":"/redfish/v1/SessionService/Sessions"
+​	      }
+​	   },
+​	   "Name":"Root Service",
+​	   "Oem":{
+​	
+​	   },
+​	   "RedfishVersion":"1.11.1",
+​	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
+​	}
+​	```
 
 6. Change the password of the default administrator account of Resource Aggregator for ODIM:
   
@@ -1769,15 +1771,58 @@ This action erases the inventory of a specific server and also deletes all the e
 
 <blockquote>
 NOTE: You can remove only one server at a time.
-
 </blockquote>
 For more information such as curl command, sample request, and sample response, see "Deleting a server" in [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
 
+## CI process
 
+GitHub action workflows, also known as checks, are added to the ODIM repository. They are triggered whenever a Pull Request (PR) is raised against the master (development) branch. The result from the workflow execution is then updated to the PR.
 
+<blockquote>
+NOTE: You can review and merge PRs only if the checks are passed.
+</blockquote>
+Following checks are added as part of the CI process:
 
+| Sl No. | Workflow Name           | Description                                                  |
+| ------ | ----------------------- | ------------------------------------------------------------ |
+| 1      | `build_unittest.yml`    | Builds and runs Unit Tests with code coverage enabled.       |
+| 2      | `build_deploy_test.yml` | Builds, deploys, runs sanity tests, and uploads build artifacts (like odimra logs). |
 
+These checks run in parallel and take approximately 9 minutes to complete.
 
+## GitHub action workflow details
+
+1. build_unittest.yml
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Installs Go 1.13.8 package
+   - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380
+   - Checks out the PR code into the Go module directory
+   - Builds/compiles the code
+   - Runs the unit tests
+2. build_deploy_test.yml
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Checks out the PR code
+   - Builds and deploys the following docker containers:
+     - ODIMRA 
+     - Generic Redfish plugin 
+     - Unmanaged Rack Plugin 
+     - Kakfa 
+     - Zookeeper 
+     - Consul 
+     - Redisdb
+   - Runs the sanity tests.
+   - Prepares build artifacts
+   - Uploads the build artifacts.
+
+> **NOTE:** Build status notifications having a link to the GitHub Actions build job page will be sent to the developer’s email address.
+
+## Screenshots of the checks after execution
+
+![screenshot](docs/images/check_1.png)
+
+![screenshot](docs/images/check_2.png)
+
+![screenshot](docs/images/check_3.png)
 
 # Using odim-controller command-line interface
 
@@ -2195,12 +2240,13 @@ NOTE: Before performing the following steps, ensure that `http_proxy`, `https_pr
 </blockquote>
 
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
-    ```
-	$ cat << EOF | sudo tee -a /etc/environment
+   
+	```
+    $ cat << EOF | sudo tee -a /etc/environment
     http_proxy=${http_proxy}
     https_proxy=${https_proxy}
     no_proxy=${no_proxy}
-    EOF
+	EOF
 	```
 2. Run the following commands to update proxy information in the Docker service file:
    ```
@@ -2283,13 +2329,17 @@ NOTE: Before performing the following steps, ensure that `http_proxy`, `https_pr
    1. Check if the Docker group exists using the following command:
       ```
 	    $ getent group docker
+	   ```
 	  ```
-	  ```
-	  
-     Example output: `docker:x:998:<username>`
-   2. Create the Docker group using the following command:
+	
+     ```
+   
+	  Example output: `docker:x:998:<username>`
+	2. Create the Docker group using the following command:
 	  ```
 	  $ sudo groupadd docker
+	
+	  ```
 	
 	  ```
 	
