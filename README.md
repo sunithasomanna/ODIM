@@ -43,7 +43,7 @@ ODIMRA framework comprises the following two components.
 
   The plugins abstract, translate, and expose southbound resource information to the resource aggregator through
   RESTful APIs. HPE Resource Aggregator for ODIM supports:
- 
+
     - Generic Redfish plugin for ODIM (GRF): Generic Redfish plugin that can be used as a plugin for any Redfishcompliant
       device.
 	- Plugin for unmanaged racks (URP): Plugin that acts as a resource manager for unmanaged racks. 
@@ -122,6 +122,7 @@ Infrastructure Management Plugin Developer's Guide](https://github.com/ODIM-Proj
 --------------
 Perform the following steps on the system where you want to deploy ODIMRA:
 1. Download and install `Ubuntu 18.04 LTS`.
+    
     >   **NOTE:**  Before installation, configure your system IP to access the data center network.
 2. Install `Ubuntu Make`. It is required to build ODIMRA services.
 
@@ -147,7 +148,7 @@ Perform the following steps on the system where you want to deploy ODIMRA:
        ```
    3.  ```
        $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        ```
+       ```
    4. ```
       $ sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
       ```
@@ -156,7 +157,7 @@ Perform the following steps on the system where you want to deploy ODIMRA:
       ```
    6. ```
       $ apt-cache policy docker-ce
-       ```
+      ```
       
         The following output is generated:
       ```
@@ -177,14 +178,14 @@ Perform the following steps on the system where you want to deploy ODIMRA:
     8. ```
        $ wget https://github.com/docker/compose/releases/download/1.25.5/docker-compose-Linux-x86_64
        ```
-	   
+	
 	   ```
        $ sudo cp docker-compose-Linux-x86_64 /usr/bin/docker-compose
-       ```
+      ```
 	   ```
        $ sudo chmod +x /usr/bin/docker-compose
-       ```
-        
+      ```
+   
        >  **NOTE:** To run the commands without sudo, add your username to the Docker group using the following command:
         ```
          $ sudo usermod -aG docker ${USER}
@@ -194,7 +195,7 @@ Perform the following steps on the system where you want to deploy ODIMRA:
       ```
     $ sudo systemctl status docker
       ```
- 
+
    If Docker is active and running, the following output is generated:
    ```
    docker.service - Docker Application Container Engine
@@ -210,35 +211,36 @@ Perform the following steps on the system where you want to deploy ODIMRA:
    +-10113 docker-containerd --config /var/run/docker/containerd/
    containerd.toml
    ```
-     
+   
    >  **NOTE:** If your system is behind a corporate proxy, ensure to configure Docker to use proxy server and restart the Docker services. To know how to configure Docker proxy, see [Configuring Docker proxy](#configuring-proxy-for-docker).
-						   
-     
+	
+   
    c. To enable Docker service to start on reboot, run the following command:
       ```
       $ sudo systemctl enable docker
-	  ```
-      
+	   ```
+   
 	
    d. Restart the system.
       ```
       $ sudo reboot
       ```
    
-  
+    
    
 	   
 
 
-	   
+​	   
 ## 2. Installing the resource aggregator for ODIM, the Generic redfish plugin (GRF), and the Unmanaged Rack Plugin (URP)
 This section provides a step-by-step procedure for deploying ODIMRA, the GRF plugin, and URP.
 
-  
+
 Following are some important points to consider before starting the deployment:
   - All configuration parameters are set to default values in the configuration files for ODIMRA and the GRF plugin. 
   - The following ports are used for deploying ODIMRA, the GRF plugin, and URP:
     45000, 45001, 45003, 45101-45110, 9092, 9082, 6380, 6379, 8500, 8300, 8302, 8301, 8600
+    
     > **NOTE:** Ensure that the above ports are not in use.
   - The following users are created and added to group Ids automatically when the certificates are generated during the deployment. 
   
@@ -316,7 +318,7 @@ Following are some important points to consider before starting the deployment:
 
 
     **Procedure**
-   
+
    a. Navigate to the path: `ODIM/build/cert_generator`:
       ```
        $ cd ~/ODIM/build/cert_generator
@@ -352,7 +354,7 @@ Following are some important points to consider before starting the deployment:
      The following files are copied in the path - `/etc/kafka/conf/`:
       - kafka.keystore.jks
       - kafka.truststore.jks
-
+    
      The following files are copied in the path - `/etc/zookeeper/conf`:
       - zookeeper.keystore.jks
       - zookeeper.trustore.jks
@@ -363,7 +365,7 @@ Following are some important points to consider before starting the deployment:
       - odimra_server.crt
       - odimra_kafka_client.key
       - odimra_kafka_client.crt
-      
+
 
 8. Navigate to the ODIMRA folder.
    ```
@@ -387,7 +389,7 @@ Following are some important points to consider before starting the deployment:
    ```
    $ ps -eaf | grep svc
    ```
-   
+
    All the resource aggregator services are listed:
    ```
    root     26491 30077  0 Jan10 ?        00:00:00 sudo -E -u odimra nohup ./svc-events --registry=consul --registry_address=consul:8500 --server_address=odimra:45103 --client_request_timeout=300s
@@ -435,7 +437,7 @@ Following are some important points to consider before starting the deployment:
     b. Open the `odimra` file to edit:
 	```
     $ sudo vi odimra
-    ```	
+    ```
 	c. Add the following content and save:
      ```
     /var/log/GRF_PLUGIN/*.log
@@ -450,7 +452,7 @@ Following are some important points to consider before starting the deployment:
     shred
     copytruncate
     }
-    ``` 
+     ```
     d. Navigate to the `/etc/cron.hourly` directory:
        ```
        $ cd /etc/cron.hourly
@@ -466,8 +468,10 @@ Following are some important points to consider before starting the deployment:
     e. To verify that the configuration is working, run the following command:
       ```
       $ sudo logrotate -v -f /etc/logrotate.d/odimra
+      ```
+
   	  ```
-  
+
 
 
 12. To add the Generic Redfish Plugin, URP, and servers to the resource aggregator for ODIM, see "*Adding a plugin as an aggregation source*" and "*Adding a server as an aggregation source*" in the following readme:  
@@ -489,25 +493,25 @@ The GRF plugin:
 ```
 Username: admin
 Password: GRFPlug!n12$4
-``` 
+```
 
 URP:
 
 ```
 Username: admin
 Password: Od!m12$4
-``` 
+```
 
  
- 
-  
+
+
 #  Modifying default configuration parameters for the resource aggregator
 
 1.   Navigate to the `build_odimra_1` container using the following command: 
 
       ```
      $ docker exec -it build_odimra_1 /bin/bash
-     ```
+      ```
 
 2.   Edit the parameters in the `odimra_config.json` file located in this path: `/etc/odimra_config/odimra_config.json` and save. 
 
@@ -554,12 +558,12 @@ Password: Od!m12$4
 
      ```
      $ docker restart build_odimra_1
-      ```
-    
+     ```
+
    
+
    
-   
-   
+
 # Configuring proxy for Docker
 
 <blockquote>
@@ -590,7 +594,7 @@ During the course of this procedure, you will be required to create files and co
 
       ```
        vi config.json
-      ```	   
+      ```
 
 2.   Add the following content in the `config.json` file and save: 
 
@@ -606,8 +610,8 @@ During the course of this procedure, you will be required to create files and co
           }
         }
       }
-    
-     ```
+        
+      ```
 
 3.   Update the `/etc/environment` file with the following content using sudo: 
 
@@ -634,7 +638,7 @@ During the course of this procedure, you will be required to create files and co
          Environment="HTTP_PROXY=<Proxy_URL>"
          Environment="HTTPS_PROXY=<Proxy_URL>"
          Environment="NO_PROXY=localhost,127.0.0.1, <ODIM_server_IP>"
-        
+           
          ```
 
      4. Run the following commands: 
@@ -647,11 +651,11 @@ During the course of this procedure, you will be required to create files and co
          $ sudo service docker restart
 
          ```
-		 
+		
 # Uninstalling ODIMRA
 
   To uninstall ODIMRA, use either of the two commands listed in this section.
-  
+
 1. ```
    $ make clean
    ```
@@ -662,11 +666,10 @@ During the course of this procedure, you will be required to create files and co
    - Remove data stored by Consul, Redis, and Kafka.	
 	
     When prompted for password, enter the sudo password.
-	 
-  
+	
 2. ```
    $ make deepclean
-   ``` 
+   ```
   
    Use the following command to:
    - Remove all the deployed Docker containers.
@@ -679,13 +682,13 @@ During the course of this procedure, you will be required to create files and co
 
 >**CAUTION**:
  Running these commands will unistall ODIMRA and all the data related to it completely. It is best not to run these commands unless absolutely necessary.
-               
+
 
 # CI Process
 
-GitHub action workflows, also called as checks, are added to the ODIM repository. They are triggered whenever a Pull Request(PR) is raised against the development branch.
+GitHub action workflows, also known as checks, are added to the ODIM repository. They are triggered whenever a Pull Request(PR) is raised against the master branch.
 The result from the workflow execution is then updated to the PR.
- 
+
 >**Note:** You can review and merge PRs only if the checks are passed.
 
 Following checks are added as part of the CI process:
@@ -694,33 +697,41 @@ Following checks are added as part of the CI process:
 |---------|-----------|----------|
 |1|`build_unittest.yml` |Builds and runs Unit Tests with code coverage enabled.|
 |2|`build_deploy_test.yml` |Builds, Deploys, runs sanity tests, and uploads build artifacts (like odimra logs).|
-|3|`LGTM analysis` |Semantic code analyzer and query tool which finds security vulnerabilities in codebases.| 
 
-These checks run in parallel and take approximately nine minutes to complete.
+These checks run in parallel and take approximately 9 minutes to complete.
 
 GitHub action workflow details
 ------------------------------
 
 1. build_unittest.yml
-   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md.
-   - Installs Go 1.13.8 package.
-   - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380.
-   - Checks out the PR code into the Go module directory.
-   - Builds the code.
-   - Runs the unit tests.
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Installs Go 1.13.8 package
+   - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380
+   - Checks out the PR code into the Go module directory
+   - Builds/Compiles the code
+   - Runs the unit tests
 
 2. build_deploy_test.yml
-   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md.
-   - Checks out the PR code.
-   - Builds and deploys the following docker containers
-     ODIMRA
-     Generic redfish plugin
-     Unmanaged Rack Plugin
-     Kakfa
-     Zookeeper
-     Consul
-     Redisdb
-   - Runs the sanity tests.
-   - Uploads the build artifacts.
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Checks out the PR code
+   - Builds and deploys the following docker containers:
+     - ODIMRA
+     - Generic Redfish plugin
+     - Unmanaged Rack Plugin
+     - Kakfa
+     - Zookeeper
+     - Consul
+     - Redisdb
+   - Runs the sanity tests
+   - Prepares build artifacts
+   - Uploads build artifacts
 
-> **NOTE:** Build status notifications having a link to the GitHub Actions' build job page will be sent to the developer’s email.
+> **NOTE:** Build status notifications having a link to the GitHub Actions build job page will be sent to the developer’s email address.
+
+## Screenshots of the checks after execution
+
+<img src="docs/images/check_1.png">
+
+<img src="docs/images/check_2.png" />
+
+<img src="docs/images/check_3.png" />
