@@ -29,9 +29,6 @@
   * [Viewing network fabrics](#viewing-network-fabrics)
   * [Creating and deleting volumes](#creating-and-deleting-volumes)
   * [Removing a server from the resource inventory](#removing-a-server-from-the-resource-inventory)
-  * [CI Process](#ci-process)
-  * [GitHub action workflow details](#GitHub-action-workflow-details)
-  * [Screenshots of the checks after execution](#Screenshots-of-the-checks-after-execution)
 - [Using odim-controller command-line interface](#using-odim-controller-command-line-interface)
 - [Postdeployment operations](#postdeployment-operations)
   * [Scaling up the resources and services of Resource Aggregator for ODIM](#scaling-up-the-resources-and-services-of-resource-aggregator-for-odim)
@@ -62,9 +59,9 @@
   * [Removing an existing plugin](#removing-an-existing-plugin)
   * [Uninstalling the resource aggregator services](#uninstalling-the-resource-aggregator-services)
 
-
-
-   
+* [CI process](#ci-process)
+  * [GitHub action workflow details](#GitHub-action-workflow-details)
+  * [Screenshots of the checks after execution](#Screenshots-of-the-checks-after-execution)
 
 
 
@@ -1773,56 +1770,6 @@ This action erases the inventory of a specific server and also deletes all the e
 NOTE: You can remove only one server at a time.
 </blockquote>
 For more information such as curl command, sample request, and sample response, see "Deleting a server" in [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
-
-## CI process
-
-GitHub action workflows, also known as checks, are added to the ODIM repository. They are triggered whenever a Pull Request (PR) is raised against the master (development) branch. The result from the workflow execution is then updated to the PR.
-
-<blockquote>
-NOTE: You can review and merge PRs only if the checks are passed.
-</blockquote>
-Following checks are added as part of the CI process:
-
-| Sl No. | Workflow Name           | Description                                                  |
-| ------ | ----------------------- | ------------------------------------------------------------ |
-| 1      | `build_unittest.yml`    | Builds and runs Unit Tests with code coverage enabled.       |
-| 2      | `build_deploy_test.yml` | Builds, deploys, runs sanity tests, and uploads build artifacts (like odimra logs). |
-
-These checks run in parallel and take approximately 9 minutes to complete.
-
-## GitHub action workflow details
-
-1. build_unittest.yml
-   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
-   - Installs Go 1.13.8 package
-   - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380
-   - Checks out the PR code into the Go module directory
-   - Builds/compiles the code
-   - Runs the unit tests
-2. build_deploy_test.yml
-   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
-   - Checks out the PR code
-   - Builds and deploys the following docker containers:
-     - ODIMRA 
-     - Generic Redfish plugin 
-     - Unmanaged Rack Plugin 
-     - Kakfa 
-     - Zookeeper 
-     - Consul 
-     - Redisdb
-   - Runs the sanity tests.
-   - Prepares build artifacts
-   - Uploads the build artifacts.
-
-> **NOTE:** Build status notifications having a link to the GitHub Actions build job page will be sent to the developer’s email address.
-
-## Screenshots of the checks after execution
-
-![screenshot](docs/images/check_1.png)
-
-![screenshot](docs/images/check_2.png)
-
-![screenshot](docs/images/check_3.png)
 
 # Using odim-controller command-line interface
 
@@ -3964,3 +3911,56 @@ $ python3 odim-controller.py --reset odimra --config \
  /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml \
  --ignore-errors
 ```
+
+# CI process
+
+GitHub action workflows, also known as checks, are added to the ODIM repository. They are triggered whenever a Pull Request (PR) is raised against the master (development) branch. The result from the workflow execution is then updated to the PR.
+
+<blockquote>
+NOTE: You can review and merge PRs only if the checks are passed.
+</blockquote>
+
+Following checks are added as part of the CI process:
+
+| Sl No. | Workflow Name           | Description                                                  |
+| ------ | ----------------------- | ------------------------------------------------------------ |
+| 1      | `build_unittest.yml`    | Builds and runs Unit Tests with code coverage enabled.       |
+| 2      | `build_deploy_test.yml` | Builds, deploys, runs sanity tests, and uploads build artifacts (like odimra logs). |
+
+These checks run in parallel and take approximately 9 minutes to complete.
+
+## GitHub action workflow details
+
+1. build_unittest.yml
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Installs Go 1.13.8 package
+   - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380
+   - Checks out the PR code into the Go module directory
+   - Builds/compiles the code
+   - Runs the unit tests
+2. build_deploy_test.yml
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Checks out the PR code
+   - Builds and deploys the following docker containers:
+     - ODIMRA 
+     - Generic Redfish plugin 
+     - Unmanaged Rack Plugin 
+     - Kakfa 
+     - Zookeeper 
+     - Consul 
+     - Redisdb
+   - Runs the sanity tests
+   - Prepares build artifacts
+   - Uploads the build artifacts
+
+> **NOTE:** Build status notifications having a link to the GitHub Actions build job page will be sent to the developer’s email address.
+
+## Screenshots of the checks after execution
+
+![screenshot](docs/images/check_1.png)
+
+![screenshot](docs/images/check_2.png)
+
+![screenshot](docs/images/check_3.png)
+
+# 
