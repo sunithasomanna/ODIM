@@ -4,6 +4,7 @@
 - [Introduction](#introduction)
   * [Resource Aggregator for ODIM logical architecture](#resource-aggregator-for-odim-logical-architecture)
 - [API usage and access guidelines](#api-usage-and-access-guidelines)
+- [Support for URL Encoding](#support-for-url-encoding)
 - [List of supported APIs](#list-of-supported-apis)
   * [Viewing the list of supported Redfish services](#viewing-the-list-of-supported-redfish-services)
 - [HTTP request methods, responses, and status codes](#http-request-methods--responses--and-status-codes)
@@ -152,15 +153,6 @@
   * [Viewing a collection of registries](#viewing-a-collection-of-registries)
   * [Viewing a single registry](#viewing-a-single-registry)
   * [Viewing a file in a registry](#viewing-a-file-in-a-registry)
-
-
-
-
-
-
-
-
-
 
 
 
@@ -321,9 +313,7 @@ For a complete list of curl flags, see information provided at [https://curl.hax
     $ export no_proxy="127.0.0.1,localhost,{odimra_host}"
      ```
 
-   
 
-<br>
 
 **Including HTTP certificate**
 
@@ -351,11 +341,7 @@ certificate problem. Provide the root CA certificate to curl for secure SSL comm
         curl -v --cacert {path}/rootCA.crt 'https://{odimra_host}:{port}/redfish/v1'
         ```
 
-​		 
-
 >**NOTE:** To avoid using the `--cacert` flag in every curl command, add `rootCA.crt` in the `ca-certificates.crt` file located in this path:<br> `/etc/ssl/certs/ca-certificates.crt`.
-
-
 
 # Support for URL Encoding
 
@@ -367,11 +353,9 @@ Resource Aggregator for ODIM supports standard URL encoding for all APIs. When R
 
 <blockquote>Tip: You can look up on the Internet for the standard ASCII Encoding Reference of the URL characters.</blockquote>
 
-#  List of supported APIs
+# List of supported APIs
 
 Resource Aggregator for ODIM supports the following Redfish APIs:
-
-
 
 |Redfish Service Root||
 |-------|--------------------|
