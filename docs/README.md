@@ -190,7 +190,7 @@ ODIMRA framework comprises the following two components.
 
   The plugins abstract, translate, and expose southbound resource information to the resource aggregator through
   RESTful APIs. HPE Resource Aggregator for ODIM supports:
- 
+
     - Generic Redfish plugin for ODIM (GRF): Generic Redfish plugin that can be used as a plugin for any Redfishcompliant
       device.
 	- Plugin for unmanaged racks (URP): Plugin that acts as a resource manager for unmanaged racks. 
@@ -357,8 +357,15 @@ certificate problem. Provide the root CA certificate to curl for secure SSL comm
 
 
 
+# Support for URL Encoding
 
+The URL encoding mechanism translates the characters in the URLs to a representation that are universally accepted by all web browsers and servers. 
 
+Resource Aggregator for ODIM supports standard URL encoding for all APIs. When Resource Aggregator for ODIM gets an encoded URL path, the non-ASCII characters in its path are internally translated and sent to the web browsers. In other words, if you replace a character in a URL with its standard encoding notation, Resource Aggregator for ODIM accepts the encoded notation, decodes it to the actual character acceptable by the web browser and sends responses.
+
+**Example**: In the URL`/redfish/v1/Systems/e24fb205-6669-4080-b53c-67d4923aa73e:1`, if you replace the colon character `:` with its encoding notation `%3A`, or the `/` character with %2F and send the request, Resource Aggregator for ODIM accepts the URL, decodes the encoded notation internally and sends an accurate response.
+
+<blockquote>Tip: You can look up on the Internet for the standard ASCII Encoding Reference of the URL characters.</blockquote>
 
 #  List of supported APIs
 
@@ -545,7 +552,7 @@ Transfer-Encoding:chunked
 ```
 
 >**Sample response body**
- 
+
 
 ```
 {
@@ -4370,9 +4377,9 @@ curl -i GET \
 |<strong>Response code</strong>  |On success, `200 OK` |
 |<strong>Authentication</strong>  |Yes|
 
- 
+
 >**curl command**
- 
+
 
 ```
 curl -i GET \
@@ -5576,7 +5583,7 @@ curl -i DELETE \
    -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
    'https://{odim_host}:{port}/redfish/v1/Chassis/{rackId}'
 ```
-   
+
 
 >**Sample request body**
 
@@ -5601,7 +5608,7 @@ curl -i DELETE \
    -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
    'https://{odim_host}:{port}/redfish/v1/Chassis/{rackGroupId}`'
 ```
-   
+
 
 >**Sample request body**
 
@@ -6589,7 +6596,7 @@ curl -i GET \
 |<strong>Response code</strong> |On success, `200 Ok` |
 |<strong>Authentication</strong> |Yes|
 
- 
+
 **Usage information** 
 To know the progress of this action, perform HTTP `GET` on the [task monitor](#viewing-a-task-monitor) returned in the response header \(until the task is complete\).
 
@@ -9425,7 +9432,7 @@ curl -i POST \
 
 
 
- 
+
 
 > Sample event payload 
 

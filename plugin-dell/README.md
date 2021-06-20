@@ -1,6 +1,6 @@
-# Redfish-plugin  
+# Dell-plugin  
 
-Redfish-plugin communicates with redfish compliant BMC.  
+Dell-plugin communicates with redfish compliant BMC.  
 This is an independent module which provides two primary communication channels:  
 1.  An API mechanism that is used to exchange control data  
 2.  An Event Message Bus (EMB) that is used to exchange event and notifications.
@@ -12,7 +12,7 @@ To ensure continued adoption of open technologies, the APIs for the plugins are 
 
 ## Deployment Instructions
 
-For deploying the GRF plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the GRF plugin" section in the "Appendix" chapter in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/tree/development#readme).
+For deploying the Dell plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the Dell plugin" section in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/tree/development#readme).
 
 
 ## API accessibility
