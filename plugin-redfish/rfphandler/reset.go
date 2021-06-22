@@ -17,6 +17,7 @@ package rfphandler
 
 import (
 	"encoding/json"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
@@ -53,10 +54,9 @@ func ResetComputerSystem(ctx iris.Context) {
 	//Get device details from request
 	err := ctx.ReadJSON(&deviceDetails)
 	if err != nil {
-		errMsg := "Unable to collect data from request: " + err.Error()
-		log.Error(errMsg)
+		log.Error("Unable to collect data from request: " + err.Error())
 		ctx.StatusCode(http.StatusBadRequest)
-		ctx.WriteString(errMsg)
+		ctx.WriteString("Error: bad request.")
 		return
 	}
 	device := &rfputilities.RedfishDevice{
@@ -73,7 +73,7 @@ func ResetComputerSystem(ctx iris.Context) {
 	})
 	redfishClient, err := rfputilities.GetRedfishClient()
 	if err != nil {
-		errMsg := "While trying to create the redfish client, got:" + err.Error()
+		errMsg := "Internal processing error: " + err.Error()
 		log.Error(errMsg)
 		ctx.StatusCode(http.StatusInternalServerError)
 		ctx.WriteString(errMsg)
@@ -83,10 +83,10 @@ func ResetComputerSystem(ctx iris.Context) {
 	//Subscribe to Events
 	resp, err := redfishClient.ResetComputerSystem(device, uri)
 	if err != nil {
-		errorMessage := "While trying to reset, got: " + err.Error()
-		log.Error(errorMessage)
+		errorMessage := err.Error()
+		fmt.Println(err)
 		if resp == nil {
-			ctx.WriteString(errorMessage)
+			ctx.WriteString("Error while trying reset " + errorMessage)
 			ctx.StatusCode(http.StatusInternalServerError)
 			return
 		}
@@ -94,8 +94,9 @@ func ResetComputerSystem(ctx iris.Context) {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		body = []byte("While trying to read response body, got: " + err.Error())
-		log.Error(string(body))
+		errorMessage := err.Error()
+		fmt.Println(err)
+		ctx.WriteString("Error while trying reset " + errorMessage)
 	}
 
 	ctx.StatusCode(resp.StatusCode)

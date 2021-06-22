@@ -14,8 +14,7 @@
 package main
 
 import (
-	"encoding/json"
-	"net"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
 	"time"
@@ -30,7 +29,6 @@ import (
 	"github.com/ODIM-Project/ODIM/plugin-redfish/rfpmodel"
 	"github.com/ODIM-Project/ODIM/plugin-redfish/rfputilities"
 	iris "github.com/kataras/iris/v12"
-	"github.com/sirupsen/logrus"
 )
 
 var subscriptionInfo []rfpmodel.Device
@@ -50,11 +48,11 @@ func main() {
 	}
 
 	if err := config.SetConfiguration(); err != nil {
-		log.Fatal("While reading from config, got: " + err.Error())
+		log.Fatal("error while reading from config " + err.Error())
 	}
 
 	if err := dc.SetConfiguration(config.Data.MessageBusConf.MessageQueueConfigFilePath); err != nil {
-		log.Fatal("While trying to set messagebus configuration, got: " + err.Error())
+		log.Fatal("error while trying to set messagebus configuration: " + err.Error())
 	}
 
 	// CreateJobQueue defines the queue which will act as an infinite buffer
@@ -63,11 +61,11 @@ func main() {
 
 	// RunReadWorkers will create a worker pool for doing a specific task
 	// which is passed to it as Publish method after reading the data from the channel.
-	go common.RunReadWorkers(rfphandler.Out, rfpmessagebus.Publish, 5)
+	go common.RunReadWorkers(rfphandler.Out, rfpmessagebus.Publish, 1)
 
 	configFilePath := os.Getenv("PLUGIN_CONFIG_FILE_PATH")
 	if configFilePath == "" {
-		log.Fatal("No value get the environment variable PLUGIN_CONFIG_FILE_PATH")
+		log.Fatal("error: no value get the environment variable PLUGIN_CONFIG_FILE_PATH")
 	}
 	// TrackConfigFileChanges monitors the odim config changes using fsnotfiy
 	go rfputilities.TrackConfigFileChanges(configFilePath)
@@ -77,10 +75,10 @@ func main() {
 }
 
 func app() {
-	go sendStartupEvent()
-	go eventsrouters()
-
 	app := routers()
+	go func() {
+		eventsrouters()
+	}()
 	conf := &lutilconf.HTTPConfig{
 		Certificate:   &config.Data.KeyCertConf.Certificate,
 		PrivateKey:    &config.Data.KeyCertConf.PrivateKey,
@@ -128,7 +126,6 @@ func routers() *iris.Application {
 		systems.Get("/{id}/BootOptions", rfphandler.GetResource)
 		systems.Get("/{id}/BootOptions/{rid}", rfphandler.GetResource)
 		systems.Get("/{id}/Processors", rfphandler.GetResource)
-		systems.Get("/{id}/Processors/{rid}", rfphandler.GetResource)
 		systems.Get("/{id}/LogServices", rfphandler.GetResource)
 		systems.Get("/{id}/LogServices/{rid}", rfphandler.GetResource)
 		systems.Get("/{id}/LogServices/{rid}/Entries", rfphandler.GetResource)
@@ -144,7 +141,7 @@ func routers() *iris.Application {
 		systems.Get("/{id}/EthernetInterfaces/{id2}/VLANS", rfphandler.GetResource)
 		systems.Get("/{id}/EthernetInterfaces/{id2}/VLANS/{rid}", rfphandler.GetResource)
 		systems.Get("/{id}/NetworkInterfaces/{rid}", rfphandler.GetResource)
-		systems.Get("/{id}/PCIeDevices/{rid}", rfphandler.GetResource)
+		systems.Get("/{id}/PCIDevices/{rid}", rfphandler.GetResource)
 		systems.Patch("/{id}", rfphandler.ChangeSettings)
 
 		systemsAction := systems.Party("/{id}/Actions")
@@ -165,19 +162,6 @@ func routers() *iris.Application {
 		chassis.Get("/{id}/NetworkAdapters/{id2}/NetworkPorts", rfphandler.GetResource)
 		chassis.Get("/{id}/NetworkAdapters/{id2}/NetworkDeviceFunctions/{rid}", rfphandler.GetResource)
 		chassis.Get("/{id}/NetworkAdapters/{id2}/NetworkPorts/{rid}", rfphandler.GetResource)
-		chassis.Get("/{id}/Assembly", rfphandler.GetResource)
-		chassis.Get("/{id}/PCIeSlots", rfphandler.GetResource)
-		chassis.Get("/{id}/PCIeSlots/{rid}", rfphandler.GetResource)
-		chassis.Get("/{id}/PCIeDevices", rfphandler.GetResource)
-		chassis.Get("/{id}/PCIeDevices/{rid}", rfphandler.GetResource)
-		chassis.Get("/{id}/Sensors", rfphandler.GetResource)
-		chassis.Get("/{id}/Sensors/{rid}", rfphandler.GetResource)
-		chassis.Get("/{id}/LogServices", rfphandler.GetResource)
-		chassis.Get("/{id}/LogServices/{rid}", rfphandler.GetResource)
-		chassis.Get("/{id}/LogServices/{rid}/Entries", rfphandler.GetResource)
-		chassis.Get("/{id}/LogServices/{rid}/Entries/{rid2}", rfphandler.GetResource)
-		// TODO:
-		// chassis.Post("/{id}/LogServices/{rid}/Actions/LogService.ClearLog", rfphandler.GetResource)
 
 		// Chassis Power URl routes
 		chassisPower := chassis.Party("/{id}/Power")
@@ -202,8 +186,6 @@ func routers() *iris.Application {
 		managers.Get("/{id}/NetworkProtocol/{rid}", rfphandler.GetResource)
 		managers.Get("/{id}/HostInterfaces", rfphandler.GetResource)
 		managers.Get("/{id}/HostInterfaces/{rid}", rfphandler.GetResource)
-		managers.Get("/{id}/SerialInterface", rfphandler.GetResource)
-		managers.Get("/{id}/SerialInterface/{rid}", rfphandler.GetResource)
 		managers.Get("/{id}/VirtualMedia", rfphandler.GetResource)
 		managers.Get("/{id}/VirtualMedia/{rid}", rfphandler.GetResource)
 		managers.Get("/{id}/LogServices", rfphandler.GetResource)
@@ -231,13 +213,6 @@ func routers() *iris.Application {
 		update.Get("/FirmwareInventory/{id}", rfphandler.GetResource)
 		update.Get("/SoftwareInventory", rfphandler.GetResource)
 		update.Get("/SoftwareInventory/{id}", rfphandler.GetResource)
-
-		//Adding routes related to telemetry service
-		telemetry := pluginRoutes.Party("/TelemetryService", rfpmiddleware.BasicAuth)
-		telemetry.Get("/MetricDefinitions", rfphandler.GetResource)
-		telemetry.Get("/MetricReportDefinitions", rfphandler.GetResource)
-		telemetry.Get("/MetricReports", rfphandler.GetResource)
-		telemetry.Get("/Triggers", rfphandler.GetResource)
 	}
 	pluginRoutes.Get("/Status", rfphandler.GetPluginStatus)
 	pluginRoutes.Post("/Startup", rfpmiddleware.BasicAuth, rfphandler.GetPluginStartup)
@@ -245,6 +220,8 @@ func routers() *iris.Application {
 }
 
 func eventsrouters() {
+	app := iris.New()
+	app.Post(config.Data.EventConf.DestURI, rfphandler.RedfishEvents)
 	conf := &lutilconf.HTTPConfig{
 		Certificate:   &config.Data.KeyCertConf.Certificate,
 		PrivateKey:    &config.Data.KeyCertConf.PrivateKey,
@@ -256,39 +233,12 @@ func eventsrouters() {
 	if err != nil {
 		log.Fatal("Unable to initialize event server: " + err.Error())
 	}
-	mux := http.NewServeMux()
-	mux.HandleFunc(config.Data.EventConf.DestURI, rfphandler.RedfishEvents)
-	evtServer.Handler = mux
-	log.Fatal(evtServer.ListenAndServeTLS("", ""))
+	app.Run(iris.Server(evtServer))
 }
 
 // intializePluginStatus sets plugin status
 func intializePluginStatus() {
 	rfputilities.Status.Available = "yes"
 	rfputilities.Status.Uptime = time.Now().Format(time.RFC3339)
-}
 
-// sendStartupEvent is for sending startup event
-func sendStartupEvent() {
-	// grace wait time for plugin to be functional
-	time.Sleep(3 * time.Second)
-
-	startupEvt := common.PluginStatusEvent{
-		Name:         "Plugin startup event",
-		Type:         "PluginStarted",
-		Timestamp:    time.Now().String(),
-		OriginatorID: config.Data.PluginConf.Host,
-	}
-
-	request, _ := json.Marshal(startupEvt)
-	event := common.Events{
-		IP:        net.JoinHostPort(config.Data.PluginConf.Host, config.Data.PluginConf.Port),
-		Request:   request,
-		EventType: "PluginStartUp",
-	}
-
-	done := make(chan bool)
-	events := []interface{}{event}
-	go common.RunWriteWorkers(rfphandler.In, events, 1, done)
-	log.Info("successfully sent startup event")
 }

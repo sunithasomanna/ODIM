@@ -6,7 +6,7 @@
  You may obtain a copy of the License at
 
  http://www.apache.org/licenses/LICENSE-2.0
- 
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,7 @@
 
 # Unmanaged Racks Plugin (URP) 
 
-This folder contains implementation of Unamanaged Racks Plugin(URP) for ODIMRA. 
+This folder contains implementation of Unmanaged Racks Plugin(URP) for ODIMRA. 
 Plugin exposes narrowed obligatory REST API described by Plugin Developer’s Guide (PDG).
 In addition URP exposes following REST endpoints:
 
@@ -30,13 +30,17 @@ Full specification of URP is available here: https://wiki.odim.io/display/HOME/P
 
 Please be aware this plugin is still under development, and some features might be missing.
 
+## URP deployment instructions
+
+For deploying the Unmanaged Racks plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the Unmanaged Rack Plugin" section in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/tree/development#readme).
+
 ## Build 
 
 Build URP using following command:
 ```
 cd plugin-unmanaged-racks
 make build
-``` 
+```
 
 Run URP using run target:
 ```

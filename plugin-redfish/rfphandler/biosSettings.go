@@ -16,6 +16,7 @@
 package rfphandler
 
 import (
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
@@ -60,10 +61,9 @@ func ChangeSettings(ctx iris.Context) {
 	//Get device details from request
 	err := ctx.ReadJSON(&deviceDetails)
 	if err != nil {
-		errorMessage := "Unable to collect data from request: " + err.Error()
-		log.Error(errorMessage)
+		log.Error("Unable to collect data from request: " + err.Error())
 		ctx.StatusCode(http.StatusBadRequest)
-		ctx.WriteString(errorMessage)
+		ctx.WriteString("Error: bad request.")
 		return
 	}
 	device := &rfputilities.RedfishDevice{
@@ -75,7 +75,7 @@ func ChangeSettings(ctx iris.Context) {
 
 	redfishClient, err := rfputilities.GetRedfishClient()
 	if err != nil {
-		errMsg := "While trying to create the redfish client, got:" + err.Error()
+		errMsg := "Internal processing error: " + err.Error()
 		log.Error(errMsg)
 		ctx.StatusCode(http.StatusInternalServerError)
 		ctx.WriteString(errMsg)
@@ -83,20 +83,22 @@ func ChangeSettings(ctx iris.Context) {
 	}
 	resp, err := redfishClient.DeviceCall(device, uri, http.MethodPatch)
 	if err != nil {
-		errorMessage := "While trying to change bios settings, got: " + err.Error()
-		log.Error(errorMessage)
+		errorMessage := err.Error()
+		fmt.Println(err)
 		if resp == nil {
 			ctx.StatusCode(http.StatusInternalServerError)
-			ctx.WriteString(errorMessage)
+			ctx.WriteString("error while trying to change bios settings: " + errorMessage)
 			return
 		}
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		body = []byte("While trying to change bios settings, got: " + err.Error())
-		log.Error(string(body))
+		errorMessage := err.Error()
+		fmt.Println(err)
+		ctx.WriteString("Error while trying to change bios settings: " + errorMessage)
 	}
+	log.Info("Response body: " + string(body))
 	ctx.StatusCode(resp.StatusCode)
 	ctx.Write(body)
 }
