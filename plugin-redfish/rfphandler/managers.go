@@ -16,15 +16,17 @@
 package rfphandler
 
 import (
-	dmtf "github.com/ODIM-Project/ODIM/lib-dmtf/model"
-	pluginConfig "github.com/ODIM-Project/ODIM/plugin-redfish/config"
-	"github.com/ODIM-Project/ODIM/plugin-redfish/rfpmodel"
-	"github.com/ODIM-Project/ODIM/plugin-redfish/rfputilities"
-	iris "github.com/kataras/iris/v12"
+	"fmt"
 	log "github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	pluginConfig "github.com/ODIM-Project/ODIM/plugin-redfish/config"
+	"github.com/ODIM-Project/ODIM/plugin-redfish/rfpmodel"
+	"github.com/ODIM-Project/ODIM/plugin-redfish/rfpresponse"
+	"github.com/ODIM-Project/ODIM/plugin-redfish/rfputilities"
+	iris "github.com/kataras/iris/v12"
 )
 
 //GetManagersCollection  Fetches details of the given resource from the device
@@ -46,17 +48,17 @@ func GetManagersCollection(ctx iris.Context) {
 	// if any error come while getting the device then request will be for  plugins manager
 	ctx.ReadJSON(&deviceDetails)
 	if deviceDetails.Host == "" {
-		var members = []*dmtf.Link{
-			&dmtf.Link{
+		var members = []rfpresponse.Link{
+			rfpresponse.Link{
 				Oid: "/ODIM/v1/Managers/" + pluginConfig.Data.RootServiceUUID,
 			},
 		}
 
-		managers := dmtf.Collection{
-			ODataContext: "/ODIM/v1/$metadata#ManagerCollection.ManagerCollection",
-			//ODataEtag:         "W/\"AA6D42B0\"",
-			ODataID:      uri,
-			ODataType:    "#ManagerCollection.ManagerCollection",
+		managers := rfpresponse.ManagersCollection{
+			OdataContext: "/ODIM/v1/$metadata#ManagerCollection.ManagerCollection",
+			//Etag:         "W/\"AA6D42B0\"",
+			OdataID:      uri,
+			OdataType:    "#ManagerCollection.ManagerCollection",
 			Description:  "Managers view",
 			Name:         "Managers",
 			Members:      members,
@@ -91,17 +93,17 @@ func GetManagersInfo(ctx iris.Context) {
 	// if any error come while getting the device then request will be for  plugins manager
 	ctx.ReadJSON(&deviceDetails)
 	if deviceDetails.Host == "" {
-		managers := dmtf.Manager{
-			ODataContext: "/ODIM/v1/$metadata#Manager.Manager",
+		managers := rfpresponse.Manager{
+			OdataContext: "/ODIM/v1/$metadata#Manager.Manager",
 			//Etag:            "W/\"AA6D42B0\"",
-			ODataID:         uri,
-			ODataType:       "#Manager.v1_3_3.Manager",
+			OdataID:         uri,
+			OdataType:       "#Manager.v1_3_3.Manager",
 			Name:            pluginConfig.Data.PluginConf.ID,
 			ManagerType:     "Service",
 			ID:              pluginConfig.Data.RootServiceUUID,
 			UUID:            pluginConfig.Data.RootServiceUUID,
 			FirmwareVersion: pluginConfig.Data.FirmwareVersion,
-			Status: &dmtf.Status{
+			Status: &rfpresponse.ManagerStatus{
 				State: "Enabled",
 			},
 		}
@@ -126,7 +128,7 @@ func getInfoFromDevice(uri string, deviceDetails rfpmodel.Device, ctx iris.Conte
 	}
 	redfishClient, err := rfputilities.GetRedfishClient()
 	if err != nil {
-		errMsg := "While trying to create the redfish client, got:" + err.Error()
+		errMsg := "Internal processing error: " + err.Error()
 		log.Error(errMsg)
 		ctx.StatusCode(http.StatusInternalServerError)
 		ctx.WriteString(errMsg)
@@ -148,11 +150,7 @@ func getInfoFromDevice(uri string, deviceDetails rfpmodel.Device, ctx iris.Conte
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		errMsg := "While trying to read the response body, got: " + err.Error()
-		log.Error(errMsg)
-		ctx.StatusCode(http.StatusInternalServerError)
-		ctx.WriteString(errMsg)
-		return
+		fmt.Printf(err.Error())
 	}
 
 	if resp.StatusCode == 401 {

@@ -16,6 +16,7 @@
 package rfphandler
 
 import (
+	"fmt"
 	pluginConfig "github.com/ODIM-Project/ODIM/plugin-redfish/config"
 	"github.com/ODIM-Project/ODIM/plugin-redfish/rfpmodel"
 	"github.com/ODIM-Project/ODIM/plugin-redfish/rfputilities"
@@ -45,10 +46,9 @@ func SimpleUpdate(ctx iris.Context) {
 	//Get device details from request
 	err := ctx.ReadJSON(&deviceDetails)
 	if err != nil {
-		errMsg := "Unable to collect data from request: " + err.Error()
-		log.Error(errMsg)
+		log.Error("Unable to collect data from request: " + err.Error())
 		ctx.StatusCode(http.StatusBadRequest)
-		ctx.WriteString(errMsg)
+		ctx.WriteString("Error: bad request.")
 		return
 	}
 
@@ -68,7 +68,7 @@ func SimpleUpdate(ctx iris.Context) {
 
 	redfishClient, err := rfputilities.GetRedfishClient()
 	if err != nil {
-		errMsg := "While trying to create the redfish client, got:" + err.Error()
+		errMsg := "Internal processing error: " + err.Error()
 		log.Error(errMsg)
 		ctx.StatusCode(http.StatusInternalServerError)
 		ctx.WriteString(errMsg)
@@ -77,19 +77,20 @@ func SimpleUpdate(ctx iris.Context) {
 	//Update BMC resource
 	resp, err := redfishClient.DeviceCall(device, uri, http.MethodPost)
 	if err != nil {
-		errorMessage := "While trying to update BMC resource, got: " + err.Error()
-		log.Error(errorMessage)
+		errorMessage := err.Error()
+		fmt.Println(err)
 		if resp == nil {
 			ctx.StatusCode(http.StatusInternalServerError)
-			ctx.WriteString(errorMessage)
+			ctx.WriteString("error while trying to update BMC resource: " + errorMessage)
 			return
 		}
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		body = []byte("While trying to read the response body, got: " + err.Error())
-		log.Error(string(body))
+		errorMessage := err.Error()
+		fmt.Println(err)
+		ctx.WriteString("Error while trying to update BMC resource: " + errorMessage)
 	}
 
 	ctx.StatusCode(resp.StatusCode)
@@ -115,10 +116,9 @@ func StartUpdate(ctx iris.Context) {
 	//Get device details from request
 	err := ctx.ReadJSON(&deviceDetails)
 	if err != nil {
-		errMsg := "Error while trying to collect data from request: " + err.Error()
-		log.Error(errMsg)
+		log.Error("Error while trying to collect data from request: " + err.Error())
 		ctx.StatusCode(http.StatusBadRequest)
-		ctx.WriteString(errMsg)
+		ctx.WriteString("Error: bad request.")
 		return
 	}
 
@@ -130,7 +130,7 @@ func StartUpdate(ctx iris.Context) {
 
 	redfishClient, err := rfputilities.GetRedfishClient()
 	if err != nil {
-		errMsg := "While trying to create the redfish client, got:" + err.Error()
+		errMsg := "Internal processing error: " + err.Error()
 		log.Error(errMsg)
 		ctx.StatusCode(http.StatusInternalServerError)
 		ctx.WriteString(errMsg)
@@ -139,19 +139,20 @@ func StartUpdate(ctx iris.Context) {
 	//Update BMC resource
 	resp, err := redfishClient.DeviceCall(device, uri, http.MethodPost)
 	if err != nil {
-		errorMessage := "While trying to update BMC resource, got: " + err.Error()
-		log.Error(errorMessage)
+		errorMessage := err.Error()
+		fmt.Println(err)
 		if resp == nil {
 			ctx.StatusCode(http.StatusInternalServerError)
-			ctx.WriteString(errorMessage)
+			ctx.WriteString("error while trying to update BMC resource: " + errorMessage)
 			return
 		}
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		body = []byte("While trying to read the response body, got: " + err.Error())
-		log.Error(string(body))
+		errorMessage := err.Error()
+		fmt.Println(err)
+		ctx.WriteString("Error while trying to update BMC resource: " + errorMessage)
 	}
 
 	ctx.StatusCode(resp.StatusCode)

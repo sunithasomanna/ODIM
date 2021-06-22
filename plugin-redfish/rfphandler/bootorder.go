@@ -16,6 +16,7 @@
 package rfphandler
 
 import (
+	"fmt"
 	pluginConfig "github.com/ODIM-Project/ODIM/plugin-redfish/config"
 	"github.com/ODIM-Project/ODIM/plugin-redfish/rfpmodel"
 	"github.com/ODIM-Project/ODIM/plugin-redfish/rfputilities"
@@ -51,10 +52,9 @@ func SetDefaultBootOrder(ctx iris.Context) {
 	//Get device details from request
 	err := ctx.ReadJSON(&deviceDetails)
 	if err != nil {
-		errorMessage := "Unable to collect data from request: " + err.Error()
-		log.Error(errorMessage)
+		log.Error("Unable to collect data from request: " + err.Error())
 		ctx.StatusCode(http.StatusBadRequest)
-		ctx.WriteString(errorMessage)
+		ctx.WriteString("Error: bad request.")
 		return
 	}
 
@@ -66,7 +66,7 @@ func SetDefaultBootOrder(ctx iris.Context) {
 
 	redfishClient, err := rfputilities.GetRedfishClient()
 	if err != nil {
-		errMsg := "While trying to create the redfish client, got:" + err.Error()
+		errMsg := "Internal processing error: " + err.Error()
 		log.Error(errMsg)
 		ctx.StatusCode(http.StatusInternalServerError)
 		ctx.WriteString(errMsg)
@@ -76,19 +76,20 @@ func SetDefaultBootOrder(ctx iris.Context) {
 	//Subscribe to Events
 	resp, err := redfishClient.SetDefaultBootOrder(device, uri)
 	if err != nil {
-		errorMessage := "While trying to set default boot order, got: " + err.Error()
-		log.Error(errorMessage)
+		errorMessage := err.Error()
+		fmt.Println(err)
 		if resp == nil {
 			ctx.StatusCode(http.StatusInternalServerError)
-			ctx.WriteString(errorMessage)
+			ctx.WriteString("error while trying to set default boot order: " + errorMessage)
 			return
 		}
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		body = []byte("While trying to set default boot order, got: " + err.Error())
-		log.Error(string(body))
+		errorMessage := err.Error()
+		fmt.Println(err)
+		ctx.WriteString("Error while trying to set default boot order: " + errorMessage)
 	}
 
 	ctx.StatusCode(resp.StatusCode)

@@ -15,8 +15,6 @@
 //Package dpmodel ...
 package dpmodel
 
-import "sync"
-
 //Device struct definition
 type Device struct {
 	Host     string `json:"ManagerAddress"`
@@ -55,59 +53,9 @@ type Hpe struct {
 	RetireOldEventInMinutes        int `json:"RetireOldEventInMinutes"`
 }
 
-// StartUpData holds the required data for plugin startup
-type StartUpData struct {
-	RequestType           string                `json:"RequestType"`
-	ResyncEvtSubscription bool                  `json:"ResyncEvtSubscription"`
-	Devices               map[string]DeviceData `json:"Devices"`
-}
-
-// DeviceInventory is for storing the device inventory
-var DeviceInventory *DeviceInventoryData
-
-// DeviceInventoryData holds the list of all managed devices
-type DeviceInventoryData struct {
-	mutex  *sync.RWMutex
-	Device map[string]DeviceData
-}
-
-// DeviceData holds device credentials, event subcription and trigger details
-type DeviceData struct {
-	UserName              string                 `json:"UserName"`
-	Password              []byte                 `json:"Password"`
-	Address               string                 `json:"Address"`
-	Operation             string                 `json:"Operation"`
-	EventSubscriptionInfo *EventSubscriptionInfo `json:"EventSubscriptionInfo"`
-}
-
-// EventSubscriptionInfo holds the event subscription details of a device
-type EventSubscriptionInfo struct {
-	EventTypes []string `json:"EventTypes"`
+// Startup struct recieve request on Startup call
+type Startup struct {
 	Location   string   `json:"Location"`
-}
-
-// init is for intializing global variables defined in this package
-func init() {
-	DeviceInventory = &DeviceInventoryData{
-		mutex:  &sync.RWMutex{},
-		Device: make(map[string]DeviceData),
-	}
-}
-
-// AddDeviceToInventory is for adding new device to the inventory
-// by acquiring write lock
-func AddDeviceToInventory(uuid string, deviceData DeviceData) {
-	DeviceInventory.mutex.Lock()
-	defer DeviceInventory.mutex.Unlock()
-	DeviceInventory.Device[uuid] = deviceData
-	return
-}
-
-// DeleteDeviceInInventory is for deleting device in the inventory
-// by acquiring write lock
-func DeleteDeviceInInventory(uuid string) {
-	DeviceInventory.mutex.Lock()
-	defer DeviceInventory.mutex.Unlock()
-	delete(DeviceInventory.Device, uuid)
-	return
+	EventTypes []string `json:"EventTypes,omitempty"`
+	Device     Device   `json:"Device"`
 }

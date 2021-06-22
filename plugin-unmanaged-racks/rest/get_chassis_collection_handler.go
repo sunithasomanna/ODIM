@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2020 Intel Corporation
- * (C) Copyright [2021] Hewlett Packard Enterprise Development LP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +21,6 @@ import (
 	"net/http"
 
 	"github.com/ODIM-Project/ODIM/plugin-unmanaged-racks/db"
-	"github.com/ODIM-Project/ODIM/plugin-unmanaged-racks/logging"
 	"github.com/ODIM-Project/ODIM/plugin-unmanaged-racks/redfish"
 
 	"github.com/kataras/iris/v12/context"
@@ -37,10 +35,8 @@ type getChassisCollectionHandler struct {
 }
 
 func (c *getChassisCollectionHandler) handle(ctx context.Context) {
-	logging.Debug("Process GetChassisCollection request")
 	searchKey := db.CreateKey("Chassis")
 	keys, err := c.dao.Keys(stdCtx.TODO(), searchKey.WithWildcard().String()).Result()
-	logging.Debug("List of chassis entries:", keys)
 	if err != nil {
 		ctx.StatusCode(http.StatusBadRequest)
 	}
@@ -55,11 +51,9 @@ func (c *getChassisCollectionHandler) handle(ctx context.Context) {
 		)
 		collection.MembersCount++
 	}
-	logging.Debug("Populated collection with chassis IDs")
 
 	ctx.StatusCode(http.StatusOK)
 	ctx.JSON(&collection)
-	logging.Debug("Finished processing GetChassisCollection request")
 }
 
 func createChassisCollection() redfish.Collection {

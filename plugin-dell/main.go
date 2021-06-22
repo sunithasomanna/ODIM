@@ -14,8 +14,6 @@
 package main
 
 import (
-	"encoding/json"
-	"net"
 	"net/http"
 	"os"
 	"time"
@@ -76,10 +74,10 @@ func main() {
 }
 
 func app() {
-	go sendStartupEvent()
-	go eventsrouters()
-
 	app := routers()
+	go func() {
+		eventsrouters()
+	}()
 	conf := &lutilconf.HTTPConfig{
 		Certificate:   &config.Data.KeyCertConf.Certificate,
 		PrivateKey:    &config.Data.KeyCertConf.PrivateKey,
@@ -254,29 +252,4 @@ func eventsrouters() {
 func intializePluginStatus() {
 	dputilities.Status.Available = "yes"
 	dputilities.Status.Uptime = time.Now().Format(time.RFC3339)
-}
-
-// sendStartupEvent is for sending startup event
-func sendStartupEvent() {
-	// grace wait time for plugin to be functional
-	time.Sleep(3 * time.Second)
-
-	startupEvt := common.PluginStatusEvent{
-		Name:         "Plugin startup event",
-		Type:         "PluginStarted",
-		Timestamp:    time.Now().String(),
-		OriginatorID: config.Data.PluginConf.Host,
-	}
-
-	request, _ := json.Marshal(startupEvt)
-	event := common.Events{
-		IP:        net.JoinHostPort(config.Data.PluginConf.Host, config.Data.PluginConf.Port),
-		Request:   request,
-		EventType: "PluginStartUp",
-	}
-
-	done := make(chan bool)
-	events := []interface{}{event}
-	go common.RunWriteWorkers(dphandler.In, events, 1, done)
-	log.Info("successfully sent startup event")
 }
