@@ -1314,148 +1314,149 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 13. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
-1. ## Deploying the Lenovo plugin
+     ## Deploying the Lenovo plugin
 
-   **Prerequisites**
+     **Prerequisites**
 
-   Kubernetes cluster is set up and the resource aggregator is successfully deployed.
+     Kubernetes cluster is set up and the resource aggregator is successfully deployed.
 
-   1. Create a directory called `plugins` on the deployment node.
+     1. Create a directory called `plugins` on the deployment node.
 
-      ```
-      $ mkdir plugins
-      ```
+        ```
+        $ mkdir plugins
+        ```
 
-   2. In the `plugins` directory, create a directory called `lenovoplugin`.
+     2. In the `plugins` directory, create a directory called `lenovoplugin`.
 
-      ```
-      $ mkdir ~/plugins/lenovoplugin
-      ```
+        ```
+        $ mkdir ~/plugins/lenovoplugin
+        ```
 
-   3. Log in to each cluster node and run the following commands: 
+     3. Log in to each cluster node and run the following commands: 
 
-      ```
-      $ sudo mkdir -p /var/log/lenovoplugin_logs/
-      ```
+        ```
+        $ sudo mkdir -p /var/log/lenovoplugin_logs/
+        ```
 
-      ```
-      $ sudo chown odimra:odimra /var/log/lenovoplugin_logs
-      ```
+        ```
+        $ sudo chown odimra:odimra /var/log/lenovoplugin_logs
+        ```
 
-   4. On the deployment node, copy the Lenovo plugin configuration file to `~/plugins/lenovoplugin`:
+     4. On the deployment node, copy the Lenovo plugin configuration file to `~/plugins/lenovoplugin`:
 
-      ```
-      $ cp ~/ODIM/odim-controller/helmcharts/lenovoplugin/lenovoplugin-config.yaml ~/plugins/lenovoplugin
-      ```
+        ```
+        $ cp ~/ODIM/odim-controller/helmcharts/lenovoplugin/lenovoplugin-config.yaml ~/plugins/lenovoplugin
+        ```
 
-   5. Open the Lenovo plugin configuration YAML file. 
+     5. Open the Lenovo plugin configuration YAML file. 
 
-      ```
-      $ vi ~/plugins/lenovoplugin/lenovoplugin-config.yaml
-      ```
+        ```
+        $ vi ~/plugins/lenovoplugin/lenovoplugin-config.yaml
+        ```
 
-      **Sample lenovoplugin-config.yaml file:**
+        **Sample lenovoplugin-config.yaml file:**
 
-      ```
-      odimra:
-       namespace: odim
-       groupID: 2021
-      lenovoplugin:
-       hostname: knode1
-       eventListenerNodePort: 30089
-       lenovoPluginRootServiceUUID: 7a38b735-8b9f-48a0-b3e7-e5a180567d37
-       username: admin
-       password: sTfTyTZFvNj5zU5Tt0TfyDYU-ye3_ZqTMnMIj-LAeXaa8vCnBqq8Ga7zV6ZdfqQCdSAzmaO5AJxccD99UHLVlQ==
-       lbHost: 10.24.1.232
-       lbPort: 30089
-       logPath: /var/log/lenovoplugin_logs
-      
-      ```
+        ```
+        odimra:
+         namespace: odim
+         groupID: 2021
+        lenovoplugin:
+         hostname: knode1
+         eventListenerNodePort: 30089
+         lenovoPluginRootServiceUUID: 7a38b735-8b9f-48a0-b3e7-e5a180567d37
+         username: admin
+         password: sTfTyTZFvNj5zU5Tt0TfyDYU-ye3_ZqTMnMIj-LAeXaa8vCnBqq8Ga7zV6ZdfqQCdSAzmaO5AJxccD99UHLVlQ==
+         lbHost: 10.24.1.232
+         lbPort: 30089
+         logPath: /var/log/lenovoplugin_logs
+        
+        ```
 
-   6. Update the following mandatory parameters in the plugin configuration file: 
+     6. Update the following mandatory parameters in the plugin configuration file: 
 
-      - **hostname**: Hostname of the cluster node where the Lenovo plugin will be installed.
-      - **lbHost**: IP address of the cluster node where the Lenovo plugin will be installed.
-      - **lbPort**: Default port is 30089.
-      - **lenovoPluginRootServiceUUID**: RootServiceUUID to be used by the Lenovo plugin service.
+        - **hostname**: Hostname of the cluster node where the Lenovo plugin will be installed.
+        - **lbHost**: IP address of the cluster node where the Lenovo plugin will be installed.
+        - **lbPort**: Default port is 30089.
+        - **lenovoPluginRootServiceUUID**: RootServiceUUID to be used by the Lenovo plugin service.
 
-      Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+        Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
-   7. Generate the Helm package for the Lenovo plugin on the deployment node.
+     7. Generate the Helm package for the Lenovo plugin on the deployment node.
 
-      1. Navigate to `odim-controller/helmcharts/lenovoplugin`.
+        1. Navigate to `odim-controller/helmcharts/lenovoplugin`.
+
+           ```
+           $ cd ~/ODIM/odim-controller/helmcharts/lenovoplugin
+           ```
+
+        2. Run the following command to create `lenovoplugin` Helm package at `~/plugins/lenovoplugin`:
+
+           ```
+           $ helm package lenovoplugin -d ~/plugins/lenovoplugin
+           ```
+
+           The Helm package for the Lenovo plugin is created in the tgz format.
+
+     8. Save the Lenovo plugin Docker image on the deployment node at `~/plugins/lenovoplugin`.
+
+        ```
+         $ sudo docker save lenovoplugin:1.0 -o ~/plugins/lenovoplugin/lenovoplugin.tar
+        ```
+
+     9. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the plugin](#configuring-proxy-server-for-a-plugin-version). 
+
+        Skip this step if it is a one-node cluster configuration.
+
+     10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
          ```
-         $ cd ~/ODIM/odim-controller/helmcharts/lenovoplugin
+          $ cd ~/ODIM/odim-controller/scripts
          ```
 
-      2. Run the following command to create `lenovoplugin` Helm package at `~/plugins/lenovoplugin`:
+     11. Run the following command to install the Lenovo plugin: 
 
          ```
-         $ helm package lenovoplugin -d ~/plugins/lenovoplugin
+         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin lenovo plugin
          ```
 
-         The Helm package for the Lenovo plugin is created in the tgz format.
+     12. Run the following command on the cluster nodes to verify the Lenovo plugin pod is up and running: 
 
-   8. Save the Lenovo plugin Docker image on the deployment node at `~/plugins/lenovoplugin`.
+         `$ kubectl get pods -n odim`
 
-      ```
-       $ sudo docker save lenovoplugin:1.0 -o ~/plugins/lenovoplugin/lenovoplugin.tar
-      ```
+         Example output of the Lenovo plugin pod details:
 
-   9. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the plugin](#configuring-proxy-server-for-a-plugin-version). 
+         | NAME                         | READY | STATUS  | RESTARTS | AGE   |
+         | ---------------------------- | ----- | ------- | -------- | ----- |
+         | lenovoplugin-5fc4b6788-2xx97 | 1/1   | Running | 0        | 4d22h |
 
-      Skip this step if it is a one-node cluster configuration.
+     13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
 
-   10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
+              $ vi kube_deploy_nodes.yaml
 
-       ```
-        $ cd ~/ODIM/odim-controller/scripts
-       ```
+     14. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
 
-   11. Run the following command to install the Lenovo plugin: 
+         | Parameter                    | Value                                                        |
+         | ---------------------------- | ------------------------------------------------------------ |
+         | connectionMethodConf         | The connection method associated with Lenovo: ConnectionMethodVariant: `Compute:BasicAuth:LENOVO_v1.0.0`<br> |
+         | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying Lenovo plugin: `lenovoplugin`. |
+         | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying Lenovo: `lenovoplugin` . |
+         | odimPluginPath               | The path of the directory where the Lenovo Helm package, the `lenovoplugin` image, and the modified `lenovoplugin-config.yaml` are copied. |
 
-       ```
-       $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin lenovo plugin
-       ```
+              Example:
+              
+              odimPluginPath: /home/bruce/plugins
+               connectionMethodConf:
+               - ConnectionMethodType: Redfish
+                 ConnectionMethodVariant: Compute:BasicAuth:LENOVO_v1.0.0
+                  odimraKafkaClientCertFQDNSan: lenovoplugin
+                  odimraServerCertFQDNSan: lenovoplugin
 
-   12. Run the following command on the cluster nodes to verify the Lenovo plugin pod is up and running: 
+     15. Run the following command: 
 
-       `$ kubectl get pods -n odim`
+             $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
 
-       Example output of the Lenovo plugin pod details:
+     16. [Add the Lenovo plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
-       | NAME                         | READY | STATUS  | RESTARTS | AGE   |
-       | ---------------------------- | ----- | ------- | -------- | ----- |
-       | lenovoplugin-5fc4b6788-2xx97 | 1/1   | Running | 0        | 4d22h |
-
-   13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
-
-            $ vi kube_deploy_nodes.yaml
-
-   14. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
-
-       | Parameter                    | Value                                                        |
-       | ---------------------------- | ------------------------------------------------------------ |
-       | connectionMethodConf         | The connection method associated with Lenovo: ConnectionMethodVariant: `Compute:BasicAuth:LENOVO_v1.0.0`<br> |
-       | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying Lenovo plugin: `lenovoplugin`. |
-       | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying Lenovo: `lenovoplugin` . |
-       | odimPluginPath               | The path of the directory where the Lenovo Helm package, the `lenovoplugin` image, and the modified `lenovoplugin-config.yaml` are copied. |
-
-            Example:
-            
-            odimPluginPath: /home/bruce/plugins
-             connectionMethodConf:
-             - ConnectionMethodType: Redfish
-               ConnectionMethodVariant: Compute:BasicAuth:LENOVO_v1.0.0
-                odimraKafkaClientCertFQDNSan: lenovoplugin
-                odimraServerCertFQDNSan: lenovoplugin
-
-   15. Run the following command: 
-
-           $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
-
-   16. [Add the Lenovo plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
 ## Adding a plugin into the Resource Aggregator for ODIM framework
 
@@ -1524,25 +1525,25 @@ The plugin you want to add is successfully deployed.
              }
        }
     }
-    ```
-    
+   ```
+   
     **Request payload parameters** 
-    
-    |Parameter|Type|Description|
-    |---------|----|-----------|
-    |HostName|String \(required\)<br> |It is the plugin service name and the port specified in the Kubernetes environment. For default plugin ports, see [Resource Aggregator for ODIM default ports](#resource-aggregator-for-odim-default-ports).<br>NOTE: If you are using a different port for a plugin, ensure that the port is greater than `45000`.|
-    |UserName|String \(required\)<br> |The plugin username. See default administrator account usernames of all the plugins in "Default plugin credentials".<br>|
-    |Password|String \(required\)<br> |The plugin password. See default administrator account passwords of all the plugins in "Default plugin credentials".<br> |
-    |ConnectionMethod|Array \(required\)<br> |Links to the connection methods that are used to communicate with this endpoint: `/redfish/v1/AggregationService/AggregationSources`.<br><blockquote>NOTE: Ensure that the connection method information for the plugin you want to add is updated in the odim-controller configuration file.<br></blockquote>To know which connection method to use, do the following:<br>    1.  Perform HTTP `GET` on: `/redfish/v1/AggregationService/ConnectionMethods`.<br>You will receive a list of links to available connection methods.<br>    2.  Perform HTTP `GET` on each link. Check the value of the `ConnectionMethodVariant` property in the JSON response. It displays the details of a plugin. Choose a connection method having the details of the plugin of your choice. For available connection method variants, see "Connection method variants" table.<br>|
-    
-    |Plugin|Default username|Default password|Connection method variant|
-    |------|----------------|----------------|------|
-    |GRF plugin|admin|GRFPlug!n12$4|Compute:BasicAuth:GRF\_v1.0.0|
-    |URP|admin|Plug!n12$4|Compute:BasicAuth:URP\_v1.0.0|
-    |Lenovo plugin|admin|Plug!n12$4|Compute:BasicAuth:LENOVO_v1.0.0|
-    
+   
+   |Parameter|Type|Description|
+   |---------|----|-----------|
+   |HostName|String \(required\)<br> |It is the plugin service name and the port specified in the Kubernetes environment. For default plugin ports, see [Resource Aggregator for ODIM default ports](#resource-aggregator-for-odim-default-ports).<br>NOTE: If you are using a different port for a plugin, ensure that the port is greater than `45000`.|
+   |UserName|String \(required\)<br> |The plugin username. See default administrator account usernames of all the plugins in "Default plugin credentials".<br>|
+   |Password|String \(required\)<br> |The plugin password. See default administrator account passwords of all the plugins in "Default plugin credentials".<br> |
+   |ConnectionMethod|Array \(required\)<br> |Links to the connection methods that are used to communicate with this endpoint: `/redfish/v1/AggregationService/AggregationSources`.<br><blockquote>NOTE: Ensure that the connection method information for the plugin you want to add is updated in the odim-controller configuration file.<br></blockquote>To know which connection method to use, do the following:<br>    1.  Perform HTTP `GET` on: `/redfish/v1/AggregationService/ConnectionMethods`.<br>You will receive a list of links to available connection methods.<br>    2.  Perform HTTP `GET` on each link. Check the value of the `ConnectionMethodVariant` property in the JSON response. It displays the details of a plugin. Choose a connection method having the details of the plugin of your choice. For available connection method variants, see "Connection method variants" table.<br>|
+   
+   |Plugin|Default username|Default password|Connection method variant|
+   |------|----------------|----------------|------|
+   |GRF plugin|admin|GRFPlug!n12$4|Compute:BasicAuth:GRF\_v1.0.0|
+   |URP|admin|Plug!n12$4|Compute:BasicAuth:URP\_v1.0.0|
+   |Lenovo plugin|admin|Plug!n12$4|Compute:BasicAuth:LENOVO_v1.0.0|
+   
     Use the following curl command to add the plugin:
-    
+   
     ```
     curl -i POST \
        -H 'Authorization:Basic {base64_encoded_string_of_<odim_username:odim_password>}' \
@@ -1559,26 +1560,27 @@ The plugin you want to add is successfully deployed.
     }' \
      'https://{odim_host}:30080/redfish/v1/AggregationService/AggregationSources' -k
     ```
-    
+   
     <blockquote>
         NOTE: To generate a base64 encoded string of `{odim_username:odim_password}`, run the following command:</blockquote>
-    
+   
     ```
     $ echo -n '{odim_username}:{odim_password}' | base64 -w0
     ```
-    
+   
     Replace `{base64_encoded_string_of_[odim_username:odim_password]}` with the generated base64 encoded string in the curl command. You will receive:
-    
+   
     - An HTTP `202 Accepted` status code.
     - A link to the task monitor associated with this operation in the response header.
-    
+   
     To know the status of this task, perform HTTP `GET` on the `taskmon` URI until the task is complete. If the plugin is added successfully, you will receive an HTTP `200 OK` status code.
-    
+   
     After the plugin is successfully added, it will also be available as a manager resource at:
-    
+   
        `/redfish/v1/Managers`.
+   
     For more information, refer to "Adding a plugin" in the [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
-    
+   
 2. To verify that the added plugin is active and running, do the following: 
     1. To get the list of all available managers, perform HTTP `GET` on: 
 
