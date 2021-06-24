@@ -1899,18 +1899,20 @@ Following are the two ways of scaling up the resources and services of Resource 
 Scaling down involves removing one or more worker nodes from an existing three-node cluster where the services of Resource Aggregator for ODIM are deployed.
 
 <blockquote>NOTE: You cannot remove controller nodes in a cluster.</blockquote>
+
 1. To remove a node, do the following: 
     1. Open the `kube\_deploy\_nodes.yaml` file on the deployment node.
     
-    2. Remove all the node entries under nodes except for the node that    you want to remove.
+    2. Remove all the node entries under nodes except for the node that  you want to remove.
     
-    3. Run the following command: 
-       ```
-       $ python3 odim-controller.py --rmnode kubernetes --config \
-       /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
-       ```
+    3. Run the following command:
     
-	4. Log in to each cluster node and remove the deleted node details from all the configuration files inside `/opt/nginx/servers`. 
+        ```
+        $ python3 odim-controller.py --rmnode kubernetes --config \
+        /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
+        ```
+    
+    4. Log in to each cluster node and remove the deleted node details from all the configuration files inside `/opt/nginx/servers`. 
     
     5. Run the following commands on the removed cluster node only: 
         ```
@@ -1926,7 +1928,7 @@ Scaling down involves removing one or more worker nodes from an existing three-n
         ```
         $ sudo systemctl restart nginx
         ```
-
+    
 2. To scale down the resource aggregator deployments, run the following command on the deployment node: 
 
     ```
