@@ -1905,10 +1905,10 @@ Scaling down involves removing one or more worker nodes from an existing three-n
     2. Remove all the node entries under nodes except for the node that    you want to remove. 
 
     3. Run the following command: 
-        ```
-        $ python3 odim-controller.py --rmnode kubernetes --config \
-     /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
-        ```
+       ```
+       $ python3 odim-controller.py --rmnode kubernetes --config \
+       /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
+       ```
     
 	4. Log in to each cluster node and remove the deleted node details from all the configuration files inside `/opt/nginx/servers`. 
     
@@ -2184,7 +2184,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
 </blockquote>
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
 	```
-   $ cat << EOF | sudo tee -a /etc/environment
+    $ cat << EOF | sudo tee -a /etc/environment
     http_proxy=${http_proxy}
     https_proxy=${https_proxy}
     no_proxy=${no_proxy}
