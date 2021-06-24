@@ -1905,7 +1905,6 @@ Scaling down involves removing one or more worker nodes from an existing three-n
     2. Remove all the node entries under nodes except for the node that    you want to remove. 
 
     3. Run the following command: 
-    
         ```
         $ python3 odim-controller.py --rmnode kubernetes --config \
      /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
@@ -2184,7 +2183,6 @@ Run the following commands:
 NOTE: Before performing the following steps, ensure the `http_proxy`, `https_proxy`, and `no_proxy` environment variables are set.
 </blockquote>
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
-   
 	```
    $ cat << EOF | sudo tee -a /etc/environment
     http_proxy=${http_proxy}
