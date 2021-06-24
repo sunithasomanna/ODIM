@@ -9,15 +9,14 @@
 
 2. [Resource Aggregator for ODIM compatibility matrix](#resource-aggregator-for-odim-compatibility-matrix)
 3. [Predeployment procedures](#predeployment-procedures)
-
-   - [Setting up the environment](#setting-up-the-environment)
-
-   - [Pulling the Docker images of all the Kubernetes microservices](#pulling-the-docker-images-of-all-the-kubernetes-microservices)
-
-   - [Building Docker images of all the services](#building-docker-images-of-all-the-services)
-
-   - [Generating an encrypted node password](#generating-an-encrypted-node-password)
-
+- [Setting up the environment](#setting-up-the-environment)
+  
+- [Pulling the Docker images of all the Kubernetes microservices](#pulling-the-docker-images-of-all-the-kubernetes-microservices)
+  
+- [Building Docker images of all the services](#building-docker-images-of-all-the-services)
+  
+- [Generating an encrypted node password](#generating-an-encrypted-node-password)
+  
 4. [Deploying Resource Aggregator for ODIM and the plugins](#deploying-resource-aggregator-for-odim-and-the-plugins)
    - [Deploying the resource aggregator services](#deploying-the-resource-aggregator-services)
    - [Deploying the Unmanaged Rack Plugin \(URP\)](#deploying-the-unmanaged-rack-plugin)
@@ -227,7 +226,7 @@ The following table lists the software components and their versions that are co
 # Predeployment procedures
 
 1. [Set up the environment](#setting-up-the-environment)
-2. [Pull the Docker images of all the Kubernetes microservices](#Pulling the Docker images of all the Kubernetes microservices)
+2. [Pull the Docker images of all the Kubernetes microservices](#Pulling-the-Docker-images-of-all-the-Kubernetes-microservices)
 3. [Build the Docker images of all the services](#building-docker-images-of-all-the-services)
 4. [Generate an encrypted node password using the odim-vault tool](#generating-an-encrypted-node-password)
 
