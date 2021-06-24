@@ -10,11 +10,8 @@
 2. [Resource Aggregator for ODIM compatibility matrix](#resource-aggregator-for-odim-compatibility-matrix)
 3. [Predeployment procedures](#predeployment-procedures)
    - [Setting up the environment](#setting-up-the-environment)
-  
    - [Pulling the Docker images of all the Kubernetes microservices](#pulling-the-docker-images-of-all-the-kubernetes-microservices)
-  
    - [Building Docker images of all the services](#building-docker-images-of-all-the-services)
-  
    - [Generating an encrypted node password](#generating-an-encrypted-node-password)
 4. [Deploying Resource Aggregator for ODIM and the plugins](#deploying-resource-aggregator-for-odim-and-the-plugins)
    - [Deploying the resource aggregator services](#deploying-the-resource-aggregator-services)
