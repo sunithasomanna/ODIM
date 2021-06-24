@@ -427,7 +427,7 @@ The following table lists the software components and their versions that are co
       $ cd ODIM
       ```
       
-	3. ```
+   3. ```
       $ export ODIMRA_USER_ID=2021
       ```
 	   
@@ -447,7 +447,6 @@ The following table lists the software components and their versions that are co
 	   ![Cluster node](docs/images/odimra_images.png)
 	   
 	7. Pull the reloader and busybox images by using the following commands:
-	
 	   ```
 	$ docker pull stakater/reloader:v0.0.76
 	   ```
@@ -464,7 +463,7 @@ The following table lists the software components and their versions that are co
     Example: `docker save -o api.tar api:1.0`
 
     | **Docker image name** | **Version** | **Docker image bundle name** |
-| :-------------------- | ----------- | ---------------------------- |
+    | :-------------------- | ----------- | ---------------------------- |
     | account-session       | 1.0         | account-session.tar          |
     | aggregation           | 1.0         | aggregation.tar              |
     | api                   | 1.0         | api.tar                      |
