@@ -446,12 +446,11 @@ The following table lists the software components and their versions that are co
 	   
 	   ![Cluster node](docs/images/odimra_images.png)
 	   
-	7. Pull the reloader and busybox images by using the following commands:
-	   ```
-	$ docker pull stakater/reloader:v0.0.76
-	   ```
+	7. Pull the reloader and busybox images using the following commands:
 	   
 	   ```
+	   $ docker pull stakater/reloader:v0.0.76
+	   
 	   $ docker pull busybox:1.33
 	   ```
 	
@@ -806,21 +805,21 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
     3. Enable the non-root user to access the Kubernetes command-line tool \(kubectl\) on the cluster nodes. Run the following commands on each cluster node:
 
         ```
-$ mkdir -p $HOME/.kube
+		$ mkdir -p $HOME/.kube
         ```
         
         ```
-$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+		$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
         ```
         
         ```
-$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+		$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
         ```
     
     4. Verify that the Kubernetes pods are up and running in the cluster nodes. Run the following command on each cluster node:
     
         ```
-$ kubectl get pods -n kube-system -o wide
+		$ kubectl get pods -n kube-system -o wide
         ```
     
         The following output is displayed.
