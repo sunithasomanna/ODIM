@@ -1901,9 +1901,7 @@ Scaling down involves removing one or more worker nodes from an existing three-n
 <blockquote>NOTE: You cannot remove controller nodes in a cluster.</blockquote>
 1. To remove a node, do the following: 
     1. Open the `kube\_deploy\_nodes.yaml` file on the deployment node.
-    
     2. Remove all the node entries under nodes except for the node that    you want to remove. 
-
     3. Run the following command: 
        ```
        $ python3 odim-controller.py --rmnode kubernetes --config \
