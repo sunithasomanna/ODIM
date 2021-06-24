@@ -100,6 +100,9 @@
 - [Managers](#managers)
   * [Collection of managers](#collection-of-managers)
   * [Single manager](#single-manager)
+  * [VirtualMedia](#virtualmedia)
+    + [Viewing the VirtualMedia collection](#viewing-the-virtualmedia-collection)
+    + [Viewing a VirtualMedia Instance](#viewing-a-virtualmedia-instance)
 - [Software and firmware inventory](#software-and-firmware-inventory)
   * [Viewing the update service root](#viewing-the-update-service-root)
   * [Viewing the firmware inventory](#viewing-the-firmware-inventory)
@@ -6280,6 +6283,114 @@ curl -i GET \
 }
 ```
 
+## VirtualMedia
+
+VirtualMedia enables you to connect remote storage media (such as CD-ROM, USB mass storage, ISO image, and floppy disk) to a target server on a network. The target server can access the remote media, read from and write to it as if it were physically connected to the server USB port.
+
+Resource Aggregator for ODIM exposes Redfish `VirtualMedia` APIs to connect the remote storage media to your servers.
+
+**Supported APIs**:
+
+| API URI                                                      | Operation Applicable | Required privileges   |
+| ------------------------------------------------------------ | -------------------- | --------------------- |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia                | GET                  | `Login`               |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID} | GET                  | `Login`               |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia | POST                 | `ConfigureComponents` |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia | POST                 | `ConfigureComponents` |
+
+>**NOTE:**
+>Before accessing these endpoints, ensure that the user has the required privileges. If you access these endpoints without necessary privileges, you will receive an HTTP `403 Forbidden` error.
+
+### Viewing the VirtualMedia collection
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia`              |
+| **Description**    | This operation lists all virtualmedia collections available in Resource Aggregator for ODIM. |
+| **Returns**        | A list of links to all the available virtualmedia collections. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i GET \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+ 'https://{odim_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia'
+```
+
+>**Sample response body**
+
+```
+{
+"@odata.context": "/redfish/v1/$metadata#VirtualMediaCollection.VirtualMediaCollection",
+"@odata.id": "/redfish/v1/Managers/1/VirtualMedia/",
+"@odata.type": "#VirtualMediaCollection.VirtualMediaCollection",
+"Description": "Virtual Media Services Settings",
+"Name": "Virtual Media Services",
+"Members": [
+{
+"@odata.id": "/redfish/v1/Managers/1/VirtualMedia/1/"
+},
+{
+"@odata.id": "/redfish/v1/Managers/1/VirtualMedia/2/"
+}
+],
+"Members@odata.count": 2
+}
+```
+
+### Viewing a VirtualMedia Instance
+
+| <strong>Method</strong>         | `GET`                                                        |
+| ------------------------------- | ------------------------------------------------------------ |
+| <strong>URI</strong>            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}` |
+| <strong>Description</strong>    | This action retrieves information about a specific virtualmedia instance. |
+| <strong>Returns</strong>        | JSON schema representing this virtualmedia instance.         |
+| <strong>Response Code</strong>  | On success, `200 Ok`                                         |
+| <strong>Authentication</strong> | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i GET \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+ 'https://{odim_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}'
+```
+
+
+>**Sample response body**
+
+```
+{
+"@odata.context": "/redfish/v1/$metadata#VirtualMedia.VirtualMedia",
+"@odata.etag": "W/\"3B0F66BA\"",
+"@odata.id": "/redfish/v1/Managers/1/VirtualMedia/1/",
+"@odata.type": "#VirtualMedia.v1_3_2.VirtualMedia",
+Actions{
+
+"#VirtualMedia.EjectMedia": {
+"target": "/redfish/v1/Managers/1/VirtualMedia/1/Actions/VirtualMedia.EjectMedia/"
+},
+"#VirtualMedia.InsertMedia": {
+"target": "/redfish/v1/Managers/1/VirtualMedia/1/Actions/VirtualMedia.InsertMedia/"
+}
+}
+
+"Id": "CD1",
+"Name": "Virtual CD",
+"MediaTypes": [ "CD", "DVD" ],
+"Image": "redfish.dmtf.org/freeImages/freeOS.1.1.iso",
+"ImageName": "mymedia-read-only",
+"ConnectedVia": "Applet",
+"Inserted": true,
+"WriteProtected": false
+Password
+UserName
+TransferMethod
+TransferProtocolType
+}
+```
 
 
 
