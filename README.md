@@ -908,8 +908,8 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      The following JSON response is returned:
      
      ```
-   {
-     	   "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
+     {
+     	   																	"@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
      	   "@odata.id":"/redfish/v1/",
      	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
      	   "Id":"RootService",
@@ -959,6 +959,8 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
      	}
      ```
+     
+     
      
      If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
 
