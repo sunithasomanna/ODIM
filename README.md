@@ -1313,148 +1313,125 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 13. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
-     ## Deploying the Lenovo plugin
+## Deploying the Lenovo plugin
 
-     **Prerequisites**
+**Prerequisites**
 
-     Kubernetes cluster is set up and the resource aggregator is successfully deployed.
+Kubernetes cluster is set up and the resource aggregator is successfully deployed.
 
-     1. Create a directory called `plugins` on the deployment node.
+1. Create a directory called `plugins` on the deployment node.
 
-        ```
         $ mkdir plugins
-        ```
+    
+2. In the `plugins` directory, create a directory called `lenovoplugin`.
 
-     2. In the `plugins` directory, create a directory called `lenovoplugin`.
-
-        ```
         $ mkdir ~/plugins/lenovoplugin
-        ```
+    
+3. Log in to each cluster node and run the following commands: 
 
-     3. Log in to each cluster node and run the following commands: 
-
-        ```
         $ sudo mkdir -p /var/log/lenovoplugin_logs/
-        ```
-
-        ```
-        $ sudo chown odimra:odimra /var/log/lenovoplugin_logs
-        ```
-
-     4. On the deployment node, copy the Lenovo plugin configuration file to `~/plugins/lenovoplugin`:
-
-        ```
-        $ cp ~/ODIM/odim-controller/helmcharts/lenovoplugin/lenovoplugin-config.yaml ~/plugins/lenovoplugin
-        ```
-
-     5. Open the Lenovo plugin configuration YAML file. 
-
-        ```
-        $ vi ~/plugins/lenovoplugin/lenovoplugin-config.yaml
-        ```
-
-        **Sample lenovoplugin-config.yaml file:**
-
-        ```
-        odimra:
-         namespace: odim
-         groupID: 2021
-        lenovoplugin:
-         hostname: knode1
-         eventListenerNodePort: 30089
-         lenovoPluginRootServiceUUID: 7a38b735-8b9f-48a0-b3e7-e5a180567d37
-         username: admin
-         password: sTfTyTZFvNj5zU5Tt0TfyDYU-ye3_ZqTMnMIj-LAeXaa8vCnBqq8Ga7zV6ZdfqQCdSAzmaO5AJxccD99UHLVlQ==
-         lbHost: 10.24.1.232
-         lbPort: 30089
-         logPath: /var/log/lenovoplugin_logs
         
-        ```
+        $ sudo chown odimra:odimra /var/log/lenovoplugin_logs
 
-     6. Update the following mandatory parameters in the plugin configuration file: 
+4. On the deployment node, copy the Lenovo plugin configuration file to `~/plugins/lenovoplugin`:
 
-        - **hostname**: Hostname of the cluster node where the Lenovo plugin will be installed.
-        - **lbHost**: IP address of the cluster node where the Lenovo plugin will be installed.
-        - **lbPort**: Default port is 30089.
-        - **lenovoPluginRootServiceUUID**: RootServiceUUID to be used by the Lenovo plugin service.
+        $ cp ~/ODIM/odim-controller/helmcharts/lenovoplugin/lenovoplugin-config.yaml ~/plugins/lenovoplugin
+    
+5. Open the Lenovo plugin configuration YAML file. 
 
-        Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+        $ vi ~/plugins/lenovoplugin/lenovoplugin-config.yaml
+    **Sample lenovoplugin-config.yaml file:**
+    
+```
+    odimra:
+ namespace: odim
+     groupID: 2021
+    lenovoplugin:
+     hostname: knode1
+     eventListenerNodePort: 30089
+     lenovoPluginRootServiceUUID: 7a38b735-8b9f-48a0-b3e7-e5a180567d37
+     username: admin
+     password: sTfTyTZFvNj5zU5Tt0TfyDYU-ye3_ZqTMnMIj-LAeXaa8vCnBqq8Ga7zV6ZdfqQCdSAzmaO5AJxccD99UHLVlQ==
+     lbHost: 10.24.1.232
+     lbPort: 30089
+     logPath: /var/log/lenovoplugin_logs
+    ```
+    
+6. Update the following mandatory parameters in the plugin configuration file: 
 
-     7. Generate the Helm package for the Lenovo plugin on the deployment node.
+    - **hostname**: Hostname of the cluster node where the Lenovo plugin will be installed.
+    - **lbHost**: IP address of the cluster node where the Lenovo plugin will be installed.
+    - **lbPort**: Default port is 30089.
+    - **lenovoPluginRootServiceUUID**: RootServiceUUID to be used by the Lenovo plugin service.
 
-        1. Navigate to `odim-controller/helmcharts/lenovoplugin`.
+    Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
-           ```
+7. Generate the Helm package for the Lenovo plugin on the deployment node.
+
+   1. Navigate to `odim-controller/helmcharts/lenovoplugin`.
+
            $ cd ~/ODIM/odim-controller/helmcharts/lenovoplugin
-           ```
+       
+   2. Run the following command to create `lenovoplugin` Helm package at `~/plugins/lenovoplugin`:
 
-        2. Run the following command to create `lenovoplugin` Helm package at `~/plugins/lenovoplugin`:
-
-           ```
            $ helm package lenovoplugin -d ~/plugins/lenovoplugin
-           ```
+       The Helm package for the Lenovo plugin is created in the tgz format.
 
-           The Helm package for the Lenovo plugin is created in the tgz format.
+8. Save the Lenovo plugin Docker image on the deployment node at `~/plugins/lenovoplugin`.
 
-     8. Save the Lenovo plugin Docker image on the deployment node at `~/plugins/lenovoplugin`.
+        $ sudo docker save lenovoplugin:1.0 -o ~/plugins/lenovoplugin/lenovoplugin.tar
 
-        ```
-         $ sudo docker save lenovoplugin:1.0 -o ~/plugins/lenovoplugin/lenovoplugin.tar
-        ```
+9. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the plugin](#configuring-proxy-server-for-a-plugin-version). 
 
-     9. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the plugin](#configuring-proxy-server-for-a-plugin-version). 
+    Skip this step if it is a one-node cluster configuration.
 
-        Skip this step if it is a one-node cluster configuration.
+10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
-     10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
+           $ cd ~/ODIM/odim-controller/scripts
+        
 
-         ```
-          $ cd ~/ODIM/odim-controller/scripts
-         ```
+11. Run the following command to install the Lenovo plugin: 
 
-     11. Run the following command to install the Lenovo plugin: 
-
-         ```
          $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin lenovo plugin
-         ```
 
-     12. Run the following command on the cluster nodes to verify the Lenovo plugin pod is up and running: 
+12. Run the following command on the cluster nodes to verify the Lenovo plugin pod is up and running: 
 
-         `$ kubectl get pods -n odim`
+         $ kubectl get pods -n odim
+     Example output of the Lenovo plugin pod details:
 
-         Example output of the Lenovo plugin pod details:
+     | NAME                         | READY | STATUS  | RESTARTS | AGE   |
+     | ---------------------------- | ----- | ------- | -------- | ----- |
+     | lenovoplugin-5fc4b6788-2xx97 | 1/1   | Running | 0        | 4d22h |
 
-         | NAME                         | READY | STATUS  | RESTARTS | AGE   |
-         | ---------------------------- | ----- | ------- | -------- | ----- |
-         | lenovoplugin-5fc4b6788-2xx97 | 1/1   | Running | 0        | 4d22h |
+13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
 
-     13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
+         $ vi kube_deploy_nodes.yaml
 
-              $ vi kube_deploy_nodes.yaml
+14. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
 
-     14. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
+     | Parameter                    | Value                                                        |
+     | ---------------------------- | ------------------------------------------------------------ |
+     | connectionMethodConf         | The connection method associated with Lenovo: ConnectionMethodVariant: `Compute:BasicAuth:LENOVO_v1.0.0`<br> |
+     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying Lenovo plugin: `lenovoplugin`. |
+     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying Lenovo: `lenovoplugin` . |
+     | odimPluginPath               | The path of the directory where the Lenovo Helm package, the `lenovoplugin` image, and the modified `lenovoplugin-config.yaml` are copied. |
 
-         | Parameter                    | Value                                                        |
-         | ---------------------------- | ------------------------------------------------------------ |
-         | connectionMethodConf         | The connection method associated with Lenovo: ConnectionMethodVariant: `Compute:BasicAuth:LENOVO_v1.0.0`<br> |
-         | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying Lenovo plugin: `lenovoplugin`. |
-         | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying Lenovo: `lenovoplugin` . |
-         | odimPluginPath               | The path of the directory where the Lenovo Helm package, the `lenovoplugin` image, and the modified `lenovoplugin-config.yaml` are copied. |
+      Example:
 
-              Example:
-              
-              odimPluginPath: /home/bruce/plugins
-               connectionMethodConf:
-               - ConnectionMethodType: Redfish
-                 ConnectionMethodVariant: Compute:BasicAuth:LENOVO_v1.0.0
-                  odimraKafkaClientCertFQDNSan: lenovoplugin
-                  odimraServerCertFQDNSan: lenovoplugin
+     ```
+     odimPluginPath: /home/bruce/plugins
+      connectionMethodConf:
+      - ConnectionMethodType: Redfish
+        ConnectionMethodVariant: Compute:BasicAuth:LENOVO_v1.0.0
+        odimraKafkaClientCertFQDNSan: lenovoplugin
+        odimraServerCertFQDNSan: lenovoplugin
+     ```
 
-     15. Run the following command: 
+15. Run the following command: 
 
-             $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
 
-     16. [Add the Lenovo plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
+16. [Add the Lenovo plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
 
 ## Adding a plugin into the Resource Aggregator for ODIM framework
