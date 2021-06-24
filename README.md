@@ -1901,7 +1901,9 @@ Scaling down involves removing one or more worker nodes from an existing three-n
 <blockquote>NOTE: You cannot remove controller nodes in a cluster.</blockquote>
 1. To remove a node, do the following: 
     1. Open the `kube\_deploy\_nodes.yaml` file on the deployment node.
-    2. Remove all the node entries under nodes except for the node that    you want to remove. 
+    
+    2. Remove all the node entries under nodes except for the node that    you want to remove.
+    
     3. Run the following command: 
        ```
        $ python3 odim-controller.py --rmnode kubernetes --config \
@@ -1911,13 +1913,12 @@ Scaling down involves removing one or more worker nodes from an existing three-n
 	4. Log in to each cluster node and remove the deleted node details from all the configuration files inside `/opt/nginx/servers`. 
     
     5. Run the following commands on the removed cluster node only: 
-    
         ```
         $ sudo systemctl stop keepalived
         ```
     
         ```
-         $ sudo systemctl stop nginx
+        $ sudo systemctl stop nginx
         ```
     
     6. Run the following commands on the remaining cluster nodes: 
@@ -1925,7 +1926,6 @@ Scaling down involves removing one or more worker nodes from an existing three-n
         ```
         $ sudo systemctl restart nginx
         ```
-
 
 2. To scale down the resource aggregator deployments, run the following command on the deployment node: 
 
