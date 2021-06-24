@@ -1386,15 +1386,15 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
-           $ cd ~/ODIM/odim-controller/scripts
+        $ cd ~/ODIM/odim-controller/scripts
     
 11. Run the following command to install the Lenovo plugin: 
 
-         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin lenovo plugin
+        $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin lenovo plugin
 
 12. Run the following command on the cluster nodes to verify the Lenovo plugin pod is up and running: 
 
-         $ kubectl get pods -n odim
+        $ kubectl get pods -n odim
      Example output of the Lenovo plugin pod details:
 
     | NAME                         | READY | STATUS  | RESTARTS | AGE   |
@@ -1551,7 +1551,7 @@ The plugin you want to add is successfully deployed.
    
     After the plugin is successfully added, it will also be available as a manager resource at:
    
-       `/redfish/v1/Managers`.
+       /redfish/v1/Managers
    
     For more information, refer to "Adding a plugin" in the [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
    
@@ -1574,7 +1574,7 @@ The plugin you want to add is successfully deployed.
 
         **Sample response \(URP manager\)** 
 
-        ```
+        
         {
            "@odata.context":"/redfish/v1/$metadata#Manager.Manager",
            "@odata.etag":"W/\"AA6D42B0\"",
@@ -1590,15 +1590,14 @@ The plugin you want to add is successfully deployed.
            },
            "UUID":"a9cf0e1e-c36d-4d5b-9a31-cc07b611c01b"
         }
-        ```
-
-    3. Check in the JSON response of the plugin manager, if: 
-
-        -    `State` is `Enabled` 
-
-        -   `Health` is `Ok` 
-
-        For more information, refer to "Managers" in [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
+    
+3. Check in the JSON response of the plugin manager, if: 
+   
+    -    `State` is `Enabled` 
+    
+    -   `Health` is `Ok` 
+    
+    For more information, refer to "Managers" in [Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs).
     	
 
 # Use cases for Resource Aggregator for ODIM
@@ -1902,27 +1901,30 @@ Scaling down involves removing one or more worker nodes from an existing three-n
 <blockquote>NOTE: You cannot remove controller nodes in a cluster.</blockquote>
 1. To remove a node, do the following: 
     1. Open the `kube\_deploy\_nodes.yaml` file on the deployment node.
+    
     2. Remove all the node entries under nodes except for the node that    you want to remove. 
-    3. Run the following command: 
 
+    3. Run the following command: 
+    
         ```
         $ python3 odim-controller.py --rmnode kubernetes --config \
-         /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
+     /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml
         ```
-
-    4. Log in to each cluster node and remove the deleted node details from all the configuration files inside `/opt/nginx/servers`. 
+    
+	4. Log in to each cluster node and remove the deleted node details from all the configuration files inside `/opt/nginx/servers`. 
+    
     5. Run the following commands on the removed cluster node only: 
-
+    
         ```
         $ sudo systemctl stop keepalived
         ```
-
+    
         ```
-        $ sudo systemctl stop nginx
+         $ sudo systemctl stop nginx
         ```
-
-    6.  Run the following commands on the remaining cluster nodes: 
-
+    
+    6. Run the following commands on the remaining cluster nodes: 
+    
         ```
         $ sudo systemctl restart nginx
         ```
@@ -2184,17 +2186,18 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
    
 	```
-    $ cat << EOF | sudo tee -a /etc/environment
+   $ cat << EOF | sudo tee -a /etc/environment
     http_proxy=${http_proxy}
     https_proxy=${https_proxy}
     no_proxy=${no_proxy}
-	EOF
+    EOF
 	```
+	
 2. Run the following commands to update proxy information in the Docker service file:
    ```
    $ sudo mkdir -p /etc/systemd/system/docker.service.d
    ```
-   
+
    ```
    $ cat << EOF | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
    [Service]
@@ -2203,19 +2206,20 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
     Environment="NO_PROXY=${no_proxy}"
     EOF
    ```
+
 3. Run the following commands to update proxy information in the user Docker config file:
    ```
    $ mkdir ~/.docker
    ```
-   
+
    ```
    $ sudo chown ${USER}:${USER} ~/.docker -R
    ```
-   
+
    ```
    $ sudo chmod 0700 ~/.docker
    ```
-   
+
    ```
    $ cat > ~/.docker/config.json <<EOF
     {
@@ -2231,7 +2235,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
    }
    EOF
    ```
-   
+
 ## Installing Docker
 
 1. Run the following commands:
@@ -2706,11 +2710,11 @@ Perform the following steps on each cluster node:
 
 9. To check the Nginx logs, navigate to the following paths: 
 
-    -   /var/log/syslog
+    -   `/var/log/syslog`
 
-    -   /opt/nginx/logs/error.log
+    -   `/opt/nginx/logs/error.log`
 
-    -   /opt/nginx/logs/access.log
+    -   `/opt/nginx/logs/access.log`
     
 ## Odim-controller configuration parameters
 
@@ -2785,8 +2789,8 @@ odimra:
 
 To run curl commands on a different server, perform the following steps to provide the `rootCA.crt` file.
 
-  		1. Navigate to the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file on the deployment node.
-  		2. Copy the `rootCA.crt` file.
+1. Navigate to the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file on the deployment node.
+2. Copy the `rootCA.crt` file.
 
 3. Log in to your server and paste the `rootCA.crt` file in a folder.
 
@@ -2794,15 +2798,15 @@ To run curl commands on a different server, perform the following steps to provi
 
 5. Scroll to the end of the file, add the following line, and then save:
 
-```
-<hostvm_ipv4_address> <FQDN>
-```
+   ```
+   <hostvm_ipv4_address> <FQDN>
+   ```
 
 6. Check if curl is working by using the following command:
 
-```
-curl --cacert rootCA.crt 'https://{odim_host}:{port}/redfish/v1'
-```
+   ```
+   curl --cacert rootCA.crt 'https://{odim_host}:{port}/redfish/v1'
+   ```
 
 <blockquote> NOTE: 
 - To avoid using the `--cacert` flag in every curl command, add `rootCA.crt` in the `ca-certificates.crt` file available in this path: `/etc/ssl/certs/ca-certificates.crt`. You can access the base URL using a REST client. To access it using a REST client, add the rootCA.crt file of HPE Resource Aggregator for ODIM to the browser where the REST client is launched.</blockquote>
