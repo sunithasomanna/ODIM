@@ -1341,11 +1341,10 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
         $ vi ~/plugins/lenovoplugin/lenovoplugin-config.yaml
     **Sample lenovoplugin-config.yaml file:**
-    
-```
+   ```
     odimra:
- namespace: odim
-     groupID: 2021
+    namespace: odim
+    groupID: 2021
     lenovoplugin:
      hostname: knode1
      eventListenerNodePort: 30089
@@ -1355,8 +1354,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
      lbHost: 10.24.1.232
      lbPort: 30089
      logPath: /var/log/lenovoplugin_logs
-    ```
-    
+   ```
 6. Update the following mandatory parameters in the plugin configuration file: 
 
     - **hostname**: Hostname of the cluster node where the Lenovo plugin will be installed.
@@ -1375,6 +1373,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    2. Run the following command to create `lenovoplugin` Helm package at `~/plugins/lenovoplugin`:
 
            $ helm package lenovoplugin -d ~/plugins/lenovoplugin
+       
        The Helm package for the Lenovo plugin is created in the tgz format.
 
 8. Save the Lenovo plugin Docker image on the deployment node at `~/plugins/lenovoplugin`.
@@ -1388,8 +1387,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
            $ cd ~/ODIM/odim-controller/scripts
-        
-
+    
 11. Run the following command to install the Lenovo plugin: 
 
          $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin lenovo plugin
@@ -1399,9 +1397,9 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
          $ kubectl get pods -n odim
      Example output of the Lenovo plugin pod details:
 
-     | NAME                         | READY | STATUS  | RESTARTS | AGE   |
-     | ---------------------------- | ----- | ------- | -------- | ----- |
-     | lenovoplugin-5fc4b6788-2xx97 | 1/1   | Running | 0        | 4d22h |
+    | NAME                         | READY | STATUS  | RESTARTS | AGE   |
+    | ---------------------------- | ----- | ------- | -------- | ----- |
+    | lenovoplugin-5fc4b6788-2xx97 | 1/1   | Running | 0        | 4d22h |
 
 13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
 
@@ -1409,12 +1407,12 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 14. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
 
-     | Parameter                    | Value                                                        |
-     | ---------------------------- | ------------------------------------------------------------ |
-     | connectionMethodConf         | The connection method associated with Lenovo: ConnectionMethodVariant: `Compute:BasicAuth:LENOVO_v1.0.0`<br> |
-     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying Lenovo plugin: `lenovoplugin`. |
-     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying Lenovo: `lenovoplugin` . |
-     | odimPluginPath               | The path of the directory where the Lenovo Helm package, the `lenovoplugin` image, and the modified `lenovoplugin-config.yaml` are copied. |
+    | Parameter                    | Value                                                        |
+    | ---------------------------- | ------------------------------------------------------------ |
+    | connectionMethodConf         | The connection method associated with Lenovo: ConnectionMethodVariant: `Compute:BasicAuth:LENOVO_v1.0.0`<br> |
+    | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying Lenovo plugin: `lenovoplugin`. |
+    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying Lenovo: `lenovoplugin` . |
+    | odimPluginPath               | The path of the directory where the Lenovo Helm package, the `lenovoplugin` image, and the modified `lenovoplugin-config.yaml` are copied. |
 
       Example:
 
