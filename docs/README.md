@@ -103,6 +103,8 @@
   * [VirtualMedia](#virtualmedia)
     + [Viewing the VirtualMedia collection](#viewing-the-virtualmedia-collection)
     + [Viewing a VirtualMedia Instance](#viewing-a-virtualmedia-instance)
+    + [Inserting VirtualMedia](#inserting-virtualmedia)
+    + [Ejecting VirtualMedia](#ejecting-virtualmedia)
 - [Software and firmware inventory](#software-and-firmware-inventory)
   * [Viewing the update service root](#viewing-the-update-service-root)
   * [Viewing the firmware inventory](#viewing-the-firmware-inventory)
@@ -350,11 +352,11 @@ certificate problem. Provide the root CA certificate to curl for secure SSL comm
 
 The URL encoding mechanism translates the characters in the URLs to a representation that are universally accepted by all web browsers and servers. 
 
-Resource Aggregator for ODIM supports standard URL encoding for all APIs. When Resource Aggregator for ODIM gets an encoded URL path, the non-ASCII characters in its path are internally translated and sent to the web browsers. In other words, if you replace a character in a URL with its standard encoding notation, Resource Aggregator for ODIM accepts the encoded notation, decodes it to the actual character acceptable by the web browser and sends responses.
+Resource Aggregator for ODIM supports all standard URL encoded characters for all the APIs. When Resource Aggregator for ODIM gets an encoded URL path, the non-ASCII characters in its path are internally translated and sent to the web browsers. In other words, if you replace a character in a URL with its standard encoding notation, Resource Aggregator for ODIM accepts the encoded notation, decodes it to the actual character acceptable by the web browser and sends responses.
 
 **Example**: In the URL`/redfish/v1/Systems/e24fb205-6669-4080-b53c-67d4923aa73e:1`, if you replace the colon character `:` with its encoding notation `%3A`, or the `/` character with %2F and send the request, Resource Aggregator for ODIM accepts the URL, decodes the encoded notation internally and sends an accurate response.
 
-<blockquote>Tip: You can look up on the Internet for the standard ASCII Encoding Reference of the URL characters.</blockquote>
+<blockquote>Tip: You can visit https://www.w3schools.com/tags/ref_urlencode.ASP or browse the Internet to view the standard ASCII Encoding Reference of the URL characters.</blockquote>
 
 # List of supported APIs
 
@@ -439,6 +441,10 @@ Resource Aggregator for ODIM supports the following Redfish APIs:
 |/redfish/v1/Managers/\{managerId\}/HostInterfaces|`GET`|
 |/redfish/v1/Managers/\{managerId\}/LogServices|`GET`|
 |/redfish/v1/Managers/\{managerId\}/NetworkProtocol|`GET`|
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia|`GET`|
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}| `GET`  |
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia|`POST`|
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia|`POST`|
 
 |UpdateService||
 |-------|--------------------|
@@ -590,10 +596,6 @@ Transfer-Encoding:chunked
    "UUID": "a64fc187-e0e9-4f68-82a8-67a616b84b1d"
 }
 ```
-
-
-
-
 
 
 
@@ -955,7 +957,6 @@ Transfer-Encoding:chunked
 curl -i GET \
                -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
               'https://{odimra_host}:{port}/redfish/v1/SessionService/Sessions'
-
 
 ```
 
@@ -6073,6 +6074,7 @@ Resource Aggregator for ODIM exposes APIs to retrieve information about managers
 |/redfish/v1/Managers/\{managerId\}/HostInterfaces|`GET`|
 |/redfish/v1/Managers/\{managerId\}/LogServices|`GET`|
 |/redfish/v1/Managers/\{managerId\}/NetworkProtocol|`GET`|
+|/redfish/v1/Managers/\{managerId\}/VirtualMedia|`GET`|
 
 
 
@@ -6363,44 +6365,108 @@ curl -i GET \
 
 ```
 {
-"@odata.context": "/redfish/v1/$metadata#VirtualMedia.VirtualMedia",
-"@odata.etag": "W/\"3B0F66BA\"",
-"@odata.id": "/redfish/v1/Managers/1/VirtualMedia/1/",
-"@odata.type": "#VirtualMedia.v1_3_2.VirtualMedia",
-Actions{
-
-"#VirtualMedia.EjectMedia": {
-"target": "/redfish/v1/Managers/1/VirtualMedia/1/Actions/VirtualMedia.EjectMedia/"
-},
-"#VirtualMedia.InsertMedia": {
-"target": "/redfish/v1/Managers/1/VirtualMedia/1/Actions/VirtualMedia.InsertMedia/"
-}
-}
-
-"Id": "CD1",
-"Name": "Virtual CD",
-"MediaTypes": [ "CD", "DVD" ],
-"Image": "redfish.dmtf.org/freeImages/freeOS.1.1.iso",
-"ImageName": "mymedia-read-only",
-"ConnectedVia": "Applet",
-"Inserted": true,
-"WriteProtected": false
-Password
-UserName
-TransferMethod
-TransferProtocolType
+    "error": {
+        "@Message.ExtendedInfo": [
+            {
+                "MessageId": "Base.1.4.Success"
+            }
+        ],
+        "code": "iLO.0.10.ExtendedInfo",
+        "message": "See @Message.ExtendedInfo for more information."
+    }
 }
 ```
 
+## Inserting VirtualMedia
+
+| **Method**         | `POST`                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia` |
+| **Description**    | This operation inserts the virtual media on to the manager.  |
+| **Returns**        | A message stating the virtual media insertion was successful. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i POST \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+   -H "Content-Type:application/json" \
+   -d \
+	'{
+  "Image":"http://<ip address>/<image path>",
+  "Inserted":true,
+  "WriteProtected":true
+}' \
+ 'https://{odimra_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia'
+
+```
+
+>**Sample response body**
+
+```
+{
+    "error": {
+        "@Message.ExtendedInfo": [
+            {
+                "MessageId": "Base.1.4.Success"
+            }
+        ],
+        "code": "iLO.0.10.ExtendedInfo",
+        "message": "See @Message.ExtendedInfo for more information."
+    }
+}
+ 
+```
+
+## Ejecting VirtualMedia
+
+| **Method**         | `POST`                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia` |
+| **Description**    | This operation ejects the virtual media from the manager.    |
+| **Returns**        | A message stating the virtual media ejection was successful. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i POST \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+   -H "Content-Type:application/json" \
+   
+ 'https://{odimra_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia'
+```
+
+<blockquote>NOTE: No payload is required for this operation. </blockquote>
+
+>**Sample response body**
 
 
+```
+{
+    "error": {
+        "@Message.ExtendedInfo": [
+            {
+                "MessageId": "Base.1.4.Success"
+            }
+        ],
+        "code": "iLO.0.10.ExtendedInfo",
+        "message": "See @Message.ExtendedInfo for more information."
+    }
+}
+ 
+```
 
+**Request parameters**
 
-
-
-
-
-
+| Parameter      | Type               | Description           |
+| -------------- | ------------------ | --------------------- |
+| Image          | String (Required)  | Image path            |
+| Inserted       | Boolean (Optional) | Default value is true |
+| WriteProtected | Boolean (Optional) | Default value is true |
 
 # Software and firmware inventory
 
@@ -6882,18 +6948,6 @@ Content-Length:491 bytes
       "code":"iLO.0.10.ExtendedInfo",
       "message":"See @Message.ExtendedInfo for more information."
 ```
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -7779,7 +7833,7 @@ Transfer-Encoding:chunked
 
 ```
 
->**Sample response body**
+>- **Sample response body**
 
 ```
 {
@@ -7847,7 +7901,7 @@ Transfer-Encoding:chunked
 |**Method** |`POST` |
 |**URI** |`/redfish/v1/Fabrics/{fabricID}/AddressPools` |
 |**Description** |This operation creates an address pool for a zone of zones in a specific fabric.|
-|**Returns** |<ul><li>Link to the created address pool in the `Location` header.</li><li>JSON schema representing the created address pool.</li></ul>|
+|**Returns** |- Link to the created address pool in the `Location` header.<br />- JSON schema representing the created address pool.|
 |**Response code** | `201 Created` |
 |**Authentication** |Yes|
 
