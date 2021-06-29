@@ -2211,14 +2211,14 @@ Run the following commands:
 NOTE: Before performing the following steps, ensure the `http_proxy`, `https_proxy`, and `no_proxy` environment variables are set.
 </blockquote>
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
+
    ```
    $ cat << EOF | sudo tee -a /etc/environment
-	 http_proxy=${http_proxy}
-	 https_proxy=${https_proxy}
-	 no_proxy=${no_proxy}
-	 EOF
+   http_proxy=${http_proxy}
+   https_proxy=${https_proxy}
+   no_proxy=${no_proxy}
+   EOF
    ```
-	
 	
 2. Run the following commands to update proxy information in the Docker service file:
    ```
