@@ -90,8 +90,9 @@ Resource Aggregator for ODIM comprises the following two key components:
     -  Generic Redfish plugin for ODIM (The GRF plugin): This plugin can be used for any Redfish-compliant device
     -  Dell plugin for ODIM: Plugin for managing Dell servers
    -  Plugin for unmanaged racks \(URP): This plugin acts as a resource manager for unmanaged racks.
-   -  Integration of additional third-party plugins
-
+   -  Cisco ACI plugin: Plugin for managing Cisco ACI servers
+-  Integration of additional third-party plugins
+   
    Resource Aggregator for ODIM allows third parties to easily develop and integrate their plugins into its framework. For more information, see [Resource Aggregator for Open Distributed Infrastructure Management™ Plugin Developer's Guide](https://github.com/ODIM-Project/ODIM/blob/development/plugin-redfish/README.md).
 
 ## Resource Aggregator for ODIM deployment overview
@@ -391,7 +392,7 @@ The following table lists the software components and their versions that are co
    
    You get an output similar to the following sample:
    
-   ![Cluster node](docs/images/kuberenetes_images.png)
+   ![Cluster node](docs/images/kubernetes_images.png)
    
 3. Save each Docker image to a tar archive using the following command:
 
@@ -477,6 +478,7 @@ The following table lists the software components and their versions that are co
     | dellplugin            | 1.0         | dellplugin.tar               |
     | urplugin              | 1.0         | urplugin.tar                 |
     | grfplugin             | 1.0         | grfplugin.tar                |
+    | aciplugin             | 1.0         | aciplugin.tar                |
     
 3. To install the Docker images of all services on the cluster nodes, create a directory called `odimra_images` on the deployment node and copy each tar archive to this directory. 
     For example: `cp /home/bruce/ODIM/*.tar /home/bruce/odimra_images`
@@ -580,7 +582,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    2. Copy content from the kube_deploy_nodes.yaml.tmpl file to the kube_deploy_nodes.yaml file by running the following command:
    
       ```
-      $ cp kube_deploy_nodes.yaml.tmpl kube_deploy_nodes.yaml`
+      $ cp kube_deploy_nodes.yaml.tmpl kube_deploy_nodes.yaml
       ```
    3. Edit the `kube_deploy_nodes.yaml` file. 
    
@@ -838,24 +840,26 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
     2. Log in to each cluster node, run the following command on each cluster node to verify all deployed services are running successfully. 
 
         ```
-    	$ kubectl get pods -n odim -o wide
+        $ kubectl get pods -n odim -o wide
         ```
-        
+
         Example output:
 
         ![screenshot](docs/images/all_services_verification.png)
 
         If the services are not successfully deployed, reset the deployment and try deploying again. 
         To reset, run the following command:
-        
+
         ```
         $ python3 odim-controller.py --reset odimra --config \
         /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml \
         --ignore-errors
         ```
-        
-        <blockquote> NOTE: Resetting deployment removes the virtual IP configured through Keepalived. After reset, restart the Keepalived service </blockquote>
-        
+
+        <blockquote> NOTE: 
+        - Resetting deployment removes the virtual IP configured through Keepalived. After reset, restart the Keepalived service. <br/>
+        After resetting deployment, reset the odimCertsPath parameter to "" or to actual your certificate path in the kube_deploy_nodes.yaml file. </blockquote>
+
         <blockquote>IMPORTANT: Save the RootServiceUUID in the kube_deploy_nodes.yaml file in the path ~/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml.
             If the services are not successfully deployed and you want to reset the deployment, you can use the saved RootServiceUUID.</blockquote>	
 
@@ -896,7 +900,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    - {odim_host} is the virtual IP address of the Kubernetes cluster.
 
      <blockquote>
-      NOTE: To use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
+      NOTE: For a single node cluster configuration, {odim_host} is the ip address of master node. For a three node cluster configuration, to use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
       </blockquote>
 
    - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
@@ -1158,13 +1162,16 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
     
-14. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
+12. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
 
-         $ kubectl get pods -n odim
-        Example output of the URP pod details:
-    
-    NAME 										READY 	STATUS 		RESTARTS 	AGE
-    urplugin-5fc4b6788-2xx97 	1/1 			Running 		0 				4d22h
+          $ kubectl get pods -n odim
+
+     Example output of the URP pod details:
+
+     ```
+     NAME 						READY 	STATUS 		RESTARTS 	AGE
+     urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
+     ```
 
 15. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
 
@@ -1307,7 +1314,32 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
      dellplugin-5fc4b6788-2xx97  1/1 			Running 		0 			 		4d22h
      ```
 
-13. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
+13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
+
+          $ vi kube_deploy_nodes.yaml
+
+14. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
+
+    | Parameter                    | Value                                                        |
+    | ---------------------------- | ------------------------------------------------------------ |
+    | connectionMethodConf         | The connection method associated with Cisco ACI plugin: ConnectionMethodVariant: <br />`Fabric:BasicAuth:ACI_v1.0.0`<br> |
+    | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br />`dellplugin`, `dellplugin-events`<br>Add these values to the existing comma-separated list.<br> |
+    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br /> `dellplugin`, `dellplugin-events`<br> Add these values to the existing comma-separated list.<br> |
+
+          Example:
+          
+          odimPluginPath: /home/bruce/plugins
+           connectionMethodConf:
+           - ConnectionMethodType: Redfish
+             ConnectionMethodVariant: Fabric:BasicAuth:DELL_v1.0.0
+           odimraKafkaClientCertFQDNSan: dellplugin,dellplugin-events
+           odimraServerCertFQDNSan: dellplugin,dellplugin-events
+
+15. Run the following command: 
+
+         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+
+16. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
 ## Deploying the Lenovo plugin
 
@@ -2181,11 +2213,11 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
 
 	```
-    $ cat << EOF | sudo tee -a /etc/environment
-    http_proxy=${http_proxy}
-    https_proxy=${https_proxy}
-    no_proxy=${no_proxy}
-    EOF
+	$ cat << EOF | sudo tee -a /etc/environment
+	    http_proxy=${http_proxy}
+	    https_proxy=${https_proxy}
+	    no_proxy=${no_proxy}
+	    EOF
 	```
 	
 2. Run the following commands to update proxy information in the Docker service file:
