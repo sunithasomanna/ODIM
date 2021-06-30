@@ -15,26 +15,6 @@ To ensure continued adoption of open technologies, the APIs for the plugins are 
 For deploying the Dell plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the Dell plugin" section in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/tree/development#readme).
 
 
-## API accessibility
-
-The plugin layer uses JSON as the primary data format for communication. Standardizing on a well-known data-interchange format ensures consistency among plugins and simplifies the task for plugin developers. The API service uses [HATEOAS \(Hypermedia as the Engine of Application State\)](https://restfulapi.net/hateoas/) principles to link resources using the `href` key.
-
-The API service under the plugin layer uses token-based authentication for securing the platform. The token-based authentication is applicable to:
-
--   The authentication information flowing from the aggregator to the plugin where the aggregator is authenticated.
-
--   The data flowing from the plugin to the aggregator where the aggregator is authenticated.
-
-
-The plugin currently uses credentials of the client for authenticating the same.
-
-Data on the wire is encrypted using TLS and is not sent out as cleartext. For this, the plugin exposes a CA signed certificate for the clients to authenticate itself. The plugins communicate primarily with the aggregator. To gather resource information, they can also communicate with another plugin through the north-bound APIs provided by the aggregator. For plugin-to-plugin communication, the aggregator defines a plugin role to set and allows permissions for plugins to communicate with other plugins.
-
-API operations must adhere to the standard Restful API rules—Ensure that the API operations are not idempotent and concurrent. APIs can, in selective cases, implement capabilities to use subresources, filtering, sorting, and other value additions effectively. Return codes are fully in compliance with HTTP. A core objective of the plugin layer is to be able to perform many different operations using the primary HTTP operations —GET, PUT, POST, and DELETE.
-
-The primary media type for plugin content is `Application/json`. The future releases may have other media types and custom media types.
-
-
 ## Naming conventions
 
 -   `PascalCase` is used for all naming requirements within the plugin. It includes the plugin, the resources it contains, functions it implements, and the variables it defines.
