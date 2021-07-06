@@ -261,14 +261,14 @@ The following table lists the software components and their versions that are co
       ```
 
    2. ```
-      $ sudo apt-get install sshpass=1.406-1 -y
+      $ sudo apt-get install sshpass=1.06-1 -y
       ```
 
    3. ```
       $ sudo apt-get install python3.8=3.8.0-3~18.04.1 -y
       ```
    4. ```
-       $ sudo apt-get install python3-pip=9.0.1-2.3~ubuntu1.18.04.4 -y
+       $ sudo apt-get install python3-pip=9.0.1-2.3~ubuntu1.18.04.5 -y
        ```
    5.  ```
        $ sudo apt-get install software-properties-common=0.96.24.32.14 -y
@@ -277,7 +277,7 @@ The following table lists the software components and their versions that are co
         $ sudo -E apt-add-repository ppa:ansible/ansible -y
        ```
    7.  ```
-       $ sudo apt-get install openjdk-11-jre-headless=11.0.10+9-0ubuntu1~18.04 -y
+       $ sudo apt-get install openjdk-11-jre-headless=11.0.11+9-0ubuntu2~18.04 -y
        ```
    8.  ```
        $ python3 -m pip install --upgrade pip
