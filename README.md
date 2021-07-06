@@ -1124,7 +1124,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       logPath: /var/log/urplugin_logs
     ```
 
-7. Update the following mandatory parameters in the plugin configuration file: 
+7. Update the following parameters in the plugin configuration file: 
 
     - **odimUsername**: The username of the default administrator account of Resource Aggregator for ODIM.
 
@@ -1138,7 +1138,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
     - **urPluginRootServiceUUID**: RootServiceUUID to be used by the URP service.
 
-    Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+    Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
 10. Generate Helm package for URP on the deployment node.
 
@@ -1270,14 +1270,14 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     
     ```
 
-6. Update the following mandatory parameters in the plugin configuration file: 
+6. Update the following parameters in the plugin configuration file: 
    
    - **hostname**: Hostname of the cluster node where the Dell plugin will be installed.
    - **lbHost**: IP address of the cluster node where the Dell plugin will be installed for one node cluster configuration. For three node cluster configuration,  lbHost is the virtual IP address configured in Nginx and Keepalived.
    - **lbPort**: Default port is 30084 for one node cluster configuration. For three node cluster configuration, lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
    - **dellPluginRootServiceUUID**: RootServiceUUID to be used by the Dell plugin service.
    
-   Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+   Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
    
 7. Generate the Helm package for the Dell plugin on the deployment node.
 
@@ -1394,14 +1394,14 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
      logPath: /var/log/lenovoplugin_logs
    ```
    
-6. Update the following mandatory parameters in the plugin configuration file: 
+6. Update the following parameters in the plugin configuration file: 
 
     - **hostname**: Hostname of the cluster node where the Lenovo plugin will be installed.
     - **lbHost**: IP address of the cluster node where the Lenovo plugin will be installed for one node cluster configuration. For three node cluster configuration,  lbHost is the virtual IP address configured in Nginx and Keepalived.
     - **lbPort**: Default port is 30089. for one node cluster configuration. For three node cluster configuration, \(haDeploymentEnabled is true\), lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
     - **lenovoPluginRootServiceUUID**: RootServiceUUID to be used by the Lenovo plugin service.
 
-    Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+    Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
 7. Generate the Helm package for the Lenovo plugin on the deployment node.
 
@@ -3422,6 +3422,8 @@ The following table lists all the default ports used by the resource aggregator,
 |Kafka node port|30092 for a one-node cluster configuration.30092, 30093, and 30094 for a three-node cluster configuration.<br>|
 |GRF plugin port|45001|
 |URP port|45007|
+|Dell port|45005|
+|Lenovo port|45009|
 
 ## Deploying the GRF plugin
 
@@ -3485,7 +3487,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    - **lbPort**: Default port is 30081 for one node cluster configuration. For three node cluster configuration, \(haDeploymentEnabled is true\), lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
    - **grfPluginrootServiceUUID**: RootServiceUUID to be used by the GRF plugin service.
 
-   Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+   Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
 7. Generate the Helm package for the GRF plugin on the deployment node.
 
