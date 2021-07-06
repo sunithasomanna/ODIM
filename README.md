@@ -3057,7 +3057,7 @@ To run curl commands on a different server, perform the following steps to provi
 <blockquote>
         NOTE: If you restart Nginx on a follower node (cluster node having lower Keepalived priority number), the service fails to start with the following error: </blockquote>
 
-    `nginx: [emerg] bind() to <VIP>:<nginx_port> failed (99: Cannot assign requested address)`
+    nginx: [emerg] bind() to <VIP>:<nginx_port> failed (99: Cannot assign requested address)
 
 ## Plugin configuration parameters
 
@@ -3474,8 +3474,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       logPath: /var/log/grfplugin_logs
     ```
     
-
-Other parameters have default values. Optionally, you can modify them according to your requirements. To know more about each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
+    Other parameters have default values. Optionally, you can modify them according to your requirements. To know more about each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
     
 6. Update the following parameters in the plugin configuration file:
 
@@ -3518,10 +3517,10 @@ Other parameters have default values. Optionally, you can modify them according 
 
 11. Open the kube\_deploy\_nodes.yaml file to edit.
 
-    ```
-    $ vi kube_deploy_nodes.yaml
-    ```
-    
+     ```
+     $ vi kube_deploy_nodes.yaml
+     ```
+
 12. Update the following parameters in the kube\_deploy\_nodes.yaml file to their corresponding values: 
 
     | Parameter                    | Value                                                        |
@@ -3531,50 +3530,50 @@ Other parameters have default values. Optionally, you can modify them according 
     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the GRF plugin: grfplugin, grfplugin-eventsAdd these values to the existing comma-separated list.<br> |
     | odimPluginPath               | The path of the directory where the GRF Helm package, the `grfplugin` image, and the modified `grfplugin-config.yaml` are copied. |
 
-     Example:
+      Example:
 
-     ```
-     connectionMethodConf:
-       ConnectionMethodType: Redfish
-       ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
-     odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
-     odimraServerCertFQDNSan: grfplugin,grfplugin-events
-     ```
+      ```
+      connectionMethodConf:
+        ConnectionMethodType: Redfish
+        ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+      odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
+      odimraServerCertFQDNSan: grfplugin,grfplugin-events
+      ```
 
 13. Run the following command: 
 
-     ```
-     $ python3 odim-controller.py --config \ 
-      /home/${USER}/ODIM/odim-controller/scripts\
-     /kube_deploy_nodes.yaml --upgrade odimra-config
-     ```
+      ```
+      $ python3 odim-controller.py --config \ 
+       /home/${USER}/ODIM/odim-controller/scripts\
+      /kube_deploy_nodes.yaml --upgrade odimra-config
+      ```
 
 14. Run the following command to install the GRF plugin: 
 
-      ```
-      $ python3 odim-controller.py --config \
-       /home/${USER}/ODIM/odim-controller/scripts\
-      /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
-      ```
+       ```
+       $ python3 odim-controller.py --config \
+        /home/${USER}/ODIM/odim-controller/scripts\
+       /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
+       ```
 
 15. Run the following command on the cluster nodes to verify the GRF plugin pod is up and running: 
 
-     ```
-     $ kubectl get pods -n odim
-     ```
+      ```
+      $ kubectl get pods -n odim
+      ```
 
-     Example output showing the GRF plugin pod details:
+      Example output showing the GRF plugin pod details:
 
-     ```
-     NAME READY STATUS RESTARTS AGE
-     grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
-     ```
+      ```
+      NAME READY STATUS RESTARTS AGE
+      grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
+      ```
 
 16. Navigate to `~/ODIM/odim-controller/scripts`.
 
-     ```
-     $ cd ~/ODIM/odim-controller/scripts
-     ```
+      ```
+      $ cd ~/ODIM/odim-controller/scripts
+      ```
 
 17. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
