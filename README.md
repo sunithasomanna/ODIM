@@ -3057,7 +3057,7 @@ To run curl commands on a different server, perform the following steps to provi
 <blockquote>
         NOTE: If you restart Nginx on a follower node (cluster node having lower Keepalived priority number), the service fails to start with the following error: </blockquote>
 
-    `nginx: [emerg] bind() to <VIP>:<nginx_port> failed (99: Cannot assign requested address)`
+    nginx: [emerg] bind() to <VIP>:<nginx_port> failed (99: Cannot assign requested address)
 
 ## Plugin configuration parameters
 
