@@ -4,6 +4,7 @@
 - [Introduction](#introduction)
   * [Resource Aggregator for ODIM logical architecture](#resource-aggregator-for-odim-logical-architecture)
 - [API usage and access guidelines](#api-usage-and-access-guidelines)
+- [Support for URL Encoding](#support-for-url-encoding)
 - [List of supported APIs](#list-of-supported-apis)
   * [Viewing the list of supported Redfish services](#viewing-the-list-of-supported-redfish-services)
 - [HTTP request methods, responses, and status codes](#http-request-methods--responses--and-status-codes)
@@ -99,6 +100,11 @@
 - [Managers](#managers)
   * [Collection of managers](#collection-of-managers)
   * [Single manager](#single-manager)
+  * [VirtualMedia](#virtualmedia)
+    + [Viewing the VirtualMedia collection](#viewing-the-virtualmedia-collection)
+    + [Viewing a VirtualMedia Instance](#viewing-a-virtualmedia-instance)
+    + [Inserting VirtualMedia](#inserting-virtualmedia)
+    + [Ejecting VirtualMedia](#ejecting-virtualmedia)
 - [Software and firmware inventory](#software-and-firmware-inventory)
   * [Viewing the update service root](#viewing-the-update-service-root)
   * [Viewing the firmware inventory](#viewing-the-firmware-inventory)
@@ -152,17 +158,17 @@
   * [Viewing a collection of registries](#viewing-a-collection-of-registries)
   * [Viewing a single registry](#viewing-a-single-registry)
   * [Viewing a file in a registry](#viewing-a-file-in-a-registry)
-
-
-
-
-
-
-
-
-
-
-
+- [Redfish Telemetry](#redfish-telemetry)
+  * [Viewing the telemetry service root](#viewing-the-telemetry-service-root)
+  * [Collection of metric definitions](#collection-of-metric-definitions)
+  * [Single metric definition](#single-metric-definition)
+  * [Collection of Metric Report Definitions](#collection-of-metric-report-definitions)
+  * [Single metric report definition](#single-metric-report-definition)
+  * [Collection of metric reports](#collection-of-metric-reports)
+  * [Single metric report](#single-metric-report)
+  * [Collection of Triggers](#collection-of-triggers)
+  * [Single Trigger](#single-trigger)
+  * [Updating a trigger](#updating-a-trigger)
 
 # Introduction 
 
@@ -190,7 +196,7 @@ ODIMRA framework comprises the following two components.
 
   The plugins abstract, translate, and expose southbound resource information to the resource aggregator through
   RESTful APIs. HPE Resource Aggregator for ODIM supports:
- 
+
     - Generic Redfish plugin for ODIM (GRF): Generic Redfish plugin that can be used as a plugin for any Redfishcompliant
       device.
 	- Plugin for unmanaged racks (URP): Plugin that acts as a resource manager for unmanaged racks. 
@@ -257,14 +263,11 @@ To access the RESTful APIs exposed by the resource aggregator, you need an HTTPS
 browser with a REST Client plugin extension, or a Desktop REST Client application, or curl (a popular, free command-line
 utility). You can also easily write simple REST clients for RESTful APIs using modern scripting languages.
 
-<aside class="notice">
+<blockquote>
 Tip: It is good to use a tool, such as curl or any Desktop REST Client application initially to perform requests. Later,
 you will want to write your own scripting code to perform requests.
-</aside>
-
-
-This guide contains sample request and response payloads. For information on response payload parameters, refer to 
-[Redfish® Scalable Platforms API (Redfish) schema 2020.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0268_2020.3.pdf).
+</blockquote>
+This guide contains sample request and response payloads. For information on response payload parameters, refer to [Redfish® Scalable Platforms API (Redfish) schema 2020.3](https://www.dmtf.org/sites/default/files/standards/documents/DSP0268_2020.3.pdf).
 
 > **IMPORTANT:**
 The response codes and the JSON request and response parameters provided in this guide may vary for systems depending on the vendor, model, and firmware versions.
@@ -292,8 +295,6 @@ Use the following URL in all HTTP requests that you send to the resource aggrega
 
 - {port} is the port where the services of the resource aggregator are running. The default port is 45000. If you
     have changed the default port in the `/etc/odimra_config/odimra_config.json` file, use that as the port.
-	
-	
 >**NOTE**: To access the base URL using a REST client, replace `{odimra_host}` with the IP address of the system where the resource aggregator is installed. To use FQDN in place of `{odimra_host}`, add the Resource Aggregator for ODIM server certificate to the browser where the REST client is launched.
 
 
@@ -321,16 +322,10 @@ For a complete list of curl flags, see information provided at [https://curl.hax
     $ export no_proxy="127.0.0.1,localhost,{odimra_host}"
      ```
 
-   
-
-<br>
-
 **Including HTTP certificate**
 
 Without CA certificate, curl fails to verify that HTTP connections are secure and curl commands may fail with the SSL
 certificate problem. Provide the root CA certificate to curl for secure SSL communication.
-
-
 
 
 1. If you are running curl commands on the server where the resource aggregator is deployed, provide the `rootCA.crt` file as shown in the curl command:
@@ -351,20 +346,21 @@ certificate problem. Provide the root CA certificate to curl for secure SSL comm
         curl -v --cacert {path}/rootCA.crt 'https://{odimra_host}:{port}/redfish/v1'
         ```
 
-​		 
-
 >**NOTE:** To avoid using the `--cacert` flag in every curl command, add `rootCA.crt` in the `ca-certificates.crt` file located in this path:<br> `/etc/ssl/certs/ca-certificates.crt`.
 
+# Support for URL Encoding
 
+The URL encoding mechanism translates the characters in the URLs to a representation that are universally accepted by all web browsers and servers. 
 
+Resource Aggregator for ODIM supports all standard URL encoded characters for all the APIs. When Resource Aggregator for ODIM gets an encoded URL path, the non-ASCII characters in its path are internally translated and sent to the web browsers. In other words, if you replace a character in a URL with its standard encoding notation, Resource Aggregator for ODIM accepts the encoded notation, decodes it to the actual character acceptable by the web browser and sends responses.
 
+**Example**: In the URL`/redfish/v1/Systems/e24fb205-6669-4080-b53c-67d4923aa73e:1`, if you replace the colon character `:` with its encoding notation `%3A`, or the `/` character with %2F and send the request, Resource Aggregator for ODIM accepts the URL, decodes the encoded notation internally and sends an accurate response.
 
+<blockquote>Tip: You can visit https://www.w3schools.com/tags/ref_urlencode.ASP or browse the Internet to view the standard ASCII Encoding Reference of the URL characters.</blockquote>
 
-#  List of supported APIs
+# List of supported APIs
 
 Resource Aggregator for ODIM supports the following Redfish APIs:
-
-
 
 |Redfish Service Root||
 |-------|--------------------|
@@ -445,6 +441,10 @@ Resource Aggregator for ODIM supports the following Redfish APIs:
 |/redfish/v1/Managers/\{managerId\}/HostInterfaces|`GET`|
 |/redfish/v1/Managers/\{managerId\}/LogServices|`GET`|
 |/redfish/v1/Managers/\{managerId\}/NetworkProtocol|`GET`|
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia|`GET`|
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}| `GET`  |
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia|`POST`|
+|/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia|`POST`|
 
 |UpdateService||
 |-------|--------------------|
@@ -486,9 +486,17 @@ Resource Aggregator for ODIM supports the following Redfish APIs:
 | /redfish/v1/TaskService/Tasks/\{taskId\}/SubTasks |`GET`|
 | /redfish/v1/TaskService/Tasks/\{taskId\}/SubTasks/ \{subTaskId\} |`GET`|
 
-
-
-
+| TelemetryService                                             |                |
+| ------------------------------------------------------------ | -------------- |
+| /redfish/v1/TelemetryService                                 | `GET`          |
+| /redfish/v1/TelemetryService/MetricDefinitions               | `GET`          |
+| /redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionId} | `GET`          |
+| /redfish/v1//TelemetryService/MetricReportDefinitions        | `GET`,         |
+| /redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionId} | `GET`          |
+| redfish/v1/TelemetryService/MetricReports                    | `GET`          |
+| /redfish/v1/TelemetryService/MetricReports/{MetricReportId}  | `GET`          |
+| /redfish/v1/TelemetryService/Triggers                        | `GET`          |
+| /redfish/v1/TelemetryService/Triggers/{TriggerId}            | `GET`, `PATCH` |
 
 |Task monitor||
 |-------|--------------------|
@@ -526,8 +534,6 @@ universally unique identifier of a system. Example: *ba0a6871-7bc4-5f7a-903d-67f
 curl -i GET 'https://{odimra_host}:{port}/redfish/v1'
 ```
 
-
-
 >**Sample response header**
 
 
@@ -545,7 +551,7 @@ Transfer-Encoding:chunked
 ```
 
 >**Sample response body**
- 
+
 
 ```
 {
@@ -567,6 +573,9 @@ Transfer-Encoding:chunked
    },
    "Tasks": {
       "@odata.id": "/redfish/v1/TaskService"
+   },
+   "Tasks": {
+      "@odata.id": "/redfish/v1/TelemetryService"
    },
    "AggregationService": {
       "@odata.id": "/redfish/v1/AggregationService"
@@ -596,10 +605,6 @@ Transfer-Encoding:chunked
    "UUID": "a64fc187-e0e9-4f68-82a8-67a616b84b1d"
 }
 ```
-
-
-
-
 
 
 
@@ -706,10 +711,6 @@ To authenticate requests with the Redfish services, implement any one of the fol
 
       An `X-AUTH-TOKEN` is valid and a session is open only for 30 minutes, unless you continue to send requests to a Redfish service using this token. An idle session is automatically terminated after the time-out interval.
 
-
-
-
-
 ## Role-based authorization
 
 In Resource Aggregator for ODIM, the roles and privileges control which users have what access to resources. If you perform an HTTP operation on a resource without necessary privileges, you will receive an HTTP `403 Forbidden` error.
@@ -783,8 +784,6 @@ This privilege is required to view any resource or a collection of resources exp
 Resource Aggregator for ODIM has a default user account that has all the privileges of an administrator role.
 
 
-
-
 # Sessions
 
 A session represents a window of user's login with a Redfish service and contains details about the user and the user activity. You can run multiple sessions simultaneously.
@@ -805,7 +804,7 @@ Resource Aggregator for ODIM offers Redfish `SessionService` interface for creat
 |API URI|Operation Applicable|Required privileges|
 |-------|--------------------|-------------------|
 |/redfish/v1/SessionService|GET|`Login` |
-|/redfish/v1/SessionService/Sessions|POST, GET|`Login`,|
+|/redfish/v1/SessionService/Sessions|POST, GET|`Login`|
 |redfish/v1/SessionService/Sessions/\{sessionId\}|GET, DELETE|`Login`, `ConfigureManager`, `ConfigureSelf` |
 
 >**NOTE:**
@@ -854,10 +853,6 @@ curl -i GET \
 }
 ```
 
-
-
-
-
 ##  Creating a session
 
 |||
@@ -894,8 +889,6 @@ curl -i POST \
 "Password": "abc123"
 }
 ```
-
-
 
 
 
@@ -961,7 +954,6 @@ Transfer-Encoding:chunked
 curl -i GET \
                -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
               'https://{odimra_host}:{port}/redfish/v1/SessionService/Sessions'
-
 
 ```
 
@@ -4370,9 +4362,9 @@ curl -i GET \
 |<strong>Response code</strong>  |On success, `200 OK` |
 |<strong>Authentication</strong>  |Yes|
 
- 
+
 >**curl command**
- 
+
 
 ```
 curl -i GET \
@@ -5576,7 +5568,7 @@ curl -i DELETE \
    -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
    'https://{odim_host}:{port}/redfish/v1/Chassis/{rackId}'
 ```
-   
+
 
 >**Sample request body**
 
@@ -5601,7 +5593,7 @@ curl -i DELETE \
    -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
    'https://{odim_host}:{port}/redfish/v1/Chassis/{rackGroupId}`'
 ```
-   
+
 
 >**Sample request body**
 
@@ -5920,10 +5912,6 @@ Refer to [Resetting Servers](#resetting-servers) to know about `ResetType.`
 
 
 
-
-
-
-
 ## Changing the boot settings
 
 |||
@@ -6079,6 +6067,7 @@ Resource Aggregator for ODIM exposes APIs to retrieve information about managers
 |/redfish/v1/Managers/\{managerId\}/HostInterfaces|`GET`|
 |/redfish/v1/Managers/\{managerId\}/LogServices|`GET`|
 |/redfish/v1/Managers/\{managerId\}/NetworkProtocol|`GET`|
+|/redfish/v1/Managers/\{managerId\}/VirtualMedia|`GET`|
 
 
 
@@ -6289,16 +6278,188 @@ curl -i GET \
 }
 ```
 
+## VirtualMedia
+
+VirtualMedia enables you to connect remote storage media (such as CD-ROM, USB mass storage, ISO image, and floppy disk) to a target server on a network. The target server can access the remote media, read from and write to it as if it were physically connected to the server USB port.
+
+Resource Aggregator for ODIM exposes Redfish `VirtualMedia` APIs to connect the remote storage media to your servers.
+
+**Supported APIs**:
+
+| API URI                                                      | Operation Applicable | Required privileges   |
+| ------------------------------------------------------------ | -------------------- | --------------------- |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia                | GET                  | `Login`               |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID} | GET                  | `Login`               |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia | POST                 | `ConfigureComponents` |
+| /redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia | POST                 | `ConfigureComponents` |
+
+>**NOTE:**
+>Before accessing these endpoints, ensure that the user has the required privileges. If you access these endpoints without necessary privileges, you will receive an HTTP `403 Forbidden` error.
+
+### Viewing the VirtualMedia collection
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia`              |
+| **Description**    | This operation lists all virtualmedia collections available in Resource Aggregator for ODIM. |
+| **Returns**        | A list of links to all the available virtualmedia collections. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i GET \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+ 'https://{odim_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia'
+```
+
+>**Sample response body**
+
+```
+{
+  "@odata.context":"/redfish/v1/$metadata#VirtualMediaCollection.VirtualMediaCollection",
+   "@odata.id":"/redfish/v1/Managers/1/VirtualMedia/",
+   "@odata.type":"#VirtualMediaCollection.VirtualMediaCollection",
+   "Description":"Virtual Media Services Settings",
+   "Name":"Virtual Media Services",
+   "Members":[
+      {
+         "@odata.id":"/redfish/v1/Managers/1/VirtualMedia/1/"
+      },
+      {
+         "@odata.id":"/redfish/v1/Managers/1/VirtualMedia/2/"
+      }
+   ],
+   "Members@odata.count":2
+}
+```
+
+### Viewing a VirtualMedia Instance
+
+| <strong>Method</strong>         | `GET`                                                        |
+| ------------------------------- | ------------------------------------------------------------ |
+| <strong>URI</strong>            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}` |
+| <strong>Description</strong>    | This action retrieves information about a specific virtualmedia instance. |
+| <strong>Returns</strong>        | JSON schema representing this virtualmedia instance.         |
+| <strong>Response Code</strong>  | On success, `200 Ok`                                         |
+| <strong>Authentication</strong> | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i GET \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+ 'https://{odim_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}'
+```
 
 
+>**Sample response body**
+
+```
+{
+    "error": {
+        "@Message.ExtendedInfo": [
+            {
+                "MessageId": "Base.1.4.Success"
+            }
+        ],
+        "code": "iLO.0.10.ExtendedInfo",
+        "message": "See @Message.ExtendedInfo for more information."
+    }
+}
+```
+
+## Inserting VirtualMedia
+
+| **Method**         | `POST`                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia` |
+| **Description**    | This operation inserts the virtual media on to the manager.  |
+| **Returns**        | A message stating the virtual media insertion was successful. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i POST \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+   -H "Content-Type:application/json" \
+   -d \
+	'{
+  "Image":"http://<ip address>/<image path>",
+  "Inserted":true,
+  "WriteProtected":true
+}' \
+ 'https://{odimra_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.InsertMedia'
+
+```
+
+>**Sample response body**
+
+```
+{
+    "error": {
+        "@Message.ExtendedInfo": [
+            {
+                "MessageId": "Base.1.4.Success"
+            }
+        ],
+        "code": "iLO.0.10.ExtendedInfo",
+        "message": "See @Message.ExtendedInfo for more information."
+    }
+}
+ 
+```
+
+## Ejecting VirtualMedia
+
+| **Method**         | `POST`                                                       |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia` |
+| **Description**    | This operation ejects the virtual media from the manager.    |
+| **Returns**        | A message stating the virtual media ejection was successful. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | Yes                                                          |
+
+>**curl command**
+
+```
+curl -i POST \
+   -H 'Authorization:Basic {base64_encoded_string_of_[username:password]}' \
+   -H "Content-Type:application/json" \
+   
+ 'https://{odimra_host}:{port}/redfish/v1/Managers/{ManagerId}/VirtualMedia/{VirtualMediaID}/Actions/VirtualMedia.EjectMedia'
+```
+
+<blockquote>NOTE: No payload is required for this operation. </blockquote>
+
+>**Sample response body**
 
 
+```
+{
+    "error": {
+        "@Message.ExtendedInfo": [
+            {
+                "MessageId": "Base.1.4.Success"
+            }
+        ],
+        "code": "iLO.0.10.ExtendedInfo",
+        "message": "See @Message.ExtendedInfo for more information."
+    }
+}
+ 
+```
 
+**Request parameters**
 
-
-
-
-
+| Parameter      | Type               | Description           |
+| -------------- | ------------------ | --------------------- |
+| Image          | String (Required)  | Image path            |
+| Inserted       | Boolean (Optional) | Default value is true |
+| WriteProtected | Boolean (Optional) | Default value is true |
 
 # Software and firmware inventory
 
@@ -6589,7 +6750,7 @@ curl -i GET \
 |<strong>Response code</strong> |On success, `200 Ok` |
 |<strong>Authentication</strong> |Yes|
 
- 
+
 **Usage information** 
 To know the progress of this action, perform HTTP `GET` on the [task monitor](#viewing-a-task-monitor) returned in the response header \(until the task is complete\).
 
@@ -6780,18 +6941,6 @@ Content-Length:491 bytes
       "code":"iLO.0.10.ExtendedInfo",
       "message":"See @Message.ExtendedInfo for more information."
 ```
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -7447,8 +7596,6 @@ curl -i GET \
 
 
 
-
-
 ## Collection of zones
 
 |||
@@ -7677,7 +7824,7 @@ Transfer-Encoding:chunked
 
 ```
 
->**Sample response body**
+>- **Sample response body**
 
 ```
 {
@@ -7745,7 +7892,7 @@ Transfer-Encoding:chunked
 |**Method** |`POST` |
 |**URI** |`/redfish/v1/Fabrics/{fabricID}/AddressPools` |
 |**Description** |This operation creates an address pool for a zone of zones in a specific fabric.|
-|**Returns** |<ul><li>Link to the created address pool in the `Location` header.</li><li>JSON schema representing the created address pool.</li></ul>|
+|**Returns** |- Link to the created address pool in the `Location` header.<br />- JSON schema representing the created address pool.|
 |**Response code** | `201 Created` |
 |**Authentication** |Yes|
 
@@ -8381,10 +8528,6 @@ curl -i -X PATCH \
 
 
 
-
-
-
-
 >**Sample request body** \(assigning links for a zone of endpoints\)
 
 ```
@@ -8563,29 +8706,9 @@ curl -i DELETE \
 ```
 curl -i -X DELETE \
    -H "X-Auth-Token:{X-Auth-Token}" \
- 'https://{odimra_host}:{port}/redfish/v1/Fabrics/{fabricID}/AddressPools/{addresspoolid}'
+ 'https://{odimra_host}:{port}/redfish/v1/Fabrics/{fabricID}/AddressPools/{addresspo'
 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # Tasks
@@ -8681,16 +8804,6 @@ Transfer-Encoding":chunked
 
 
 
-
-
-
-
-
-
-
-
-
-
 ## Viewing a collection of tasks
 
 |||
@@ -8737,10 +8850,6 @@ curl -i GET \
 ```
 
 
-
-
-
- 
 
 ## Viewing information about a specific task
 
@@ -8801,10 +8910,6 @@ curl -i GET \
 ```
 
 
-
-
-
- 
 
 
 ##  Viewing a task monitor
@@ -8900,12 +9005,6 @@ Content-Length:491 bytes
 
 
 
-
-
-
-
- 
-
 ## Deleting a task
 
 |||
@@ -8927,20 +9026,6 @@ curl -i DELETE \
  'https://{odimra_host}:{port}/redfish/v1/TaskService/Tasks/{TaskID}'
 
 ```
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
 
 
 
@@ -9119,14 +9204,6 @@ Transfer-Encoding:chunked
    }
 }
 ```
-
-
-
-
-
-
-
-
 
 
 
@@ -9421,12 +9498,6 @@ curl -i POST \
 
 
 
-
-
-
-
- 
-
 > Sample event payload 
 
 ```
@@ -9661,10 +9732,6 @@ To get notified of the task completion status, subscribe to `StatusChange` event
 
 
 
-
-
-
-
 ## Viewing a collection of event subscriptions
 
 |||
@@ -9768,10 +9835,6 @@ curl -i GET \
 ```
 
 
-
-
-
-
 ##  Deleting an event subscription
 
 |||
@@ -9807,10 +9870,6 @@ curl -i -X DELETE \
    "Severity":"OK"
 }
 ```
-
-
-
-
 
 
 
@@ -9959,8 +10018,6 @@ curl -i GET \
 
 
 
-
-
 ##  Viewing a single registry
 
 |||
@@ -10032,6 +10089,588 @@ curl -i GET \
 ```
 
 
+
+# Redfish Telemetry
+
+Telemetry refers to the metrics obtained from remote systems for analysis and monitoring. 
+The Redfish Telemetry model is designed to obtain characteristics of metrics, send specific metric reports periodically and specify triggers against metrics.
+
+Resource Aggregator for ODIM exposes the Redfish `TelemetryService` APIs to:
+
+- Define characteristics and details of one or more metrics (metadata)
+- Generate metric reports at regular intervals, specifying their content and timeframe
+- Transmit metric reports with metric readings and any metadata associated with the readings
+- Specify trigger thresholds for a list of metrics
+
+**Supported APIs**
+
+| API URI                                                      | Operation Applicable | Required privileges     |
+| ------------------------------------------------------------ | -------------------- | ----------------------- |
+| /redfish/v1/TelemetryService                                 | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricDefinitions               | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID} | GET                  | `Login`                 |
+| /redfish/v1//TelemetryService/MetricReportDefinitions        | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID} | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricReports                   | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricReports/{MetricReportID}  | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/Triggers                        | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/Triggers/{TriggerID}            | GET, PATCH           | `Login`,`ConfigureSelf` |
+
+>**NOTE:**
+>Before accessing these endpoints, ensure that the user has the required privileges. If you access these endpoints without necessary privileges, you will receive an HTTP `403 Forbidden` error.
+
+## Viewing the telemetry service root
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService`                               |
+| **Description**    | This operation retrieves JSON schema representing the Redfish `TelemetryService` root. |
+| **Returns**        | Properties for the Redfish `TelemetryService` and links to its list of resources. |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.id":"/redfish/v1/TelemetryService",
+   "@odata.type":"#TelemetryService.v1_2_0.TelemetryService",
+   "Id":"TelemetryService",
+   "Name":"Telemetry Service",
+   "Status":{
+      "State":"Enabled",
+      "Health":"OK"
+   },
+   "ServiceEnabled":true,
+   "SupportedCollectionFunctions":[
+      "Average",
+      "Minimum",
+      "Maximum"
+   ],
+   "MetricDefinitions":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions"
+   },
+   "MetricReportDefinitions":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions"
+   },
+   "MetricReports":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReports"
+   },
+   "Triggers":{
+      "@odata.id":"/redfish/v1/TelemetryService/Triggers"
+   }
+}
+```
+
+## Collection of metric definitions
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions`             |
+| **Description**    | This operation lists the metadata information for the metrics collection in Redfish implementation. |
+| **Returns**        | JSON schema containing the definition, metadata or the characteristics of the metrics collection |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricDefinitions/'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/PowerConsumedWatts",
+   "@odata.type":"#MetricDefinition.v1_0_3.MetricDefinition",
+   "Id":"PowerConsumedWatts",
+   "Name":"Power Consumed Watts Metric Definition",
+   "MetricType":"Numeric",
+   "Implementation":"PhysicalSensor",
+   "PhysicalContext":"PowerSupply",
+   "MetricDataType":"Decimal",
+   "Units":"W",
+   "Precision":4,
+   "Accuracy":1,
+   "Calibration":2,
+   "MinReadingRange":0,
+   "MaxReadingRange":50,
+   "SensingInterval":"PT1S",
+   "TimestampAccuracy":"PT1S",
+   "Wildcards":[
+      {
+         "Name":"ChassisID",
+         "Values":[
+            "1",
+            "2",
+            "3"
+         ]
+      }
+   ],
+   "MetricProperties":[
+      "/redfish/v1/Chassis/{ChassisID}/Power#/PowerControl/0/PowerConsumedWatts",
+      "/redfish/v1/Chassis/{ChassisID}/Power#/PowerControl/1/PowerConsumedWatts"
+   ]
+}
+```
+
+## Single metric definition
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID}` |
+| **Description**    | This operation lists the metadata information for a metric in Redfish implementation. |
+| **Returns**        | JSON schema containing the definition, metadata or the characteristics of a metric |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID}'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.type":"#MetricDefinition.v1_2_0.MetricDefinition",
+   "Id":"PowerConsumedWatts",
+   "Name":"Power Consumed Watts Metric Definition",
+   "MetricType":"Numeric",
+   "Implementation":"PhysicalSensor",
+   "PhysicalContext":"PowerSupply",
+   "MetricDataType":"Decimal",
+   "Units":"W",
+   "Precision":4,
+   "Accuracy":1,
+   "Calibration":2,
+   "MinReadingRange":0,
+   "MaxReadingRange":50,
+   "SensingInterval":"PT1S",
+   "TimestampAccuracy":"PT1S",
+   "Wildcards":[
+      {
+         "Name":"ChassisID",
+         "Values":[
+            "1"
+         ]
+      }
+   ],
+   "MetricProperties":[
+      "/redfish/v1/Chassis/{ChassisID}/Power#/PowerControl/0/PowerConsumedWatts"
+   ],
+   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/PowerConsumedWatts"
+}
+```
+
+## Collection of Metric Report Definitions
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions`       |
+| **Description**    | This operation represents a set of metric properties of collected in multiple metric reports. |
+| **Returns**        | JSON schema defining the content and time of the metric reports |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReportDefinitions/'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/PowerMetrics",
+   "@odata.type":"#MetricReportDefinition.v1_3_0.MetricReportDefinition",
+   "Id":"PowerMetrics",
+   "Name":"Transmit and Log Power Metrics",
+   "MetricReportDefinitionType":"Periodic",
+   "MetricReportDefinitionEnabled":true,
+   "Schedule":{
+      "RecurrenceInterval":"PT0.1S"
+   },
+   "ReportActions":[
+      "RedfishEvent",
+      "LogToMetricReportsCollection"
+   ],
+   "ReportUpdates":"Overwrite",
+   "MetricReport":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReports/PowerMetrics"
+   },
+   "Status":{
+      "State":"Enabled"
+   },
+   "Wildcards":[
+      {
+         "Name":"PWild",
+         "Values":[
+            "0",
+            "1"
+         ]
+      },
+      {
+         "Name":"TWild",
+         "Values":[
+            "Tray_1",
+            "Tray_2",
+            "Tray_3"
+         ]
+      }
+   ],
+   "MetricProperties":[
+      "/redfish/v1/Chassis/{TWild}/Power#/PowerControl/{PWild}/PowerMetrics/
+AverageConsumedWatts",
+      "/redfish/v1/Chassis/{TWild}/Power#/PowerControl/{PWild}/PowerMetrics/
+MinConsumedWatts",
+      "/redfish/v1/Chassis/{TWild}/Power#/PowerControl/{PWild}/PowerMetrics/
+MaxConsumedWatts"
+   ]
+}
+```
+
+## Single metric report definition 
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID}` |
+| **Description**    | This operation represents metric properties of a single metric report. |
+| **Returns**        | JSON schema defining the content and periodicity of the metric report |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID}'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.type":"#MetricReport.v1_4_2.MetricReport",
+   "Id":"AvgPlatformPowerUsage",
+   "Name":"Average Platform Power Usage metric report",
+   "ReportSequence":"127",
+   "MetricReportDefinition":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/AvgPlatformPowerUsage"
+   },
+   "MetricValues":[
+      {
+         "MetricId":"AverageConsumedWatts",
+         "MetricValue":"100",
+         "Timestamp":"2016-11-08T12:25:00-05:00",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+      },
+      {
+         "MetricId":"AverageConsumedWatts",
+         "MetricValue":"94",
+         "Timestamp":"2016-11-08T13:25:00-05:00",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+      },
+      {
+         "MetricId":"AverageConsumedWatts",
+         "MetricValue":"100",
+         "Timestamp":"2016-11-08T14:25:00-05:00",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+      }
+   ],
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/AvgPlatformPowerUsage"
+}
+```
+
+## Collection of metric reports
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/MetricReports`                 |
+| **Description**    | This operation retrieves collection of reports with metric readings and any metadata associated with the readings. |
+| **Returns**        | Links of the metric reports.                                 |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReports/'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/PlatformPowerUsage",
+   "@odata.type":"#MetricReport.v1_3_0.MetricReport",
+   "Id":"PlatformPowerUsage",
+   "Name":"PlatformPowerUsage",
+   "MetricReportDefinition":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/
+PlatformPowerUsage"
+   },
+   "MetricValues":[
+      {
+         "Timestamp":"2016-11-08T12:25:00-05:00",
+         "MetricValue":"103",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/PowerControl/0/
+PlatformConsumedWatts"
+      },
+      {
+         "Timestamp":"2016-11-08T12:25:00-05:00",
+         "MetricValue":"103",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_2/Power#/PowerControl/0/
+PlatformConsumedWatts"
+      },
+      {
+         "Timestamp":"2016-11-08T13:25:00-05:00",
+         "MetricValue":"106",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/PowerControl/0/
+PlatformConsumedWatts"
+      },
+      {
+         "Timestamp":"2016-11-08T13:25:00-05:00",
+         "MetricValue":"106",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_2/Power#/PowerControl/0/
+PlatformConsumedWatts"
+      },
+      {
+         "Timestamp":"2016-11-08T14:25:00-05:00",
+         "MetricValue":"107",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/PowerControl/0/
+PlatformConsumedWatts"
+      },
+      {
+         "Timestamp":"2016-11-08T14:25:00-05:00",
+         "MetricValue":"107",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_2/Power#/PowerControl/0/
+PlatformConsumedWatts"
+      }
+   ]
+}
+```
+
+## Single metric report 
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/MetricReports/{MetricReportID}` |
+| **Description**    | This operation retrieves a report with metric readings and any metadata associated with the readings. |
+| **Returns**        | Link to the metric report.                                   |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReports/{MetricReportID}'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.type":"#MetricReport.v1_4_2.MetricReport",
+   "Id":"AvgPlatformPowerUsage",
+   "Name":"Average Platform Power Usage metric report",
+   "ReportSequence":"127",
+   "MetricReportDefinition":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/AvgPlatformPowerUsage"
+   },
+   "MetricValues":[
+      {
+         "MetricId":"AverageConsumedWatts",
+         "MetricValue":"100",
+         "Timestamp":"2016-11-08T12:25:00-05:00",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+      },
+      {
+         "MetricId":"AverageConsumedWatts",
+         "MetricValue":"94",
+         "Timestamp":"2016-11-08T13:25:00-05:00",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+      },
+      {
+         "MetricId":"AverageConsumedWatts",
+         "MetricValue":"100",
+         "Timestamp":"2016-11-08T14:25:00-05:00",
+         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+      }
+   ],
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/AvgPlatformPowerUsage"
+}
+```
+
+## Collection of triggers
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/Triggers`                      |
+| **Description**    | This operation retrieves the collection of triggers that apply to multiple metric properties. |
+| **Returns**        | Links to a collection of triggers                            |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/Triggers/'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.id":"/redfish/v1/TelemetryService/Triggers/PlatformPowerCapTriggers",
+   "@odata.type":"#Triggers.v1_1_1.Triggers",
+   "Id":"PlatformPowerCapTriggers",
+   "Name":"Triggers for platform power consumed",
+   "MetricType":"Numeric",
+   "TriggerActions":[
+      "RedfishEvent"
+   ],
+   "NumericThresholds":{
+      "UpperCritical":{
+         "Reading":50,
+         "Activation":"Increasing",
+         "DwellTime":"PT0.001S"
+      },
+      "UpperWarning":{
+         "Reading":48.1,
+         "Activation":"Increasing",
+         "DwellTime":"PT0.004S"
+      }
+   },
+   "MetricProperties":[
+      "/redfish/v1/Chassis/1/Power#/PowerControl/0/PowerConsumedWatts"
+   ]
+}
+```
+
+## Single trigger 
+
+| **Method**         | `GET`                                                        |
+| ------------------ | ------------------------------------------------------------ |
+| **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersID}`         |
+| **Description**    | This endpoint retrieves a trigger that apply to the listed metrics. |
+| **Returns**        | Link of a single trigger                                     |
+| **Response Code**  | `200 OK`                                                     |
+| **Authentication** | No                                                           |
+
+
+>**curl command**
+
+```
+curl -i GET \
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/Triggers/'
+
+```
+
+
+>**Sample response body**
+
+```
+{
+   "@odata.type":"#Triggers.v1_1_4.Triggers",
+   "Id":"PlatformPowerCapTriggers",
+   "Name":"Triggers for platform power consumed",
+   "MetricType":"Numeric",
+   "TriggerActions":[
+      "RedfishEvent"
+   ],
+   "NumericThresholds":{
+      "UpperCritical":{
+         "Reading":50,
+         "Activation":"Increasing",
+         "DwellTime":"PT0.001S"
+      },
+      "UpperWarning":{
+         "Reading":48.1,
+         "Activation":"Increasing",
+         "DwellTime":"PT0.004S"
+      }
+   },
+   "MetricProperties":[
+      "/redfish/v1/Chassis/1/Power#/PowerControl/0/PowerConsumedWatts"
+   ],
+   "@odata.id":"/redfish/v1/TelemetryService/Triggers/{TriggerID}"
+}
+```
+
+## Updating a trigger
+
+| **Method**         | `PATCH`                                              |
+| ------------------ | ---------------------------------------------------- |
+| **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersID}` |
+| **Description**    | This operation updates triggers of each metric.      |
+| **Returns**        |                                                      |
+| **Response Code**  | `200 OK`                                             |
+| **Authentication** | No                                                   |
+
+
+>**curl command**
+
+```
+curl -i -X PATCH \
+   -H "Authorization:Basic YWRtaW46T2QhbTEyJDQ=" \
+   -H "Content-Type:application/json" \
+   -d \
+'{
+  "EventTriggers": ["Alert"]
+}' \
+ 'https://10.24.1.33:30080/redfish/v1/TelemetryService/Triggers/{TriggersID}'
+
+```
+
+
+>**Sample request body**
+
+```
+{
+  "EventTriggers": ["Alert"]
+}
+```
 
 
 
