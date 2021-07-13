@@ -491,7 +491,7 @@ Resource Aggregator for ODIM supports the following Redfish APIs:
 | /redfish/v1/TelemetryService                                 | `GET`          |
 | /redfish/v1/TelemetryService/MetricDefinitions               | `GET`          |
 | /redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionId} | `GET`          |
-| /redfish/v1//TelemetryService/MetricReportDefinitions        | `GET`,         |
+| /redfish/v1//TelemetryService/MetricReportDefinitions        | `GET`          |
 | /redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionId} | `GET`          |
 | redfish/v1/TelemetryService/MetricReports                    | `GET`          |
 | /redfish/v1/TelemetryService/MetricReports/{MetricReportId}  | `GET`          |
@@ -574,7 +574,7 @@ Transfer-Encoding:chunked
    "Tasks": {
       "@odata.id": "/redfish/v1/TaskService"
    },
-   "Tasks": {
+   "TelemetryService": {
       "@odata.id": "/redfish/v1/TelemetryService"
    },
    "AggregationService": {
@@ -8706,7 +8706,7 @@ curl -i DELETE \
 ```
 curl -i -X DELETE \
    -H "X-Auth-Token:{X-Auth-Token}" \
- 'https://{odimra_host}:{port}/redfish/v1/Fabrics/{fabricID}/AddressPools/{addresspo'
+ 'https://{odimra_host}:{port}/redfish/v1/Fabrics/{fabricID}/AddressPools/{addresspoolid}'
 
 ```
 
@@ -10108,13 +10108,13 @@ Resource Aggregator for ODIM exposes the Redfish `TelemetryService` APIs to:
 | ------------------------------------------------------------ | -------------------- | ----------------------- |
 | /redfish/v1/TelemetryService                                 | GET                  | `Login`                 |
 | /redfish/v1/TelemetryService/MetricDefinitions               | GET                  | `Login`                 |
-| /redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID} | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionId} | GET                  | `Login`                 |
 | /redfish/v1//TelemetryService/MetricReportDefinitions        | GET                  | `Login`                 |
-| /redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID} | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionId} | GET                  | `Login`                 |
 | /redfish/v1/TelemetryService/MetricReports                   | GET                  | `Login`                 |
-| /redfish/v1/TelemetryService/MetricReports/{MetricReportID}  | GET                  | `Login`                 |
+| /redfish/v1/TelemetryService/MetricReports/{MetricReportId}  | GET                  | `Login`                 |
 | /redfish/v1/TelemetryService/Triggers                        | GET                  | `Login`                 |
-| /redfish/v1/TelemetryService/Triggers/{TriggerID}            | GET, PATCH           | `Login`,`ConfigureSelf` |
+| /redfish/v1/TelemetryService/Triggers/{TriggerId}            | GET, PATCH           | `Login`,`ConfigureSelf` |
 
 >**NOTE:**
 >Before accessing these endpoints, ensure that the user has the required privileges. If you access these endpoints without necessary privileges, you will receive an HTTP `403 Forbidden` error.
@@ -10125,7 +10125,7 @@ Resource Aggregator for ODIM exposes the Redfish `TelemetryService` APIs to:
 | ------------------ | ------------------------------------------------------------ |
 | **URI**            | `/redfish/v1/TelemetryService`                               |
 | **Description**    | This operation retrieves JSON schema representing the Redfish `TelemetryService` root. |
-| **Returns**        | Properties for the Redfish `TelemetryService` and links to its list of resources. |
+| **Returns**        | Properties of the Redfish `TelemetryService` and links to its list of resources. |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
 
@@ -10177,7 +10177,7 @@ curl -i GET \
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
 | **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions`             |
-| **Description**    | This operation lists the metadata information for the metrics collection in Redfish implementation. |
+| **Description**    | This operation lists the metadata information for the metrics collection. |
 | **Returns**        | JSON schema containing the definition, metadata or the characteristics of the metrics collection |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
@@ -10196,36 +10196,30 @@ curl -i GET \
 
 ```
 {
-   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/PowerConsumedWatts",
-   "@odata.type":"#MetricDefinition.v1_0_3.MetricDefinition",
-   "Id":"PowerConsumedWatts",
-   "Name":"Power Consumed Watts Metric Definition",
-   "MetricType":"Numeric",
-   "Implementation":"PhysicalSensor",
-   "PhysicalContext":"PowerSupply",
-   "MetricDataType":"Decimal",
-   "Units":"W",
-   "Precision":4,
-   "Accuracy":1,
-   "Calibration":2,
-   "MinReadingRange":0,
-   "MaxReadingRange":50,
-   "SensingInterval":"PT1S",
-   "TimestampAccuracy":"PT1S",
-   "Wildcards":[
+   "@odata.context":"/redfish/v1/$metadata#MetricDefinitionCollection.MetricDefinitionCollection",
+   "@odata.etag":"W/\"1E796226\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions",
+   "@odata.type":"#MetricDefinitionCollection.MetricDefinitionCollection",
+   "Description":"Metric Definitions view",
+   "Name":"Metric Definitions",
+   "Members":[
       {
-         "Name":"ChassisID",
-         "Values":[
-            "1",
-            "2",
-            "3"
-         ]
+         "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/MemoryBusUtil"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/IOBusUtil"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/JitterCount"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/AvgCPU0Freq"
       }
    ],
-   "MetricProperties":[
-      "/redfish/v1/Chassis/{ChassisID}/Power#/PowerControl/0/PowerConsumedWatts",
-      "/redfish/v1/Chassis/{ChassisID}/Power#/PowerControl/1/PowerConsumedWatts"
-   ]
+   "Members@odata.count":5
 }
 ```
 
@@ -10234,7 +10228,7 @@ curl -i GET \
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
 | **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID}` |
-| **Description**    | This operation lists the metadata information for a metric in Redfish implementation. |
+| **Description**    | This operation lists the metadata information for a metric.  |
 | **Returns**        | JSON schema containing the definition, metadata or the characteristics of a metric |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
@@ -10244,7 +10238,7 @@ curl -i GET \
 
 ```
 curl -i GET \
-              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID}'
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionId}'
 
 ```
 
@@ -10253,33 +10247,25 @@ curl -i GET \
 
 ```
 {
-   "@odata.type":"#MetricDefinition.v1_2_0.MetricDefinition",
-   "Id":"PowerConsumedWatts",
-   "Name":"Power Consumed Watts Metric Definition",
-   "MetricType":"Numeric",
+   "@odata.context":"/redfish/v1/$metadata#MetricDefinition.MetricDefinition",
+   "@odata.etag":"W/\"AB720077\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil",
+   "@odata.type":"#MetricDefinition.v1_0_0.MetricDefinition",
+   "Id":"CPUUtil",
+   "Calculable":"NonSummable",
+   "CalculationAlgorithm":"Average",
+   "Description":"Metric definition for CPU Utilization",
    "Implementation":"PhysicalSensor",
-   "PhysicalContext":"PowerSupply",
+   "IsLinear":true,
+   "MaxReadingRange":100,
    "MetricDataType":"Decimal",
-   "Units":"W",
-   "Precision":4,
-   "Accuracy":1,
-   "Calibration":2,
-   "MinReadingRange":0,
-   "MaxReadingRange":50,
-   "SensingInterval":"PT1S",
-   "TimestampAccuracy":"PT1S",
-   "Wildcards":[
-      {
-         "Name":"ChassisID",
-         "Values":[
-            "1"
-         ]
-      }
-   ],
    "MetricProperties":[
-      "/redfish/v1/Chassis/{ChassisID}/Power#/PowerControl/0/PowerConsumedWatts"
+      "/redfish/v1/Systems/1#SystemUsage/CPUUtil"
    ],
-   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/PowerConsumedWatts"
+   "MetricType":"Numeric",
+   "MinReadingRange":0,
+   "Name":"Metric definition for CPU Utilization",
+   "Units":"%"
 }
 ```
 
@@ -10288,8 +10274,8 @@ curl -i GET \
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions`       |
-| **Description**    | This operation represents a set of metric properties of collected in multiple metric reports. |
-| **Returns**        | JSON schema defining the content and time of the metric reports |
+| **Description**    | This operation represents a collection of metric report definitions. |
+| **Returns**        | JSON schema defining the content of the multiple metric report |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
 
@@ -10307,51 +10293,25 @@ curl -i GET \
 
 ```
 {
-   "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/PowerMetrics",
-   "@odata.type":"#MetricReportDefinition.v1_3_0.MetricReportDefinition",
-   "Id":"PowerMetrics",
-   "Name":"Transmit and Log Power Metrics",
-   "MetricReportDefinitionType":"Periodic",
-   "MetricReportDefinitionEnabled":true,
-   "Schedule":{
-      "RecurrenceInterval":"PT0.1S"
-   },
-   "ReportActions":[
-      "RedfishEvent",
-      "LogToMetricReportsCollection"
-   ],
-   "ReportUpdates":"Overwrite",
-   "MetricReport":{
-      "@odata.id":"/redfish/v1/TelemetryService/MetricReports/PowerMetrics"
-   },
-   "Status":{
-      "State":"Enabled"
-   },
-   "Wildcards":[
+   "@odata.context":"/redfish/v1/$metadata#MetricReportDefinitionCollection.MetricReportDefinitionCollection",
+   "@odata.etag":"W/\"BFD5C070\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions",
+   "@odata.type":"#MetricReportDefinitionCollection.MetricReportDefinitionCollection",
+   "Description":" MetricReportDefinitions view",
+   "Name":"MetricReportDefinitions",
+   "Members":[
       {
-         "Name":"PWild",
-         "Values":[
-            "0",
-            "1"
-         ]
+         "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/CPUUtilCustom1"
       },
       {
-         "Name":"TWild",
-         "Values":[
-            "Tray_1",
-            "Tray_2",
-            "Tray_3"
-         ]
-      }
+         "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/CPUUtilCustom2"
+      },
+      {
+      
+"@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/CPU0PowerCustom1"
+      },      
    ],
-   "MetricProperties":[
-      "/redfish/v1/Chassis/{TWild}/Power#/PowerControl/{PWild}/PowerMetrics/
-AverageConsumedWatts",
-      "/redfish/v1/Chassis/{TWild}/Power#/PowerControl/{PWild}/PowerMetrics/
-MinConsumedWatts",
-      "/redfish/v1/Chassis/{TWild}/Power#/PowerControl/{PWild}/PowerMetrics/
-MaxConsumedWatts"
-   ]
+   "Members@odata.count":3
 }
 ```
 
@@ -10360,8 +10320,8 @@ MaxConsumedWatts"
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID}` |
-| **Description**    | This operation represents metric properties of a single metric report. |
-| **Returns**        | JSON schema defining the content and periodicity of the metric report |
+| **Description**    | This operation represents a single metric report definition. |
+| **Returns**        | JSON schema defining the content of the single metric report |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
 
@@ -10370,7 +10330,7 @@ MaxConsumedWatts"
 
 ```
 curl -i GET \
-              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID}'
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionId}'
 
 ```
 
@@ -10379,34 +10339,32 @@ curl -i GET \
 
 ```
 {
-   "@odata.type":"#MetricReport.v1_4_2.MetricReport",
-   "Id":"AvgPlatformPowerUsage",
-   "Name":"Average Platform Power Usage metric report",
-   "ReportSequence":"127",
-   "MetricReportDefinition":{
-      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/AvgPlatformPowerUsage"
+   "@odata.context":"/redfish/v1/$metadata#MetricReportDefinition.MetricReportDefinition",
+   "@odata.etag":"W/\"9A613B5C\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/CPUUtilCustom1",
+   "@odata.type":"#MetricReportDefinition.v1_0_0.MetricReportDefinition",
+   "Id":"CPUUtilCustom1",
+   "Description":"Metric report of CPU Utilization for 10 minutes with sensing interval of 20 seconds.",
+   "MetricProperties":[
+      "SystemUsage/CPUUtil"
+   ],
+   "MetricReport":{
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReports/CPUUtilCustom1"
    },
-   "MetricValues":[
+   "MetricReportDefinitionType":"OnRequest",
+   "Metrics":[
       {
-         "MetricId":"AverageConsumedWatts",
-         "MetricValue":"100",
-         "Timestamp":"2016-11-08T12:25:00-05:00",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
-      },
-      {
-         "MetricId":"AverageConsumedWatts",
-         "MetricValue":"94",
-         "Timestamp":"2016-11-08T13:25:00-05:00",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
-      },
-      {
-         "MetricId":"AverageConsumedWatts",
-         "MetricValue":"100",
-         "Timestamp":"2016-11-08T14:25:00-05:00",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+         "CollectionDuration":"PT20S",
+         "CollectionFunction":"Average",
+         "CollectionTimeScope":"Interval",
+         "MetricId":"CPUUtil""…"
       }
    ],
-   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/AvgPlatformPowerUsage"
+   "Name":"Metric report of CPU Utilization for 10 minutes with sensing interval of 20 seconds.",
+   "Status":{
+      "Health":"OK",
+      "State":"Enabled"
+   }
 }
 ```
 
@@ -10415,8 +10373,8 @@ curl -i GET \
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReports`                 |
-| **Description**    | This operation retrieves collection of reports with metric readings and any metadata associated with the readings. |
-| **Returns**        | Links of the metric reports.                                 |
+| **Description**    | This operation retrieves collection of reports with metric readings. |
+| **Returns**        | Links of the metric reports collection.                      |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
 
@@ -10434,52 +10392,24 @@ curl -i GET \
 
 ```
 {
-   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/PlatformPowerUsage",
-   "@odata.type":"#MetricReport.v1_3_0.MetricReport",
-   "Id":"PlatformPowerUsage",
-   "Name":"PlatformPowerUsage",
-   "MetricReportDefinition":{
-      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/
-PlatformPowerUsage"
-   },
-   "MetricValues":[
+   "@odata.context":"/redfish/v1/$metadata#MetricReportCollection.MetricReportCollection",
+   "@odata.etag":"W/\"BFD5C070\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReports",
+   "@odata.type":"#MetricReportCollection.MetricReportCollection",
+   "Description":" Metric Reports view",
+   "Name":"Metric Reports",
+   "Members":[
       {
-         "Timestamp":"2016-11-08T12:25:00-05:00",
-         "MetricValue":"103",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/PowerControl/0/
-PlatformConsumedWatts"
+         "@odata.id":"/redfish/v1/TelemetryService/MetricReports/CPUUtilCustom1"
       },
       {
-         "Timestamp":"2016-11-08T12:25:00-05:00",
-         "MetricValue":"103",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_2/Power#/PowerControl/0/
-PlatformConsumedWatts"
+         "@odata.id":"/redfish/v1/TelemetryService/MetricReports/CPUUtilCustom2"
       },
       {
-         "Timestamp":"2016-11-08T13:25:00-05:00",
-         "MetricValue":"106",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/PowerControl/0/
-PlatformConsumedWatts"
+         "@odata.id":"/redfish/v1/TelemetryService/MetricReports/CPUUtilCustom3"
       },
-      {
-         "Timestamp":"2016-11-08T13:25:00-05:00",
-         "MetricValue":"106",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_2/Power#/PowerControl/0/
-PlatformConsumedWatts"
-      },
-      {
-         "Timestamp":"2016-11-08T14:25:00-05:00",
-         "MetricValue":"107",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/PowerControl/0/
-PlatformConsumedWatts"
-      },
-      {
-         "Timestamp":"2016-11-08T14:25:00-05:00",
-         "MetricValue":"107",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_2/Power#/PowerControl/0/
-PlatformConsumedWatts"
-      }
-   ]
+   ],
+   "Members@odata.count":3
 }
 ```
 
@@ -10487,7 +10417,7 @@ PlatformConsumedWatts"
 
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
-| **URI**            | `/redfish/v1/TelemetryService/MetricReports/{MetricReportID}` |
+| **URI**            | `/redfish/v1/TelemetryService/MetricReports/{MetricReportId}` |
 | **Description**    | This operation retrieves a report with metric readings and any metadata associated with the readings. |
 | **Returns**        | Link to the metric report.                                   |
 | **Response Code**  | `200 OK`                                                     |
@@ -10498,7 +10428,7 @@ PlatformConsumedWatts"
 
 ```
 curl -i GET \
-              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReports/{MetricReportID}'
+              'https://{odimra_host}:{port}/redfish/v1/TelemetryService/MetricReports/{MetricReportId}'
 
 ```
 
@@ -10507,34 +10437,34 @@ curl -i GET \
 
 ```
 {
-   "@odata.type":"#MetricReport.v1_4_2.MetricReport",
-   "Id":"AvgPlatformPowerUsage",
-   "Name":"Average Platform Power Usage metric report",
-   "ReportSequence":"127",
+   "@odata.context":"/redfish/v1/$metadata#MetricReport.MetricReport",
+   "@odata.etag":"W/\"21D55655\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/CPUUtilCustom1",
+   "@odata.type":"#MetricReport.v1_0_0.MetricReport",
+   "Id":"CPUUtilCustom1",
+   "Description":"Metric report of CPU Utilization for 10 minutes with sensing interval of 20 seconds.",
    "MetricReportDefinition":{
-      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/AvgPlatformPowerUsage"
+      "@odata.id":"/redfish/v1/TelemetryService/MetricReportDefinitions/CPUUtilCustom1"
    },
    "MetricValues":[
       {
-         "MetricId":"AverageConsumedWatts",
-         "MetricValue":"100",
-         "Timestamp":"2016-11-08T12:25:00-05:00",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+         "MetricDefinition":{
+            "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil"
+         },
+         "MetricId":"CPUUtil",
+         "MetricValue":"0",
+         "Timestamp":"2021-07-13T10:09:45Z"
       },
       {
-         "MetricId":"AverageConsumedWatts",
-         "MetricValue":"94",
-         "Timestamp":"2016-11-08T13:25:00-05:00",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
-      },
-      {
-         "MetricId":"AverageConsumedWatts",
-         "MetricValue":"100",
-         "Timestamp":"2016-11-08T14:25:00-05:00",
-         "MetricProperty":"/redfish/v1/Chassis/Tray_1/Power#/0/PowerConsumedWatts"
+         "MetricDefinition":{
+            "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil"
+         },
+         "MetricId":"CPUUtil",
+         "MetricValue":"0",
+         "Timestamp":"2021-07-13T10:10:05Z"
       }
    ],
-   "@odata.id":"/redfish/v1/TelemetryService/MetricReports/AvgPlatformPowerUsage"
+   "Name":"Metric report of CPU Utilization for 10 minutes with sensing interval of 20 seconds."
 }
 ```
 
@@ -10562,29 +10492,36 @@ curl -i GET \
 
 ```
 {
-   "@odata.id":"/redfish/v1/TelemetryService/Triggers/PlatformPowerCapTriggers",
-   "@odata.type":"#Triggers.v1_1_1.Triggers",
-   "Id":"PlatformPowerCapTriggers",
-   "Name":"Triggers for platform power consumed",
-   "MetricType":"Numeric",
-   "TriggerActions":[
-      "RedfishEvent"
-   ],
-   "NumericThresholds":{
-      "UpperCritical":{
-         "Reading":50,
-         "Activation":"Increasing",
-         "DwellTime":"PT0.001S"
+   "@odata.context":"/redfish/v1/$metadata#TriggersCollection.TriggersCollection",
+   "@odata.etag":"W/\"DA402EBA\"",
+   "@odata.id":"/redfish/v1/TelemetryService/Triggers",
+   "@odata.type":"#TriggersCollection.TriggersCollection",
+   "Description":" Triggers view",
+   "Name":"Triggers",
+   "Members":[
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/CPUUtilTriggers"
       },
-      "UpperWarning":{
-         "Reading":48.1,
-         "Activation":"Increasing",
-         "DwellTime":"PT0.004S"
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/MemoryBusUtilTriggers"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/IOBusUtilTriggers"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/CPUICUtilTriggers"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/JitterCountTriggers"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/CPU0PowerTriggers"
+      },
+      {
+         "@odata.id":"/redfish/v1/TelemetryService/Triggers/CPU1PowerTriggers"
       }
-   },
-   "MetricProperties":[
-      "/redfish/v1/Chassis/1/Power#/PowerControl/0/PowerConsumedWatts"
-   ]
+   ],
+   "Members@odata.count":7
 }
 ```
 
@@ -10592,7 +10529,7 @@ curl -i GET \
 
 | **Method**         | `GET`                                                        |
 | ------------------ | ------------------------------------------------------------ |
-| **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersID}`         |
+| **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersId}`         |
 | **Description**    | This endpoint retrieves a trigger that apply to the listed metrics. |
 | **Returns**        | Link of a single trigger                                     |
 | **Response Code**  | `200 OK`                                                     |
@@ -10612,41 +10549,37 @@ curl -i GET \
 
 ```
 {
-   "@odata.type":"#Triggers.v1_1_4.Triggers",
-   "Id":"PlatformPowerCapTriggers",
-   "Name":"Triggers for platform power consumed",
-   "MetricType":"Numeric",
-   "TriggerActions":[
-      "RedfishEvent"
-   ],
-   "NumericThresholds":{
-      "UpperCritical":{
-         "Reading":50,
-         "Activation":"Increasing",
-         "DwellTime":"PT0.001S"
-      },
-      "UpperWarning":{
-         "Reading":48.1,
-         "Activation":"Increasing",
-         "DwellTime":"PT0.004S"
-      }
-   },
+   "@odata.context":"/redfish/v1/$metadata#MetricDefinition.MetricDefinition",
+   "@odata.etag":"W/\"AB720077\"",
+   "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil",
+   "@odata.type":"#MetricDefinition.v1_0_0.MetricDefinition",
+   "Id":"CPUUtil",
+   "Calculable":"NonSummable",
+   "CalculationAlgorithm":"Average",
+   "Description":"Metric definition for CPU Utilization",
+   "Implementation":"PhysicalSensor",
+   "IsLinear":true,
+   "MaxReadingRange":100,
+   "MetricDataType":"Decimal",
    "MetricProperties":[
-      "/redfish/v1/Chassis/1/Power#/PowerControl/0/PowerConsumedWatts"
+      "/redfish/v1/Systems/1#SystemUsage/CPUUtil"
    ],
-   "@odata.id":"/redfish/v1/TelemetryService/Triggers/{TriggerID}"
+   "MetricType":"Numeric",
+   "MinReadingRange":0,
+   "Name":"Metric definition for CPU Utilization",
+   "Units":"%"
 }
 ```
 
 ## Updating a trigger
 
-| **Method**         | `PATCH`                                              |
-| ------------------ | ---------------------------------------------------- |
-| **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersID}` |
-| **Description**    | This operation updates triggers of each metric.      |
-| **Returns**        |                                                      |
-| **Response Code**  | `200 OK`                                             |
-| **Authentication** | No                                                   |
+| **Method**         | `PATCH`                                               |
+| ------------------ | ----------------------------------------------------- |
+| **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersId}`  |
+| **Description**    | This operation updates triggers of each metric.       |
+| **Returns**        | Task to monitor the progress of the Update operation. |
+| **Response Code**  | `200 OK`                                              |
+| **Authentication** | No                                                    |
 
 
 >**curl command**
@@ -10659,7 +10592,7 @@ curl -i -X PATCH \
 '{
   "EventTriggers": ["Alert"]
 }' \
- 'https://10.24.1.33:30080/redfish/v1/TelemetryService/Triggers/{TriggersID}'
+ 'https://{odimra_host}:{port}/redfish/v1/TelemetryService/Triggers/CPUUtilTriggers
 
 ```
 
