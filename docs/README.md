@@ -10121,8 +10121,9 @@ Resource Aggregator for ODIM exposes the Redfish `TelemetryService` APIs to:
 
 ## Viewing the telemetry service root
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService`                               |
 | **Description**    | This operation retrieves JSON schema representing the Redfish `TelemetryService` root. |
 | **Returns**        | Properties of the Redfish `TelemetryService` and links to its list of resources. |
@@ -10174,8 +10175,9 @@ curl -i GET \
 
 ## Collection of metric definitions
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions`             |
 | **Description**    | This operation lists the metadata information for the metrics collection. |
 | **Returns**        | JSON schema containing the definition, metadata or the characteristics of the metrics collection |
@@ -10225,8 +10227,9 @@ curl -i GET \
 
 ## Single metric definition
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID}` |
 | **Description**    | This operation lists the metadata information for a metric.  |
 | **Returns**        | JSON schema containing the definition, metadata or the characteristics of a metric |
@@ -10271,8 +10274,9 @@ curl -i GET \
 
 ## Collection of Metric Report Definitions
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions`       |
 | **Description**    | This operation represents a collection of metric report definitions. |
 | **Returns**        | JSON schema defining the content of the multiple metric report |
@@ -10317,8 +10321,9 @@ curl -i GET \
 
 ## Single metric report definition 
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID}` |
 | **Description**    | This operation represents a single metric report definition. |
 | **Returns**        | JSON schema defining the content of the single metric report |
@@ -10370,8 +10375,9 @@ curl -i GET \
 
 ## Collection of metric reports
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReports`                 |
 | **Description**    | This operation retrieves collection of reports with metric readings. |
 | **Returns**        | Links of the metric reports collection.                      |
@@ -10415,8 +10421,9 @@ curl -i GET \
 
 ## Single metric report 
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReports/{MetricReportId}` |
 | **Description**    | This operation retrieves a report with metric readings and any metadata associated with the readings. |
 | **Returns**        | Link to the metric report.                                   |
@@ -10470,8 +10477,9 @@ curl -i GET \
 
 ## Collection of triggers
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/Triggers`                      |
 | **Description**    | This operation retrieves the collection of triggers that apply to multiple metric properties. |
 | **Returns**        | Links to a collection of triggers                            |
@@ -10527,8 +10535,9 @@ curl -i GET \
 
 ## Single trigger 
 
-| **Method**         | `GET`                                                        |
+|                    |                                                              |
 | ------------------ | ------------------------------------------------------------ |
+| **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersId}`         |
 | **Description**    | This endpoint retrieves a trigger that apply to the listed metrics. |
 | **Returns**        | Link of a single trigger                                     |
@@ -10573,8 +10582,9 @@ curl -i GET \
 
 ## Updating a trigger
 
-| **Method**         | `PATCH`                                               |
+|                    |                                                       |
 | ------------------ | ----------------------------------------------------- |
+| **Method**         | `PATCH`                                               |
 | **URI**            | `/redfish/v1/TelemetryService/Triggers/{TriggersId}`  |
 | **Description**    | This operation updates triggers of each metric.       |
 | **Returns**        | Task to monitor the progress of the Update operation. |
