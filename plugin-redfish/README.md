@@ -14,7 +14,7 @@ To ensure continued adoption of open technologies, the APIs for the plugins are 
 
 ## GRF plugin deployment instructions
 
-For deploying the GRF plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the GRF plugin" section in the "Appendix" chapter in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/tree/development#readme).
+For deploying the GRF plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the GRF plugin" section in the "Appendix" chapter in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/blob/main/README.md).
 
 
 
@@ -589,7 +589,7 @@ NOTE:
 -   When any request comes to plugin, do the following:
 
          -  Check if header has auth token or basic auth. If the header does not have auth token or basic auth, return an unauthorized error.
-    
+        
          -  Check if auth token is valid or basic auth has valid user name and password. If auth token is not valid or basic auth does not have valid user name and password, return an unauthorized error.
 
 

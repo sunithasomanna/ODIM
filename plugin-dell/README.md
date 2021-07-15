@@ -14,4 +14,5 @@ To ensure continued adoption of open technologies, the APIs for the plugins are 
 
 ## Dell plugin deployment instructions
 
-For deploying the Dell plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the Dell plugin" section in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/tree/development#readme).
+For deploying the Dell plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the Dell plugin" section in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/blob/main/README.md).
+
