@@ -18,6 +18,7 @@
    - [Deploying the Unmanaged Rack Plugin \(URP\)](#deploying-the-unmanaged-rack-plugin)
    - [Deploying the Dell plugin](#deploying-the-dell-plugin)
    - [Deploying the Lenovo plugin](#deploying-the-lenovo-plugin)
+   - [Deploying the Cisco ACI plugin](#deploying-the-cisco-aci-plugin)
    - [Adding a plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework)
 5. [Use cases for Resource Aggregator for ODIM](#use-cases-for-resource-aggregator-for-odim)
    - [Adding a server into the resource inventory](#adding-a-server-into-the-resource-inventory)
@@ -196,7 +197,7 @@ The following is a list of considerations to be made while deploying Resource Ag
 
 -   The GRF plugin is not meant to be used in a production environment. Use it as reference while developing third-party plugins.
 
--   Scaling of the third-party services is not supported.
+-   Scaling of the third-party services—Kafka and Redis clusters is not supported.
 
 -   There must be at least one instance of a resource aggregator service and a plugin service running in the cluster. The maximum number of instances of a resource aggregator service and a plugin service that are allowed to run in a cluster is 10.
 
@@ -237,9 +238,9 @@ The following table lists the software components and their versions that are co
 - Single deployment node with a minimum RAM of 8 GB \(8192MB\), three CPUs, and 100 GB of Hard Disk Drive (HDD)
 
 - Cluster nodes:
-    - To add 1,000 servers or less, you require nodes having 12 GB RAM, 8 CPU cores and 16 threads, and 200 GB HDD each
+    - To add 1,000 servers or less, you require nodes having 12 GB (12288 MB) RAM, 8 CPU cores and 16 threads, and 200 GB HDD each
 
-    - To add 5,000 servers or less, you require nodes having 32 GB RAM, 16 CPU cores and 32 threads, and 200GB HDD each
+    - To add 5,000 servers or less, you require nodes having 32 GB (32768) RAM, 16 CPU cores and 32 threads, and 200GB HDD each
 
 
 1. Download and install Ubuntu 18.04 LTS on the deployment node and all the cluster nodes. 
@@ -400,7 +401,7 @@ The following table lists the software components and their versions that are co
 3. Save each Docker image to a tar archive using the following command:
 
     ```
-    $ docker save -o <image_name.tar> <image_name>
+    $ docker save -o <Docker image file name> <Docker image name>
     ```
     Example: `$ docker save -o calico_node.tar calico/node` 
 
@@ -413,7 +414,7 @@ The following table lists the software components and their versions that are co
    <blockquote>
        The 'kube_deploy_nodes.yaml' file is the configuration file used by odim-controller to set up a Kubernetes cluster and to deploy the Resource Aggregator for ODIM services. </blockquote>
    <blockquote>
-       NOTE: Verify the permissions of the archived tar files of the Docker images; the privilege of all files must be 'user:user'.</blockquote>
+       NOTE: Verify the permissions of the archived tar files of the Docker images; the privilege of all files must be 'user:docker'.</blockquote>
 
 
 ## Building Docker images of all the services
@@ -567,7 +568,8 @@ Resource Aggregator for ODIM uses the odim-vault tool to encrypt and decrypt pas
 2. [Deploying the Unmanaged Rack Plugin \(URP\)](#deploying-the-unmanaged-rack-plugin)
 3. [Deploying the Dell plugin](#deploying-the-dell-plugin)
 4. [Deploying the Lenovo plugin](#deploying-the-lenovo-plugin)
-5. [Adding a plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework)
+5. [Deploying the Cisco ACI plugin](#deploying-the-cisco-aci-plugin)
+6. [Adding a plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework)
 
 ## Deploying the resource aggregator services
 
@@ -1470,6 +1472,9 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 16. [Add the Lenovo plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
+## Deploying the Cisco ACI plugin
+
+Refer to the deployment instructions of the Cisco ACI plugin [here](https://github.com/ODIM-Project/PluginCiscoACI/blob/main/README.md).
 
 ## Adding a plugin into the Resource Aggregator for ODIM framework
 
