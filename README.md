@@ -197,7 +197,7 @@ The following is a list of considerations to be made while deploying Resource Ag
 
 -   The GRF plugin is not meant to be used in a production environment. Use it as reference while developing third-party plugins.
 
--   Scaling of the third-party services (Kafka and Redis clusters) is not supported.
+-   Scaling of the third-party services—Kafka and Redis clusters is not supported.
 
 -   There must be at least one instance of a resource aggregator service and a plugin service running in the cluster. The maximum number of instances of a resource aggregator service and a plugin service that are allowed to run in a cluster is 10.
 
