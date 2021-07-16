@@ -1474,7 +1474,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 ## Deploying the Cisco ACI plugin
 
-Refer to the deployment instructions of the Cisco ACI plugin at  [https://github.com/ODIM-Project/PluginCiscoACI/blob/main/README.md](#https://github.com/ODIM-Project/PluginCiscoACI/blob/main/README.md).
+Refer to the deployment instructions of the Cisco ACI plugin [here](https://github.com/ODIM-Project/PluginCiscoACI/blob/main/README.md).
 
 ## Adding a plugin into the Resource Aggregator for ODIM framework
 
