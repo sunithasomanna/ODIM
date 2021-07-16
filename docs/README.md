@@ -10179,7 +10179,7 @@ curl -i GET \
 | ------------------ | ------------------------------------------------------------ |
 | **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions`             |
-| **Description**    | This operation lists the metadata information for the metrics collection. |
+| **Description**    | This operation lists the metadata information for the metric definitions collection. |
 | **Returns**        | JSON schema containing the definition, metadata or the characteristics of the metrics collection |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
@@ -10231,7 +10231,7 @@ curl -i GET \
 | ------------------ | ------------------------------------------------------------ |
 | **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricDefinitions/{MetricDefinitionID}` |
-| **Description**    | This operation lists the metadata information for a metric.  |
+| **Description**    | This operation lists the metadata information for a metric definition. |
 | **Returns**        | JSON schema containing the definition, metadata or the characteristics of a metric |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
@@ -10279,7 +10279,7 @@ curl -i GET \
 | **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions`       |
 | **Description**    | This operation represents a collection of metric report definitions. |
-| **Returns**        | JSON schema defining the content of the multiple metric report |
+| **Returns**        | JSON schema defining content of the collection of metric report definition |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
 
@@ -10326,7 +10326,7 @@ curl -i GET \
 | **Method**         | `GET`                                                        |
 | **URI**            | `/redfish/v1/TelemetryService/MetricReportDefinitions/{MetricReportDefinitionID}` |
 | **Description**    | This operation represents a single metric report definition. |
-| **Returns**        | JSON schema defining the content of the single metric report |
+| **Returns**        | JSON schema defining content of the single metric report definition |
 | **Response Code**  | `200 OK`                                                     |
 | **Authentication** | No                                                           |
 
@@ -10459,6 +10459,7 @@ curl -i GET \
             "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil"
          },
          "MetricId":"CPUUtil",
+         "MetricProperty": "/redfish/v1/Systems/f33797e2-95cc-4f93-9233-70f56833c42a:1#SystemUsage/CPUUtil",
          "MetricValue":"0",
          "Timestamp":"2021-07-13T10:09:45Z"
       },
@@ -10467,6 +10468,7 @@ curl -i GET \
             "@odata.id":"/redfish/v1/TelemetryService/MetricDefinitions/CPUUtil"
          },
          "MetricId":"CPUUtil",
+         "MetricProperty": "/redfish/v1/Systems/f33797e2-95cc-4f93-9233-70f56833c42a:1#SystemUsage/CPUUtil",
          "MetricValue":"0",
          "Timestamp":"2021-07-13T10:10:05Z"
       }
