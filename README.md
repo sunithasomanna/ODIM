@@ -1068,41 +1068,35 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    $ mkdir ~/plugins/urplugin
    ```
 
-5. Log in to each cluster node and run the following commands:
-
-    ```
-    $ sudo mkdir -p /var/log/urplugin_logs/
-    ```
-
-    ```
-    $ sudo chown odimra:odimra /var/log/urplugin_logs/
-    ```
-
-6. Log in to the deployment node and generate an encrypted password of Resource Aggregator for ODIM to be used in the urplugin-config.yaml file. 
+3. Log in to the deployment node and generate an encrypted password of Resource Aggregator for ODIM to be used in the urplugin-config.yaml file. 
 
     Run the following command and copy the output:
 
     ```
     $ echo -n '<HPE ODIMRA password>' |openssl pkeyutl -encrypt -inkey <odimCertsPath>/odimra_rsa.private -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512|openssl base64 -A
     ```
-    
+
     In this command, replace:
-    
+
     -  <HPE ODIMRA password> with the password of Resource Aggregator for ODIM \(default administrator account password\).
     -  <odimCertsPath> with the path you specified for the `<odimCertsPath>` parameter in the `kube_deploy_nodes.yaml` file.
-    
+
     Example output:
-    
+
     ```
     ip/jrKjQdzKIU1JvT4ZQ6gbCe2XJtCKPRgqOQv6g3aIAYtG+hpVgel3k67TB723h9dN2cABWZgE+b9CAxbIXj3qZZFWrUMMuPkT4fwtW8fTlhdR+phmOvnnSw5bvUrXyl5Se1IczwtMXfhqk7U8eqpJnZ6xWNR8Q1K7baDv1QvZwej/v3bqHRTC93pDL+3SvE8VCyrIgbMVdfvv3+mJKvs2F7hXoTJiwjRfKGyzdP0yRIHAFOB3m/xnv6ZIRm8Ak6+sx18NRq8RH20bktzhZ45fT+iX4twMJG1lI0KRJ3j/PL+IqY4MmYzv/72fQhMznL39Rjr9LR6mB/JGI0ww0sMUCFr6obzQfQWv1so+Ck694fNJMQPXQS64VcqVDuISXSd4cqkdMx9zBmfDbgzMQQVwgjDgt4nC1w8/wGSfMtkms8rSJrBa18hKCWi+jfhASbNM84udKc0kQsQJlsnjcdsL84zrE8iUqqXC/fK2cQbNL31H5C+qEfJqdNTauQSskkK3cpNWh1FVw736WBYYJSja59q5QwMniXldwcvRglEIELsjKgjbuOnQoIZaVTcbheaa2b1XAiRKTKuPmweysyV3fbuR0jgSJTmdTehrtYG9omjUbg/L7WFjC43JWq8suWi5uch+jHtGG5mZJFFdkE37pQd3wzHBSa+/9Yq9/ZSY=
     ```
 
-7. Copy the Unmanaged Rack plugin configuration file to `~/plugins/urplugin`.
+7. On the deployment node, copy the Dell plugin configuration file and the hook script to `~/plugins/urplugin`.
    ```
    $ cp ~/ODIM/odim-controller/helmcharts/urplugin/urplugin-config.yaml ~/plugins/urplugin
    ```
 
-8. Open the URP configuration YAML file.
+   ```
+   $ cp ~/ODIM/odim-controller/helmcharts/urplugin/urplugin.sh ~/plugins/urplugin
+   ```
+   
+5. Open the URP configuration YAML file.
 
     ```
     $ vi ~/plugins/urplugin/urplugin-config.yaml
@@ -1124,7 +1118,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       logPath: /var/log/urplugin_logs
     ```
 
-7. Update the following parameters in the plugin configuration file: 
+6. Update the following parameters in the plugin configuration file: 
 
     - **odimUsername**: The username of the default administrator account of Resource Aggregator for ODIM.
 
@@ -1140,7 +1134,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
     Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
-10. Generate Helm package for URP on the deployment node.
+7. Generate Helm package for URP on the deployment node.
 
        1. Navigate to `odim-controller/helmcharts/urplugin`.
           
@@ -1156,63 +1150,63 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
        The Helm package for URP is created in the tgz format.
 
-11. Save the URP Docker image on the deployment node at `~/plugins/urplugin`.
+8. Save the URP Docker image on the deployment node at `~/plugins/urplugin`.
 
       ```
      $ sudo docker save urplugin:1.0 -o ~/plugins/urplugin/urplugin.tar
       ```
 
-12. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
+9. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
       ```
      $ cd ~/ODIM/odim-controller/scripts
       ```
 
-13. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
+10. Open the `kube_deploy_nodes.yaml` file by navigating to`~/ODIM/odim-controller/scripts`.
 
          $ vi kube_deploy_nodes.yaml
-    
-12. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
 
-    | Parameter                    | Value                                                        |
-    | ---------------------------- | ------------------------------------------------------------ |
-    | connectionMethodConf         | The connection method associated with URP: ConnectionMethodVariant: `Compute:BasicAuth:URP_v1.0.0`<br> |
-    | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br>Add these values to the existing comma-separated list.<br> |
-    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br> Add these values to the existing comma-separated list.<br> |
-    | odimPluginPath               | The path of the directory where the URP Helm package, the `urplugin` image, and the modified `urplugin-config.yaml` are copied. |
+11. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
 
-          Example:
-          
-          odimPluginPath: /home/bruce/plugins
-           connectionMethodConf:
-          
-           - ConnectionMethodType: Redfish
-             ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
-           - ConnectionMethodType: Redfish
-             ConnectionMethodVariant: Compute:BasicAuth:URP_v1.0.0
-              odimraKafkaClientCertFQDNSan: urplugin,api
-              odimraServerCertFQDNSan: urplugin,api
+     | Parameter                    | Value                                                        |
+     | ---------------------------- | ------------------------------------------------------------ |
+     | connectionMethodConf         | The connection method associated with URP: ConnectionMethodVariant: `Compute:BasicAuth:URP_v1.0.0`<br> |
+     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br>Add these values to the existing comma-separated list.<br> |
+     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br> Add these values to the existing comma-separated list.<br> |
+     | odimPluginPath               | The path of the directory where the URP Helm package, the `urplugin` image, and the modified `urplugin-config.yaml` are copied. |
 
-13. Run the following command: 
+           Example:
+           
+           odimPluginPath: /home/bruce/plugins
+            connectionMethodConf:
+           
+            - ConnectionMethodType: Redfish
+              ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+            - ConnectionMethodType: Redfish
+              ConnectionMethodVariant: Compute:BasicAuth:URP_v1.0.0
+               odimraKafkaClientCertFQDNSan: urplugin,api
+               odimraServerCertFQDNSan: urplugin,api
 
-         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+12. Run the following command: 
 
-14. Run the following command to install Unmanaged Rack plugin: 
+          $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
 
-         $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
+13. Run the following command to install Unmanaged Rack plugin: 
 
-15. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
+          $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
 
-           $ kubectl get pods -n odim
+14. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
 
-      Example output of the URP pod details:
+            $ kubectl get pods -n odim
 
-      ```
-      NAME 						READY 	STATUS 		RESTARTS 	AGE
-      urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
-      ```
+       Example output of the URP pod details:
 
-16. [Add URP into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework).
+       ```
+       NAME 						READY 	STATUS 		RESTARTS 	AGE
+       urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
+       ```
+
+15. [Add URP into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework).
 
 
 ## Deploying the Dell plugin
@@ -1226,27 +1220,21 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    $ mkdir plugins
    ```
 
-3. In the `plugins` directory, create a directory called `dellplugin`.
+2. In the `plugins` directory, create a directory called `dellplugin`.
    ```
    $ mkdir ~/plugins/dellplugin
    ```
-   
-7. Log in to each cluster node and run the following commands: 
 
-    ```
-    $ sudo mkdir -p /var/log/dellplugin_logs/
-    ```
-
-    ```
-    $ sudo chown odimra:odimra /var/log/dellplugin_logs
-    ```
-    
-4. On the deployment node, copy the Dell plugin configuration file to `~/plugins/dellplugin`.
+3. On the deployment node, copy the Dell plugin configuration file and the hook script to `~/plugins/dellplugin`.
    ```
    $ cp ~/ODIM/odim-controller/helmcharts/dellplugin/dellplugin-config.yaml ~/plugins/dellplugin
    ```
 
-5. Open the Dell plugin configuration YAML file.
+   ```
+   $ cp ~/ODIM/odim-controller/helmcharts/dellplugin/dellplugin.sh ~/plugins/dellplugin
+   ```
+   
+4. Open the Dell plugin configuration YAML file.
 
     ```
     $ vi ~/plugins/dellplugin/dellplugin-config.yaml
@@ -1270,16 +1258,16 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     
     ```
 
-6. Update the following parameters in the plugin configuration file: 
-   
+5. Update the following parameters in the plugin configuration file: 
+
    - **hostname**: Hostname of the cluster node where the Dell plugin will be installed.
    - **lbHost**: IP address of the cluster node where the Dell plugin will be installed for one node cluster configuration. For three node cluster configuration,  lbHost is the virtual IP address configured in Nginx and Keepalived.
    - **lbPort**: Default port is 30084 for one node cluster configuration. For three node cluster configuration, lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
    - **dellPluginRootServiceUUID**: RootServiceUUID to be used by the Dell plugin service.
-   
+
    Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
-   
-7. Generate the Helm package for the Dell plugin on the deployment node.
+
+6. Generate the Helm package for the Dell plugin on the deployment node.
 
    1. Navigate to `odim-controller/helmcharts/dellplugin`.
       ```
@@ -1291,27 +1279,27 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       ```
       The Helm package for the Dell plugin is created in the tgz format.
 
-8. Save the Dell plugin Docker image on the deployment node at `~/plugins/dellplugin`.
+7. Save the Dell plugin Docker image on the deployment node at `~/plugins/dellplugin`.
 
     ```
      $ sudo docker save dellplugin:1.0 -o ~/plugins/dellplugin/dellplugin.tar
     ```
 
-9. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the plugin](#configuring-proxy-server-for-a-plugin-version). 
+8. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the plugin](#configuring-proxy-server-for-a-plugin-version). 
 
     Skip this step if it is a one-node cluster configuration.
 
-10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
+9. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
-    ```
-     $ cd ~/ODIM/odim-controller/scripts
-    ```
+      ```
+       $ cd ~/ODIM/odim-controller/scripts
+      ```
 
-11. Open the `kube_deploy_nodes.yaml` file.
+10. Open the `kube_deploy_nodes.yaml` file.
 
-          $ vi kube_deploy_nodes.yaml
-    
-12. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
+            $ vi kube_deploy_nodes.yaml
+
+11. Update the following parameters in the `kube_deploy_nodes.yaml` file to their corresponding values: 
 
     | Parameter                    | Value                                                        |
     | ---------------------------- | ------------------------------------------------------------ |
@@ -1319,37 +1307,33 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br />`dellplugin`, `dellplugin-events`<br>Add these values to the existing comma-separated list.<br> |
     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br /> `dellplugin`, `dellplugin-events`<br> Add these values to the existing comma-separated list.<br> |
 
-           Example:
-           
-           odimPluginPath: /home/bruce/plugins
-            connectionMethodConf:
-            - ConnectionMethodType: Redfish
-              ConnectionMethodVariant: Compute:BasicAuth:DELL_v1.0.0
-            odimraKafkaClientCertFQDNSan: dellplugin,dellplugin-events
-            odimraServerCertFQDNSan: dellplugin,dellplugin-events
+             Example:
+             
+             odimPluginPath: /home/bruce/plugins
+              connectionMethodConf:
+              - ConnectionMethodType: Redfish
+                ConnectionMethodVariant: Compute:BasicAuth:DELL_v1.0.0
+              odimraKafkaClientCertFQDNSan: dellplugin,dellplugin-events
+              odimraServerCertFQDNSan: dellplugin,dellplugin-events
 
-13. Run the following command: 
+12. Run the following command: 
 
-          $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+            $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
 
-14. Run the following command to install the Dell plugin: 
+13. Run the following command to install the Dell plugin: 
 
-      ```
-      $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin dellplugin
-      ```
+        $ python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin dellplugin
+    
+14. Run the following command on the cluster nodes to verify the Dell plugin pod is up and running:
 
-15. Run the following command on the cluster nodes to verify the Dell plugin pod is up and running:
-
-      `$ kubectl get pods -n odim`
-
-      Example output of the Dell plugin pod details:
-
-      ```
-      NAME 						READY 			STATUS 			RESTARTS 			AGE
-      dellplugin-5fc4b6788-2xx97  1/1 			Running 		0 			 		4d22h
-      ```
-
-16. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
+        $ kubectl get pods -n odim
+    
+    
+    Example output of the Dell plugin pod details:
+        NAME 						READY 			STATUS 			RESTARTS 			AGE
+        dellplugin-5fc4b6788-2xx97  1/1 			Running 		0 			 		4d22h
+    
+15. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
 ## Deploying the Cisco ACI plugin
 
@@ -3308,22 +3292,17 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    $ mkdir ~/plugins/grfplugin
    ```
    
-3. Log in to each cluster node and run the following commands: 
+3. On the deployment node, copy the GRF configuration file and the hook script to `~/plugins/grfplugin`.
 
     ```
-    $ sudo mkdir -p /var/log/grfplugin_logs/
+    $ cp ~/ODIM/odim-controller/helmcharts/grfplugin/grfplugin-config.yaml ~/plugins/grfplugin
     ```
 
     ```
-    $ sudo chown odimra:odimra /var/log/grfplugin_logs/
+    $ cp ~/ODIM/odim-controller/helmcharts/grfplugin/grfplugin.sh ~/plugins/grfplugin
     ```
 
-4. On the deployment node, copy the GRF configuration file to `~/plugins/grfplugin`.
-   ```
-   $ cp ~/ODIM/odim-controller/helmcharts/grfplugin/grfplugin-config.yaml ~/plugins/grfplugin
-   ```
-
-5. Open the GRF plugin configuration YAML file. 
+4. Open the GRF plugin configuration YAML file. 
 
     ```
     $ vi ~/plugins/grfplugin/grfplugin-config.yaml
@@ -3345,10 +3324,10 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       lbPort: <Ngnix_plugin_port>
       logPath: /var/log/grfplugin_logs
     ```
-    
+
     Other parameters have default values. Optionally, you can modify them according to your requirements. To know more about each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
-    
-6. Update the following parameters in the plugin configuration file:
+
+5. Update the following parameters in the plugin configuration file:
 
    - **lbHost**: IP address of the cluster node where the GRF plugin will be installed for one node cluster configuration.  For three node cluster configuration,  \(haDeploymentEnabled is true\), lbHost is the virtual IP address configured in Nginx and Keepalived.
    - **lbPort**: Default port is 30081 for one node cluster configuration. For three node cluster configuration, \(haDeploymentEnabled is true\), lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
@@ -3356,7 +3335,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
    Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
 
-7. Generate the Helm package for the GRF plugin on the deployment node.
+6. Generate the Helm package for the GRF plugin on the deployment node.
 
    1. Navigate to `odim-controller/helmcharts/grfplugin`.
       ```
@@ -3371,83 +3350,83 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       
       The Helm package for the GRF plugin is created in the tgz format.
 
-8. Save the GRF plugin Docker image on the deployment node at `~/plugins/grfplugin`.
+7. Save the GRF plugin Docker image on the deployment node at `~/plugins/grfplugin`.
 
     ```
     $ sudo docker save grfplugin:1.0 -o ~/plugins/grfplugin/grfplugin.tar
     ```
 
-9. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the GRF plugin](#configuring-proxy-server-for-a-plugin-version). 
+8. If it is a three-node cluster configuration, log in to each cluster node and [configure proxy server for the GRF plugin](#configuring-proxy-server-for-a-plugin-version). 
 
     Skip this step if it is a one-node cluster configuration.
 
-10. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
+9. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
     ```
      $ cd ~/ODIM/odim-controller/scripts
     ```
 
-11. Open the kube\_deploy\_nodes.yaml file to edit.
+10. Open the kube\_deploy\_nodes.yaml file to edit.
 
      ```
      $ vi kube_deploy_nodes.yaml
      ```
 
-12. Update the following parameters in the kube\_deploy\_nodes.yaml file to their corresponding values: 
+11. Update the following parameters in the kube\_deploy\_nodes.yaml file to their corresponding values: 
 
-    | Parameter                    | Value                                                        |
-    | ---------------------------- | ------------------------------------------------------------ |
-    | connectionMethodConf         | The connection method associated with the GRF plugin:<br/> ConnectionMethodVariant: `Compute:BasicAuth:GRF_v1.0.0`<br/>Check if it is there already before updating. If yes, do not add it again.<br/> |
-    | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the GRF plugin:grfplugin, grfplugin-events<br/>Add these values to the existing comma-separated list.<br/> |
-    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the GRF plugin: grfplugin, grfplugin-eventsAdd these values to the existing comma-separated list.<br> |
-    | odimPluginPath               | The path of the directory where the GRF Helm package, the `grfplugin` image, and the modified `grfplugin-config.yaml` are copied. |
+     | Parameter                    | Value                                                        |
+     | ---------------------------- | ------------------------------------------------------------ |
+     | connectionMethodConf         | The connection method associated with the GRF plugin:<br/> ConnectionMethodVariant: `Compute:BasicAuth:GRF_v1.0.0`<br/>Check if it is there already before updating. If yes, do not add it again.<br/> |
+     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the GRF plugin:grfplugin, grfplugin-events<br/>Add these values to the existing comma-separated list.<br/> |
+     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the GRF plugin: grfplugin, grfplugin-eventsAdd these values to the existing comma-separated list.<br> |
+     | odimPluginPath               | The path of the directory where the GRF Helm package, the `grfplugin` image, and the modified `grfplugin-config.yaml` are copied. |
 
-      Example:
-
-      ```
-      connectionMethodConf:
-        ConnectionMethodType: Redfish
-        ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
-      odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
-      odimraServerCertFQDNSan: grfplugin,grfplugin-events
-      ```
-
-13. Run the following command: 
-
-      ```
-      $ python3 odim-controller.py --config \ 
-       /home/${USER}/ODIM/odim-controller/scripts\
-      /kube_deploy_nodes.yaml --upgrade odimra-config
-      ```
-
-14. Run the following command to install the GRF plugin: 
+       Example:
 
        ```
-       $ python3 odim-controller.py --config \
+       connectionMethodConf:
+         ConnectionMethodType: Redfish
+         ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+       odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
+       odimraServerCertFQDNSan: grfplugin,grfplugin-events
+       ```
+
+12. Run the following command: 
+
+       ```
+       $ python3 odim-controller.py --config \ 
         /home/${USER}/ODIM/odim-controller/scripts\
-       /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
+       /kube_deploy_nodes.yaml --upgrade odimra-config
        ```
 
-15. Run the following command on the cluster nodes to verify the GRF plugin pod is up and running: 
+13. Run the following command to install the GRF plugin: 
 
-      ```
-      $ kubectl get pods -n odim
-      ```
+        ```
+        $ python3 odim-controller.py --config \
+         /home/${USER}/ODIM/odim-controller/scripts\
+        /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
+        ```
 
-      Example output showing the GRF plugin pod details:
+14. Run the following command on the cluster nodes to verify the GRF plugin pod is up and running: 
 
-      ```
-      NAME READY STATUS RESTARTS AGE
-      grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
-      ```
+       ```
+       $ kubectl get pods -n odim
+       ```
 
-16. Navigate to `~/ODIM/odim-controller/scripts`.
+       Example output showing the GRF plugin pod details:
 
-      ```
-      $ cd ~/ODIM/odim-controller/scripts
-      ```
+       ```
+       NAME READY STATUS RESTARTS AGE
+       grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
+       ```
 
-17. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
+15. Navigate to `~/ODIM/odim-controller/scripts`.
+
+       ```
+       $ cd ~/ODIM/odim-controller/scripts
+       ```
+
+16. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
 
 ## Replacing an unreachable controller node with a new one
