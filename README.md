@@ -1231,10 +1231,12 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     ```
     python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
     ```
+    
 15. Run the following command to install Unmanaged Rack plugin: 
     ```
     python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
     ```
+    
 16. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
     ```
     kubectl get pods -n odim
