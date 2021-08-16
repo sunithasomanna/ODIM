@@ -3469,7 +3469,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     kubectl get pods -n odim
      ```
 
-        Example output showing the GRF plugin pod details:
+    Example output showing the GRF plugin pod details:
 
      ```
     NAME READY STATUS RESTARTS AGE
