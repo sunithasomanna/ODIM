@@ -1244,7 +1244,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 Example output of the URP pod details:
 
 ```
-NAME 					READY 	STATUS 		RESTARTS    AGE
+NAME 				READY 	STATUS 		RESTARTS    AGE
 urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	    4d22h
 ```
 
