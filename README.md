@@ -1381,7 +1381,7 @@ Other parameters can have default values. Optionally, you can update them with v
 
    Example output of the Dell plugin pod details:
    ```
-   NAME 		READY 			STATUS 			RESTARTS 			AGE
+   NAME 			READY 			STATUS 			RESTARTS 			AGE
    dellplugin-5fc4b6788-2xx97  1/1 			Running 		0 			 		4d22h
    ```
 17. [Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
