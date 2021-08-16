@@ -1223,27 +1223,28 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 13. Upgrade odimra-secrets:
 
-       ```
+    ```
     python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-secret
-       ```
+    ```
 
 14. Run the following command: 
-
-        python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
-
+    ```
+    python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+    ```
 15. Run the following command to install Unmanaged Rack plugin: 
-
-        python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
-
+    ```
+    python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
+    ```
 16. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
-
-        kubectl get pods -n odim
+    ```
+    kubectl get pods -n odim
+    ```
 Example output of the URP pod details:
     
-  ```
+    ```
     NAME 						READY 	STATUS 		RESTARTS 	AGE
     urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
-      ```
+    ```
     
 17. [Add URP into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework).
 
