@@ -1238,9 +1238,9 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 16. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
 
             kubectl get pods -n odim
-
+    
           Example output of the URP pod details:
-
+    
           ```
           NAME 						READY 	STATUS 		RESTARTS 	AGE
           urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
@@ -3445,41 +3445,42 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 13. Update odimra-secrets:
 
      ```
-     python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-secret
+    python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-secret
      ```
 
 14. Run the following command: 
 
-        ```
-     python3 odim-controller.py --config \ 
-     /home/${USER}/ODIM/odim-controller/scripts\
-     /kube_deploy_nodes.yaml --upgrade odimra-config
-        ```
+     ```
+    python3 odim-controller.py --config \ 
+    /home/${USER}/ODIM/odim-controller/scripts\
+    /kube_deploy_nodes.yaml --upgrade odimra-config
+     ```
 
 15. Run the following command to install the GRF plugin: 
-
-         python3 odim-controller.py --config \
-         /home/${USER}/ODIM/odim-controller/scripts\
-         /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
+    ```
+    python3 odim-controller.py --config \
+    /home/${USER}/ODIM/odim-controller/scripts\
+    /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
+    ```
 
 16. Run the following command on the cluster nodes to verify the GRF plugin pod is up and running: 
 
-        ```
-     kubectl get pods -n odim
-        ```
+     ```
+    kubectl get pods -n odim
+     ```
 
         Example output showing the GRF plugin pod details:
 
-        ```
-     NAME READY STATUS RESTARTS AGE
-     grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
-        ```
+     ```
+    NAME READY STATUS RESTARTS AGE
+    grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
+     ```
 
 17. Navigate to `~/ODIM/odim-controller/scripts`.
 
-        ```
-     cd ~/ODIM/odim-controller/scripts
-        ```
+     ```
+    cd ~/ODIM/odim-controller/scripts
+     ```
 
 18. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
