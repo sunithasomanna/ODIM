@@ -1217,26 +1217,36 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
                odimraKafkaClientCertFQDNSan: urplugin,api
                odimraServerCertFQDNSan: urplugin,api
 
-12. Run the following command: 
+12. Move odimra_kafka_client.key and odimra_kafka_client.crt stored in odimCertsPath to a different folder.
 
-        python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+    <blockquote>NOTE: odimCertsPath is the absolute path of the directory where certificates required by the services of Resource Aggregator for ODIM are present. Refer to the "Odim-controller configuration parameters" section in this document for more information on odimCertsPath. </blockquote>
 
-13. Run the following command to install Unmanaged Rack plugin: 
-
-        python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
-
-14. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
-
-         kubectl get pods -n odim
-
-       Example output of the URP pod details:
+13. Upgrade odimra-secrets:
 
        ```
-       NAME 						READY 	STATUS 		RESTARTS 	AGE
-       urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
+       python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-secret
        ```
 
-15. [Add URP into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework).
+14. Run the following command: 
+
+           python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-config
+
+15. Run the following command to install Unmanaged Rack plugin: 
+
+           python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin urplugin
+
+16. Run the following command on the cluster nodes to verify the Unmanaged Rack plugin pod is up and running: 
+
+            kubectl get pods -n odim
+
+          Example output of the URP pod details:
+
+          ```
+          NAME 						READY 	STATUS 		RESTARTS 	AGE
+          urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 		    4d22h
+          ```
+
+17. [Add URP into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework).
 
 
 ## Deploying the Dell plugin
@@ -1349,7 +1359,7 @@ Other parameters can have default values. Optionally, you can update them with v
 
     <blockquote>NOTE: odimCertsPath is the absolute path of the directory where certificates required by the services of Resource Aggregator for ODIM are present. Refer to the "Odim-controller configuration parameters" section in this document for more information on odimCertsPath. </blockquote>
 
-13. Update odimra-secrets:
+13. Upgrade odimra-secrets:
 
        ```
     python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-secret
@@ -3428,40 +3438,50 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
        odimraServerCertFQDNSan: grfplugin,grfplugin-events
        ```
 
-12. Run the following command: 
+12. Move odimra_kafka_client.key and odimra_kafka_client.crt stored in odimCertsPath to a different folder.
 
-       ```
-    python3 odim-controller.py --config \ 
-    /home/${USER}/ODIM/odim-controller/scripts\
-    /kube_deploy_nodes.yaml --upgrade odimra-config
-       ```
-
-13. Run the following command to install the GRF plugin: 
-
-        python3 odim-controller.py --config \
-        /home/${USER}/ODIM/odim-controller/scripts\
-        /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
+    <blockquote>NOTE: odimCertsPath is the absolute path of the directory where certificates required by the services of Resource Aggregator for ODIM are present. Refer to the "Odim-controller configuration parameters" section in this document for more information on odimCertsPath. </blockquote>
     
-14. Run the following command on the cluster nodes to verify the GRF plugin pod is up and running: 
+13. Update odimra-secrets:
 
-       ```
-    kubectl get pods -n odim
-       ```
+     ```
+     python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --upgrade odimra-secret
+     ```
 
-       Example output showing the GRF plugin pod details:
+14. Run the following command: 
 
-       ```
-    NAME READY STATUS RESTARTS AGE
-    grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
-       ```
+        ```
+     python3 odim-controller.py --config \ 
+     /home/${USER}/ODIM/odim-controller/scripts\
+     /kube_deploy_nodes.yaml --upgrade odimra-config
+        ```
 
-15. Navigate to `~/ODIM/odim-controller/scripts`.
+15. Run the following command to install the GRF plugin: 
 
-       ```
-    cd ~/ODIM/odim-controller/scripts
-       ```
+         python3 odim-controller.py --config \
+         /home/${USER}/ODIM/odim-controller/scripts\
+         /kube_deploy_nodes.yaml --add plugin --plugin grfplugin
 
-16. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
+16. Run the following command on the cluster nodes to verify the GRF plugin pod is up and running: 
+
+        ```
+     kubectl get pods -n odim
+        ```
+
+        Example output showing the GRF plugin pod details:
+
+        ```
+     NAME READY STATUS RESTARTS AGE
+     grfplugin-5fc4b6788-2xx97 1/1 Running 0 4d22h
+        ```
+
+17. Navigate to `~/ODIM/odim-controller/scripts`.
+
+        ```
+     cd ~/ODIM/odim-controller/scripts
+        ```
+
+18. [Add the GRF plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework). 
 
 
 ## Replacing an unreachable controller node with a new one
