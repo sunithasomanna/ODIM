@@ -146,6 +146,7 @@
 - [Events](#events)
   * [Viewing the event service root](#viewing-the-event-service-root)
   * [Creating an event subscription](#creating-an-event-subscription)
+    + [Creating event subscription with eventformat type “MetricReport”](#creating-event-subscription-with-eventformat-type---metricreport)
   * [Submitting a test event](#submitting-a-test-event)
   * [Event subscription use cases](#event-subscription-use-cases)
     + [Subscribing to resource addition notification](#subscribing-to-resource-addition-notification)
@@ -319,7 +320,7 @@ For a complete list of curl flags, see information provided at [https://curl.hax
 
 >**IMPORTANT:** If you have set proxy configuration, set no_proxy using the following command before running a curl command.<br>
     ```
-    $ export no_proxy="127.0.0.1,localhost,{odimra_host}"
+    export no_proxy="127.0.0.1,localhost,{odimra_host}"
      ```
 
 **Including HTTP certificate**
@@ -681,7 +682,7 @@ To authenticate requests with the Redfish services, implement any one of the fol
      1. Generate a base64 encoded string of `{valid_username_of_odim_userAccount}:{valid_password_of_odim_userAccount}` using the following command:
 
          ```
-        $ echo -n '{username}:{password}' | base64 -w0
+        echo -n '{username}:{password}' | base64 -w0
         ```
 
         Initially, use the username and the password of the default administrator account. Later, you can create additional [user accounts](#user-accounts) and use their details to implement authentication.
@@ -9207,7 +9208,7 @@ Transfer-Encoding:chunked
 
 
 
-## Creating an event subscription
+### Creating an event subscription
 
 |||
 |-----------|-----------|
@@ -9266,8 +9267,6 @@ curl -i POST \
 ```
 
 
-
-
 >**Sample request body**
 
 ```
@@ -9301,7 +9300,59 @@ curl -i POST \
 
 ```
 
- 
+###  Creating event subscription with eventformat type - MetricReport
+
+If `EventFormatType` is empty, default value will be `Event`.
+
+If `EventTypes` list is empty and `EventFormatType` is `MetricReport`, `EventTypes` will default to `[“MetrciReport”]`.
+
+If both values are empty, `EventFormatType` will default to `Event` and `EventTypes` will default to all supported values apart from `MetricReport`.
+
+>**curl command**
+
+```
+curl -i POST \
+   -H "X-Auth-Token:{X-Auth-Token}" \
+   -H "Content-Type:application/json; charset=utf-8" \
+   -d \
+
+'{
+  "Name": "ODIMRA_NBI_client ",
+  "Destination": "https://{Valid_IP_Address}:{Port}/EventListener ",
+  "EventTypes": ["MetricReport"],
+  "Context": "TelemetryDemo",
+  "Protocol": "Redfish",
+  "SubscriptionType": "RedfishEvent",
+  "EventFormatType": "MetricReport"
+ }' \
+ 'https://{odimra_host}:{port}/redfish/v1/EventService/Subscriptions'
+```
+
+>**Sample request body**
+
+```
+{ 
+   "Name":"ODIMRA_NBI_client",
+   "Destination":"https://{valid_destination_IP_Address}:{Port}/EventListener",
+   "EventTypes":[ 
+      "Alert"
+   ],
+   "MessageIds":[ 
+
+   ],
+   "ResourceTypes":[ 
+      "ComputerSystem"
+   ],
+   "Name": "ODIMRA_NBI_client ",
+   "Destination": "https://{Valid_IP_Address}:{Port}/EventListener ",
+   "EventTypes": ["MetricReport"],
+   "Context": "TelemetryDemo",
+   "Protocol": "Redfish",
+   "SubscriptionType": "RedfishEvent",
+   "EventFormatType": "MetricReport"
+}
+
+```
 
 **Request parameters**
 
@@ -9340,12 +9391,14 @@ curl -i POST \
 |ResourceRemoved|A resource has been removed.|
 |ResourceUpdated|The value of this resource has been updated.|
 |StatusChange|The status of this resource has changed.|
+|MetricReport|Collects resource metrics.|
 
 **EventFormat type**
 
 |String|Description|
 |------|-----------|
 |Event|The subscription destination will receive JSON bodies of the Resource Type Event.|
+|MetricReport|Collects resource metrics.|
 
 **Subscription type**
 
@@ -9358,8 +9411,6 @@ curl -i POST \
 |String|Description|
 |------|-----------|
 |Redfish|The destination follows the Redfish specification for event notifications.|
-
-
 
  
 
