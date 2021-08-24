@@ -6,7 +6,7 @@
 1. [Introduction](#introduction)
    - [Creating Resource Aggregator for ODIM defects](#creating-resource-aggregator-for-odim-defects)
    - [Resource Aggregator for ODIM Deployment overview](#resource-aggregator-for-odim-deployment-overview)
-- [Deployment considerations](#deployment-considerations)
+   - [Deployment considerations](#deployment-considerations)
   
 2. [Resource Aggregator for ODIM compatibility matrix](#resource-aggregator-for-odim-compatibility-matrix)
 3. [Predeployment procedures](#predeployment-procedures)
@@ -76,13 +76,9 @@ Resource Aggregator for ODIM comprises the following two key components:
 -    The resource aggregation function \(the resource aggregator\):
 
      The resource aggregation function is the single point of contact between the northbound clients and the southbound infrastructure. Its primary function is to build and maintain a central resource inventory. It exposes Redfish-compliant APIs to allow northbound infrastructure management systems to:
-
      -  Get a unified view of the southbound compute, local storage, and Ethernet switch fabrics available in the resource inventory
-
      -   Gather crucial configuration information about southbound resources
-
      -   Manipulate groups of resources in a single action
-
      -   Listen to similar events from multiple southbound resources
 
  - One or more plugins:
@@ -97,24 +93,19 @@ Resource Aggregator for ODIM comprises the following two key components:
    
    Resource Aggregator for ODIM allows third parties to easily develop and integrate their plugins into its framework. For more information, see [Resource Aggregator for Open Distributed Infrastructure Management™ Plugin Developer's Guide](https://github.com/ODIM-Project/ODIM/blob/development/plugin-redfish/README.md).
 
+
+
 ## Creating Resource Aggregator for ODIM defects
 
 **Important**: In case of any unforeseen issues you experience while deploying or using Resource Aggregator for ODIM, log on to the following website and file your defect by clicking **Create**.
 
 - Website: https://jira.lfnetworking.org/secure/Dashboard.jspa
-
 - Discussion Forums: https://odim.slack.com/archives/C01DG9MH479
-
-- Announcement list: 
-
 - Documentation:
   - https://github.com/ODIM-Project/ODIM#readme
   - https://github.com/ODIM-Project/ODIM/blob/main/docs/README.md
-  - https://github.com/ODIM-Project/ODIM/blob/main/docs/troubleshooting.md
+  - https://github.com/ODIM-Project/ODIM/blob/main/docs/troubleshooting.md 
 
-- Tutorials: 
-
-- Certification Exam: 
 
 
 ## Resource Aggregator for ODIM deployment overview
@@ -122,31 +113,18 @@ Resource Aggregator for ODIM comprises the following two key components:
 Deploying Resource Aggregator for ODIM in a data center involves installing the following microservices on one or more machines:
 
 -   Kubernetes microservices
-
 -   The resource aggregator microservices:
-
-    1.  API
-
-    2.  Account-session
-
-    3.  Aggregation
-
-    4.  Events
-
-    5.  Fabrics
-
-    6.  Managers
-
-    7.  Systems
-
-    8.  Tasks
-
-    9.  Update
-
+    - API
+    - Account-session
+    - Aggregation
+    - Events
+    - Fabrics
+    - Managers
+    - Systems
+    - Tasks
+    - Update
 -   The plugin microservices such as the Dell plugin, URP, and additional third-party plugins
-
 -   Third-party services such as Kafka, etcd, Zookeeper, and Redis
-
 
 These microservices can be deployed as portable, light-weight Docker containers. The containerized services are orchestrated and managed by Kubernetes—an open-source container orchestration platform that helps to automate, scale, and manage a containerized application. For more information on Kubernetes and its architecture, see [https://kubernetes.io/docs/home/](https://kubernetes.io/docs/home/).
 
@@ -158,27 +136,20 @@ To deploy Resource Aggregator for ODIM, you will require:
 
 -   One virtual machine \(VM\) or a physical machine called the deployment node to deploy Kubernetes and Resource Aggregator for ODIM microservices. You can deploy the Resource Aggregator for ODIM microservices using the odim-controller command-line utility and use commands to:
     -   Set up the Docker environment
-        
     -   Set up a Kubernetes cluster
-        
     -   Deploy the containerized Resource Aggregator for ODIM microservices and third-party services on the Kubernetes cluster nodes
-        
     -   Manage the Resource Aggregator for ODIM deployment
+    
 - One or more physical or virtual machines called cluster nodes where the containerized Resource Aggregator for ODIM microservices and third-party services are deployed as pods.
-
   The cluster nodes include controller and additional worker nodes to share the extra load. The controller node in a cluster also functions as a worker node. A cluster can have either one or three controller nodes. A cluster with three controller nodes provides a High Availability \(HA\) environment. In addition, you can add worker nodes into the cluster to scale up the resources and the services.
 
   Each controller node has the following components:
 
--   An underlying Ubuntu OS platform
-
--   The Docker container engine
-
--   The resource aggregator and the plugin microservice pods
-
--   The infrastructure pods containing all the third-party services
-
-- Kubelet, Kubeproxy, and the Kubernetes control plane comprising the API server, Scheduler, and the Controller-Manager
+  -   An underlying Ubuntu OS platform
+  -   The Docker container engine
+  -   The resource aggregator and the plugin microservice pods
+  -   The infrastructure pods containing all the third-party services
+  -   Kubelet, Kubeproxy, and the Kubernetes control plane comprising the API server, Scheduler, and the Controller-Manager
 
   For more information on these Kubernetes components, see  [https://kubernetes.io/docs/concepts/overview/components/](https://kubernetes.io/docs/concepts/overview/components/).
 
@@ -200,12 +171,10 @@ The following is a list of considerations to be made while deploying Resource Ag
 -   The following two deployment configurations are supported:
 
     -  One-node cluster:
-	
-        It has only one controller node that also functions as a worker node. It does not support scaling of the resources and services of Resource Aggregator for ODIM—you cannot add worker nodes into a one-node cluster.
+	   It has only one controller node that also functions as a worker node. It does not support scaling of the resources and services of Resource Aggregator for ODIM—you cannot add worker nodes into a one-node cluster.
 
     -  Three-node cluster:
-	
-        It has three controller nodes that also function as worker nodes for sharing the extra load. It provides HA environment by allowing the scaling of the Resource Aggregator for ODIM resources and services—you can add worker nodes and increase the number of service instances running in this cluster.
+	   It has three controller nodes that also function as worker nodes for sharing the extra load. It provides HA environment by allowing the scaling of the Resource Aggregator for ODIM resources and services—you can add worker nodes and increase the number of service instances running in this cluster.
     
     To convert an existing one-node cluster into a three-node cluster, you must reset the one-node deployment first and then modify the required parameters in the odim-controller configuration file.
     
@@ -248,8 +217,8 @@ The following table lists the software components and their versions that are co
 2. [Pull the Docker images of all the Kubernetes microservices](#Pulling-the-Docker-images-of-all-the-Kubernetes-microservices)
 3. [Build the Docker images of all the services](#building-docker-images-of-all-the-services)
 4. [Generate an encrypted node password using the odim-vault tool](#generating-an-encrypted-node-password)
-5. [Configuring password authentication on cluster nodes](#configuring-password-authentication-on-cluster-nodes)
-6. [Configuring log path for odim-controller](#log-path-for-odim-controller)
+5. [Configure password authentication on cluster nodes](#configuring-password-authentication-on-cluster-nodes)
+6. [Configure log path for odim-controller](#log-path-for-odim-controller)
 
 ## Setting up the environment
 
@@ -285,15 +254,16 @@ The following table lists the software components and their versions that are co
       ```
 
    2. ```
-      sudo apt-get install -y sshpass=1.06-1 apt-transport-https=2.0.6 
-      openjdk-16-jre-headless=16.0.1+9-120.04.1 curl=7.68.0-1ubuntu2.6 
-   software-properties-common=0.98.9.5 
-      gnupg-agent=2.2.19-3ubuntu2.1 
-      python3.8=3.8.10-0ubuntu1~20.04 
-      python-setuptools=44.0.0-2 
-      python3-pip=20.0.2-5ubuntu1.6
+      sudo apt-get install -y sshpass=1.06-1 apt-transport-https=2.0.6
+openjdk-16-jre-headless=16.0.1+9-1~20.04
+ca-certificates=20210119~20.04.1 curl=7.68.0-1ubuntu2.6
+software-properties-common=0.98.9.5
+gnupg-agent=2.2.19-3ubuntu2.1
+python3.8=3.8.10-0ubuntu1~20.04
+python-setuptools=44.0.0-2
+python3-pip=20.0.2-5ubuntu1.6
       ```
-      
+   
    6.  ```
        sudo -E apt-add-repository ppa:ansible/ansible -y
        ```
@@ -301,43 +271,43 @@ The following table lists the software components and their versions that are co
    8.  ```
        python3 -m pip install --upgrade pip
        ```
-
+   
    9.  ```
        sudo -H pip3 install ansible==2.9.6 --proxy=${http_proxy}
        ```
-
+   
    10. ```
-       sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
+    sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
        ```
-
+   
    11. ```
-       sudo -H pip3 install netaddr==0.7.19 --proxy=${http_proxy}
+    sudo -H pip3 install netaddr==0.7.19 --proxy=${http_proxy}
        ```
-
+   
    12. ```
-       sudo -H pip3 install pbr==5.4.4 --proxy=${http_proxy}
+    sudo -H pip3 install pbr==5.4.4 --proxy=${http_proxy}
        ```
-
+   
    13. ```
-       sudo -H pip3 install hvac==0.10.0 --proxy=${http_proxy}
+    sudo -H pip3 install hvac==0.10.0 --proxy=${http_proxy}
        ```
-
+   
    14. ```
-       sudo -H pip3 install jmespath==0.9.5 --proxy=${http_proxy}
+    sudo -H pip3 install jmespath==0.9.5 --proxy=${http_proxy}
        ```
-
+   
    15. ```
-       sudo -H pip3 install ruamel.yaml==0.16.10 --proxy=${http_proxy}
+    sudo -H pip3 install ruamel.yaml==0.16.10 --proxy=${http_proxy}
        ```
-
+   
    16. ```
-       sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
+    sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
        ```
        
    17. ```
-       sudo -H pip3 install pycryptodome==3.4.3 --proxy=${http_proxy}
+    sudo -H pip3 install pycryptodome==3.4.3 --proxy=${http_proxy}
        ```
-
+   
 4. [Download and install go](#downloading-and-installing-go) on the deployment node.
 
 5. [Configure Docker proxy](#configuring-docker-proxy) on the deployment node.
@@ -612,8 +582,6 @@ Upon each execution of odim-controller, the following information is logged:
 - Complete output of the operation
 
 # Deploying Resource Aggregator for ODIM and the Plugins
-
-**Important**: In case of any unforeseen issues you experience while deploying or using Resource Aggregator for ODIM, log on to https://jira.lfnetworking.org/secure/Dashboard.jspa and file a defect by clicking **Create**.
 
 Topics covered in this section include:
 
@@ -971,101 +939,99 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    <blockquote>
    IMPORTANT: Before running curl commands, unset http and https proxies, check if you have set proxy configuration. If yes, set "no_proxy" using the following commands: 
 </blockquote>
-   
-
-
    ```
    unset https_proxy
+   ```
    
+   ```
    unset http_proxy
+   ```
    
+   ```
    export no_proxy="127.0.0.1,localhost,\
    localhost.localdomain,10.96.0.0/12,\
    <Comma-seperated_list_of_IP_addresses_of_the_deployment_node_and_the_cluster_nodes>"
    ```
-
+   
    Verify that all the resource aggregator services are listed in the JSON response body by running the following curl command:
-
+   
    ```
    curl -s --cacert \ 
    {path_of_rootCA.crt} \ 
    'https://{odim_host}:{port}/redfish/v1' -k
    ```
+   
+      - Replace `{path_of_rootCA.crt}` with the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file - `<odimcertsPath>/rootCA.crt`. The `rootCA.crt` file is required for secure SSL communication.
+   
+      - {odim_host} is the virtual IP address of the Kubernetes cluster.
+   
+        <blockquote>
+         NOTE: For a single node cluster configuration, {odim_host} is the ip address of master node. For a three node cluster configuration, to use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
+         </blockquote>
+   
+      - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
+   
+        The following JSON response is returned:
+   
+        ```
+        {
+        "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
+        	   "@odata.id":"/redfish/v1/",
+        	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
+        	   "Id":"RootService",
+        	   "Registries":{
+        	   "@odata.id":"/redfish/v1/Registries"
+         	   },
+               "SessionService":{
+         	      "@odata.id":"/redfish/v1/SessionService"
+         	   },
+         	   "AccountService":{
+         	      "@odata.id":"/redfish/v1/AccountService"
+         	   },
+         	   "EventService":{
+         	      "@odata.id":"/redfish/v1/EventService"
+         	   },
+         	   "Tasks":{
+         	      "@odata.id":"/redfish/v1/TaskService"
+         	   },
+         	   "TelemetryService":{
+         	      "@odata.id":"/redfish/v1/TelemetryService"
+         	   },
+         	   "AggregationService":{
+         	      "@odata.id":"/redfish/v1/AggregationService"
+         	   },
+         	   "Systems":{
+         	      "@odata.id":"/redfish/v1/Systems"
+         	   },
+         	   "Chassis":{
+         	      "@odata.id":"/redfish/v1/Chassis"
+         	   },
+         	   "Fabrics":{
+         	      "@odata.id":"/redfish/v1/Fabrics"
+         	   },
+         	   "Managers":{
+         	      "@odata.id":"/redfish/v1/Managers"
+         	   },
+         	   "UpdateService":{
+         	      "@odata.id":"/redfish/v1/UpdateService"
+         	   },
+         	   "Links":{
+         	      "Sessions":{
+         	         "@odata.id":"/redfish/v1/SessionService/Sessions"
+         	      }
+         	   },
+         	   "Name":"Root Service",
+         	   "Oem":{
+         	
+         	   },
+         	   "RedfishVersion":"1.11.1",
+         	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
+         	}
+        ```
+   
+        If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
 
-   - Replace `{path_of_rootCA.crt}` with the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file - `<odimcertsPath>/rootCA.crt`. The `rootCA.crt` file is required for secure SSL communication.
-
-   - {odim_host} is the virtual IP address of the Kubernetes cluster.
-
-     <blockquote>
-      NOTE: For a single node cluster configuration, {odim_host} is the ip address of master node. For a three node cluster configuration, to use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
-      </blockquote>
-
-   - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
-
-     The following JSON response is returned:
-     
-     ```
-     {
-     	   																	"@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
-     	   "@odata.id":"/redfish/v1/",
-     	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
-     	   "Id":"RootService",
-     	   "Registries":{
-     	   "@odata.id":"/redfish/v1/Registries"
-      	   },
-            "SessionService":{
-      	      "@odata.id":"/redfish/v1/SessionService"
-      	   },
-      	   "AccountService":{
-      	      "@odata.id":"/redfish/v1/AccountService"
-      	   },
-      	   "EventService":{
-      	      "@odata.id":"/redfish/v1/EventService"
-      	   },
-      	   "Tasks":{
-      	      "@odata.id":"/redfish/v1/TaskService"
-      	   },
-      	   "TelemetryService":{
-      	      "@odata.id":"/redfish/v1/TelemetryService"
-      	   },
-      	   "AggregationService":{
-      	      "@odata.id":"/redfish/v1/AggregationService"
-      	   },
-      	   "Systems":{
-      	      "@odata.id":"/redfish/v1/Systems"
-      	   },
-      	   "Chassis":{
-      	      "@odata.id":"/redfish/v1/Chassis"
-      	   },
-      	   "Fabrics":{
-      	      "@odata.id":"/redfish/v1/Fabrics"
-      	   },
-      	   "Managers":{
-      	      "@odata.id":"/redfish/v1/Managers"
-      	   },
-      	   "UpdateService":{
-      	      "@odata.id":"/redfish/v1/UpdateService"
-      	   },
-      	   "Links":{
-      	      "Sessions":{
-      	         "@odata.id":"/redfish/v1/SessionService/Sessions"
-      	      }
-      	   },
-      	   "Name":"Root Service",
-      	   "Oem":{
-      	
-      	   },
-      	   "RedfishVersion":"1.11.1",
-      	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
-      	}
-     ```
-
-
-
-
-If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
-
-6. Change the password of the default administrator account of Resource Aggregator for ODIM:
+5. Change the password of the default administrator account of Resource Aggregator for ODIM:
 
    Username: **admin**
 
@@ -1096,7 +1062,7 @@ If you want to run curl commands on a different server, follow the instructions 
    - Your password must contain at least one uppercase letter \(A-Z\), one lowercase letter \(a-z\), one digit \(0-9\), and one special character \(~!@\#$%^&\*-+\_|\(\)\{\}:;<\>,.?/\).
      The default password is updated to the new password in the database.
 
-7. To configure log rotation, perform the following procedure on each cluster node: 
+6. To configure log rotation, perform the following procedure on each cluster node: 
    1. Navigate to the `/etc/logrotate.d` directory. 
 
       ```
@@ -1135,15 +1101,15 @@ If you want to run curl commands on a different server, follow the instructions 
       cd /etc/cron.hourly
       ```
 
-   ​	5. Create a file called logrotate. 
+   5. Create a file called logrotate. 
 
-    6. Open the `logrotate` file and add the following content: 
+   6. Open the `logrotate` file and add the following content: 
 
        ```
        logrotate -s /var/lib/logrotate/status /etc/logrotate.d/odimra
        ```
 
-    7. To verify that the configuration is working, run the following command: 
+   7. To verify that the configuration is working, run the following command: 
 
        ```
        sudo logrotate -v -f /etc/logrotate.d/odimra
@@ -2183,6 +2149,7 @@ Run the following commands:
 <blockquote>
 NOTE: Before performing the following steps, ensure the `http_proxy`, `https_proxy`, and `no_proxy` environment variables are set.
 </blockquote>
+
 1. [Optional] If the following content is not present in the `/etc/environment` file, add it:
 
    ```
@@ -2808,15 +2775,13 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the GRF plugin: grfplugin, grfplugin-eventsAdd these values to the existing comma-separated list.<br> |
     | odimPluginPath               | The path of the directory where the GRF Helm package, the `grfplugin` image, and the modified `grfplugin-config.yaml` are copied. |
 
-        Example:
-        
-        ```
+Example:
+
         connectionMethodConf:
           ConnectionMethodType: Redfish
           ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
         odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
         odimraServerCertFQDNSan: grfplugin,grfplugin-events
-        ```
 
 13. Move odimra_kafka_client.key, odimra_kafka_client.crt, odimra_server.key and odimra_server.crt stored in odimCertsPath to a different folder.
 
