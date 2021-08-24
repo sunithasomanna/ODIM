@@ -962,20 +962,19 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    'https://{odim_host}:{port}/redfish/v1' -k
    ```
 
+ - Replace `{path_of_rootCA.crt}` with the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file - `<odimcertsPath>/rootCA.crt`. The `rootCA.crt` file is required for secure SSL communication.
+   
+  - {odim_host} is the virtual IP address of the Kubernetes cluster.
+   
+    <blockquote>
+     NOTE: For a single node cluster configuration, {odim_host} is the ip address of master node. For a three node cluster configuration, to use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
+     </blockquote>
+   
+  - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
 
-      - Replace `{path_of_rootCA.crt}` with the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file - `<odimcertsPath>/rootCA.crt`. The `rootCA.crt` file is required for secure SSL communication.
-   
-      - {odim_host} is the virtual IP address of the Kubernetes cluster.
-   
-        <blockquote>
-         NOTE: For a single node cluster configuration, {odim_host} is the ip address of master node. For a three node cluster configuration, to use FQDN as `{odim_host}`, ensure that FQDN is configured to the virtual IP address in the `/etc/hosts` file or in the DNS server.
-         </blockquote>
-   
-      - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
-   
-      The following JSON response is returned:
-        
-      ```
+  The following JSON response is returned:
+
+
       {
        "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
          	   "@odata.id":"/redfish/v1/",
@@ -1029,11 +1028,11 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
           	   "RedfishVersion":"1.11.1",
           	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
           	}
-      ```
-        
-        If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
-   
-5. Change the password of the default administrator account of Resource Aggregator for ODIM:
+
+ If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
+
+
+6. Change the password of the default administrator account of Resource Aggregator for ODIM:
 
    Username: **admin**
 
@@ -1064,7 +1063,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    - Your password must contain at least one uppercase letter \(A-Z\), one lowercase letter \(a-z\), one digit \(0-9\), and one special character \(~!@\#$%^&\*-+\_|\(\)\{\}:;<\>,.?/\).
      The default password is updated to the new password in the database.
 
-6. To configure log rotation, perform the following procedure on each cluster node: 
+7. To configure log rotation, perform the following procedure on each cluster node: 
    1. Navigate to the `/etc/logrotate.d` directory. 
 
       ```
