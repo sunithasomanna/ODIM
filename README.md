@@ -459,7 +459,7 @@ The following table lists the software components and their versions that are co
     | update                | 1.0         | update.tar                   |
     | kafka                 | 1.0         | kafka.tar                    |
     | zookeeper             | 1.0         | zookeeper.tar                |
-    | etcd                  | 1.16        | etcd.tar                     |
+    | etcd                  | 1.0         | etcd.tar                     |
     | redis                 | 1.0         | redis.tar                    |
     | stakater/reloader     | v0.0.76     | stakater_reloader.tar        |
     | busybox               | 1.33        | busybox.tar                  |
@@ -476,10 +476,6 @@ The following table lists the software components and their versions that are co
     <blockquote>
         NOTE: The 'kube_deploy_nodes.yaml' file is the configuration file used by odim-controller to set up a Kubernetes cluster and to deploy the Resource Aggregator for ODIM services. </blockquote>
     
-5. Verify the Docker images are available on each cluster node using the following command:
-   ```
-   sudo docker images
-   ```
 
 ## Generating an encrypted node password
 
@@ -553,7 +549,7 @@ Resource Aggregator for ODIM uses the odim-vault tool to encrypt and decrypt pas
 2. Open the `/etc/ssh/sshd_config` file on each cluster node. 
 
    ```
-   vi /etc/ssh/sshd_config
+   sudo vi /etc/ssh/sshd_config
    ```
 
 3. Remove the commenting symbol `#` for the following line:
@@ -609,6 +605,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
       ```
       cp kube_deploy_nodes.yaml.tmpl kube_deploy_nodes.yaml
       ```
+      
    3. Edit the `kube_deploy_nodes.yaml` file. 
    
       ```
@@ -709,7 +706,9 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
         odimraKafkaClientKey:
       ```
    
-   4. Update the following mandatory parameters in the above file:
+      For information on each parameter in this configuration file, see [Odim-controller configuration parameters](#odim-controller-configuration-parameters).
+   
+   4. Update the following mandatory parameters in the above configuration file:
    
    - httpProxy (if your environment is behind a proxy)
    
@@ -757,7 +756,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    
    - virtualIP (mandatory if haDeploymentEnabled is set to true)
    
-   Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Odim-controller configuration parameters](#odim-controller-configuration-parameters).
+   Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. 
    
    <blockquote>
         NOTE: All parameters in the `kube_deploy_nodes.yaml` file get sorted alphabetically after the successful deployment of Resource Aggregator for ODIM services.
@@ -1440,6 +1439,18 @@ The plugin you want to add is successfully deployed.
 
     -   `{port}` is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
 
+    The following ports will be used during the addition of plugins and need to open in the system to be used by Resource Aggregator for ODIM:
+    
+    | Port name                  | Ports                                                        |
+    | -------------------------- | ------------------------------------------------------------ |
+    | Container ports            | 45000, 45101-45201, 9092, 9082, 6380, 6379, 8500, 8300, 8302, 8301, 8600, 2181<br> |
+    | API node port              | 30080                                                        |
+    | Plugin event listener port | 30083                                                        |
+| Kafka node port            | 30092 for a one-node cluster configuration.30092, 30093, and 30094 for a three-node cluster configuration.<br> |
+    | GRF plugin port            | 45001                                                        |
+    | URP port                   | 45007                                                        |
+    | Dell port                  | 45005                                                        |
+    
     Provide a JSON request payload specifying:
     
     -   The plugin address \(the plugin name or hostname and the plugin port\)
@@ -1447,7 +1458,7 @@ The plugin you want to add is successfully deployed.
     -   The username and password of the plugin user account
     
     -   A link to the connection method having the details of the plugin
-
+    
     **Sample request payload for adding the GRF plugin:** 
     
     ```
@@ -1478,28 +1489,26 @@ The plugin you want to add is successfully deployed.
     }
     ```
     
-    **Sample request payload for adding Dell:** 
-    
-    ```
-    {
-       "HostName":"dellplugin:45005",
-       "UserName":"admin",
-       "Password":"Plug!n12$4",
-      "Links":{
-              "ConnectionMethod": {
-                "@odata.id": "/redfish/v1/AggregationService/ConnectionMethods/d172e66c-b4a8-437c-981b-1c07ddfeacaa"
-            }
-      }
+   **Sample request payload for adding Dell:** 
+   
+   ```
+   {
+      "HostName":"dellplugin:45005",
+      "UserName":"admin",
+      "Password":"Plug!n12$4",
+     "Links":{
+             "ConnectionMethod": {
+               "@odata.id": "/redfish/v1/AggregationService/ConnectionMethods/d172e66c-b4a8-437c-981b-1c07ddfeacaa"
+           }
+     }
    }
    ```
-   
-   
    
     **Request payload parameters** 
    
    |Parameter|Type|Description|
    |---------|----|-----------|
-   |HostName|String \(required\)<br> |It is the plugin service name and the port specified in the Kubernetes environment. For default plugin ports, see [Resource Aggregator for ODIM default ports](#resource-aggregator-for-odim-default-ports).<br>NOTE: If you are using a different port for a plugin, ensure that the port is greater than `45000`.|
+   |HostName|String \(required\)<br> |It is the plugin service name and the port specified in the Kubernetes environment. For default plugin ports, see [Resource Aggregator for ODIM default ports](#resource-aggregator-for-odim-default-ports).<br>|
    |UserName|String \(required\)<br> |The plugin username. See default administrator account usernames of all the plugins in "Default plugin credentials".<br>|
    |Password|String \(required\)<br> |The plugin password. See default administrator account passwords of all the plugins in "Default plugin credentials".<br> |
    |ConnectionMethod|Array \(required\)<br> |Links to the connection methods that are used to communicate with this endpoint: `/redfish/v1/AggregationService/AggregationSources`.<br><blockquote>NOTE: Ensure that the connection method information for the plugin you want to add is updated in the odim-controller configuration file.<br></blockquote>To know which connection method to use, do the following:<br>    1.  Perform HTTP `GET` on: `/redfish/v1/AggregationService/ConnectionMethods`.<br>You will receive a list of links to available connection methods.<br>    2.  Perform HTTP `GET` on each link. Check the value of the `ConnectionMethodVariant` property in the JSON response. It displays the details of a plugin. Choose a connection method having the details of the plugin of your choice. For available connection method variants, see the following "Connection method variants" table.<br>|
