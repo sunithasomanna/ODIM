@@ -1239,17 +1239,18 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br> Add these values to the existing comma-separated list.<br> |
     | odimPluginPath               | The path of the directory where the URP Helm package, the `urplugin` image, and the modified `urplugin-config.yaml` are copied. |
 
-           Example:
-           
+Example:
+
+
            odimPluginPath: /home/bruce/plugins
             connectionMethodConf:
-           
             - ConnectionMethodType: Redfish
               ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
             - ConnectionMethodType: Redfish
               ConnectionMethodVariant: Compute:BasicAuth:URP_v1.0.0
                odimraKafkaClientCertFQDNSan: urplugin,api
                odimraServerCertFQDNSan: urplugin,api
+
 
 12. Move odimra_kafka_client.key, odimra_kafka_client.crt, odimra_server.key and odimra_server.crt  stored in odimCertsPath to a different folder.
 
@@ -1446,7 +1447,7 @@ The plugin you want to add is successfully deployed.
     | Container ports            | 45000, 45101-45201, 9092, 9082, 6380, 6379, 8500, 8300, 8302, 8301, 8600, 2181<br> |
     | API node port              | 30080                                                        |
     | Plugin event listener port | 30083                                                        |
-| Kafka node port            | 30092 for a one-node cluster configuration.30092, 30093, and 30094 for a three-node cluster configuration.<br> |
+    | Kafka node port            | 30092 for a one-node cluster configuration.30092, 30093, and 30094 for a three-node cluster configuration.<br>     |
     | GRF plugin port            | 45001                                                        |
     | URP port                   | 45007                                                        |
     | Dell port                  | 45005                                                        |
@@ -1576,7 +1577,7 @@ The plugin you want to add is successfully deployed.
 
         **Sample response \(URP manager\)** 
 
-        
+        ```
         {
            "@odata.context":"/redfish/v1/$metadata#Manager.Manager",
            "@odata.etag":"W/\"AA6D42B0\"",
@@ -1592,6 +1593,7 @@ The plugin you want to add is successfully deployed.
            },
            "UUID":"a9cf0e1e-c36d-4d5b-9a31-cc07b611c01b"
         }
+        ```
     
 3. Check in the JSON response of the plugin manager, if: 
    
