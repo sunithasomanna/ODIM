@@ -961,7 +961,8 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    {path_of_rootCA.crt} \ 
    'https://{odim_host}:{port}/redfish/v1' -k
    ```
-   
+
+
       - Replace `{path_of_rootCA.crt}` with the path specified for the odimCertsPath parameter in the kube\_deploy\_nodes.yaml file - `<odimcertsPath>/rootCA.crt`. The `rootCA.crt` file is required for secure SSL communication.
    
       - {odim_host} is the virtual IP address of the Kubernetes cluster.
@@ -972,11 +973,11 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    
       - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
    
-        The following JSON response is returned:
+      The following JSON response is returned:
         
-        ```
-        {
-        "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
+      ```
+      {
+       "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
          	   "@odata.id":"/redfish/v1/",
          	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
          	   "Id":"RootService",
@@ -1028,7 +1029,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
           	   "RedfishVersion":"1.11.1",
           	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
           	}
-        ```
+      ```
         
         If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
    
