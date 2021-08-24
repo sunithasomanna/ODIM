@@ -255,57 +255,57 @@ The following table lists the software components and their versions that are co
 
    2. ```
       sudo apt-get install -y sshpass=1.06-1 apt-transport-https=2.0.6
-openjdk-16-jre-headless=16.0.1+9-1~20.04
-ca-certificates=20210119~20.04.1 curl=7.68.0-1ubuntu2.6
-software-properties-common=0.98.9.5
-gnupg-agent=2.2.19-3ubuntu2.1
-python3.8=3.8.10-0ubuntu1~20.04
-python-setuptools=44.0.0-2
-python3-pip=20.0.2-5ubuntu1.6
+      openjdk-16-jre-headless=16.0.1+9-1~20.04
+      ca-certificates=20210119~20.04.1 curl=7.68.0-1ubuntu2.6
+      software-properties-common=0.98.9.5
+      gnupg-agent=2.2.19-3ubuntu2.1
+      python3.8=3.8.10-0ubuntu1~20.04
+      python-setuptools=44.0.0-2
+      python3-pip=20.0.2-5ubuntu1.6
       ```
    
-   6.  ```
+   3.  ```
        sudo -E apt-add-repository ppa:ansible/ansible -y
        ```
        
-   8.  ```
+   4.  ```
        python3 -m pip install --upgrade pip
        ```
    
-   9.  ```
+   5.  ```
        sudo -H pip3 install ansible==2.9.6 --proxy=${http_proxy}
        ```
    
+   6.  ```
+       sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
+       ```
+   
+   7.  ```
+       sudo -H pip3 install netaddr==0.7.19 --proxy=${http_proxy}
+       ```
+   
+   8.  ```
+       sudo -H pip3 install pbr==5.4.4 --proxy=${http_proxy}
+       ```
+   
+   9.  ```
+       sudo -H pip3 install hvac==0.10.0 --proxy=${http_proxy}
+       ```
+   
    10. ```
-    sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
+       sudo -H pip3 install jmespath==0.9.5 --proxy=${http_proxy}
        ```
    
    11. ```
-    sudo -H pip3 install netaddr==0.7.19 --proxy=${http_proxy}
+       sudo -H pip3 install ruamel.yaml==0.16.10 --proxy=${http_proxy}
        ```
    
    12. ```
-    sudo -H pip3 install pbr==5.4.4 --proxy=${http_proxy}
-       ```
-   
-   13. ```
-    sudo -H pip3 install hvac==0.10.0 --proxy=${http_proxy}
-       ```
-   
-   14. ```
-    sudo -H pip3 install jmespath==0.9.5 --proxy=${http_proxy}
-       ```
-   
-   15. ```
-    sudo -H pip3 install ruamel.yaml==0.16.10 --proxy=${http_proxy}
-       ```
-   
-   16. ```
-    sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
+       sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
        ```
        
-   17. ```
-    sudo -H pip3 install pycryptodome==3.4.3 --proxy=${http_proxy}
+   13. ```
+       sudo -H pip3 install pycryptodome==3.4.3 --proxy=${http_proxy}
        ```
    
 4. [Download and install go](#downloading-and-installing-go) on the deployment node.
@@ -939,6 +939,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    <blockquote>
    IMPORTANT: Before running curl commands, unset http and https proxies, check if you have set proxy configuration. If yes, set "no_proxy" using the following commands: 
 </blockquote>
+
    ```
    unset https_proxy
    ```
@@ -972,65 +973,65 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
       - {port} is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
    
         The following JSON response is returned:
-   
+        
         ```
         {
         "@odata.context":"/redfish/v1/$metadata#ServiceRoot.ServiceRoot",
-        	   "@odata.id":"/redfish/v1/",
-        	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
-        	   "Id":"RootService",
-        	   "Registries":{
-        	   "@odata.id":"/redfish/v1/Registries"
-         	   },
-               "SessionService":{
-         	      "@odata.id":"/redfish/v1/SessionService"
-         	   },
-         	   "AccountService":{
-         	      "@odata.id":"/redfish/v1/AccountService"
-         	   },
-         	   "EventService":{
-         	      "@odata.id":"/redfish/v1/EventService"
-         	   },
-         	   "Tasks":{
-         	      "@odata.id":"/redfish/v1/TaskService"
-         	   },
-         	   "TelemetryService":{
-         	      "@odata.id":"/redfish/v1/TelemetryService"
-         	   },
-         	   "AggregationService":{
-         	      "@odata.id":"/redfish/v1/AggregationService"
-         	   },
-         	   "Systems":{
-         	      "@odata.id":"/redfish/v1/Systems"
-         	   },
-         	   "Chassis":{
-         	      "@odata.id":"/redfish/v1/Chassis"
-         	   },
-         	   "Fabrics":{
-         	      "@odata.id":"/redfish/v1/Fabrics"
-         	   },
-         	   "Managers":{
-         	      "@odata.id":"/redfish/v1/Managers"
-         	   },
-         	   "UpdateService":{
-         	      "@odata.id":"/redfish/v1/UpdateService"
-         	   },
-         	   "Links":{
-         	      "Sessions":{
-         	         "@odata.id":"/redfish/v1/SessionService/Sessions"
-         	      }
-         	   },
-         	   "Name":"Root Service",
-         	   "Oem":{
-         	
-         	   },
-         	   "RedfishVersion":"1.11.1",
-         	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
-         	}
+         	   "@odata.id":"/redfish/v1/",
+         	   "@odata.type":"#ServiceRoot.v1_5_0.ServiceRoot",
+         	   "Id":"RootService",
+         	   "Registries":{
+         	   "@odata.id":"/redfish/v1/Registries"
+          	   },
+                "SessionService":{
+          	      "@odata.id":"/redfish/v1/SessionService"
+          	   },
+          	   "AccountService":{
+          	      "@odata.id":"/redfish/v1/AccountService"
+          	   },
+          	   "EventService":{
+          	      "@odata.id":"/redfish/v1/EventService"
+          	   },
+          	   "Tasks":{
+          	      "@odata.id":"/redfish/v1/TaskService"
+          	   },
+          	   "TelemetryService":{
+          	      "@odata.id":"/redfish/v1/TelemetryService"
+          	   },
+          	   "AggregationService":{
+          	      "@odata.id":"/redfish/v1/AggregationService"
+          	   },
+          	   "Systems":{
+          	      "@odata.id":"/redfish/v1/Systems"
+          	   },
+          	   "Chassis":{
+          	      "@odata.id":"/redfish/v1/Chassis"
+          	   },
+          	   "Fabrics":{
+          	      "@odata.id":"/redfish/v1/Fabrics"
+          	   },
+          	   "Managers":{
+          	      "@odata.id":"/redfish/v1/Managers"
+          	   },
+          	   "UpdateService":{
+          	      "@odata.id":"/redfish/v1/UpdateService"
+          	   },
+          	   "Links":{
+          	      "Sessions":{
+          	         "@odata.id":"/redfish/v1/SessionService/Sessions"
+          	      }
+          	   },
+          	   "Name":"Root Service",
+          	   "Oem":{
+          	
+          	   },
+          	   "RedfishVersion":"1.11.1",
+          	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
+          	}
         ```
-   
+        
         If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
-
+   
 5. Change the password of the default administrator account of Resource Aggregator for ODIM:
 
    Username: **admin**
@@ -1380,15 +1381,17 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br />`dellplugin`, `dellplugin-events`<br>Add these values to the existing comma-separated list.<br> |
     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br /> `dellplugin`, `dellplugin-events`<br> Add these values to the existing comma-separated list.<br> |
 
-                 Example:
-                 
-                 odimPluginPath: /home/bruce/plugins
-                  connectionMethodConf:
-                  - ConnectionMethodType: Redfish
-                    ConnectionMethodVariant: Compute:BasicAuth:DELL_v1.0.0
-                  odimraKafkaClientCertFQDNSan: dellplugin,dellplugin-events
-                  odimraServerCertFQDNSan: dellplugin,dellplugin-events
+    Example:
 
+    ```
+    odimPluginPath: /home/bruce/plugins
+      connectionMethodConf:
+      - ConnectionMethodType: Redfish
+        ConnectionMethodVariant: Compute:BasicAuth:DELL_v1.0.0
+      odimraKafkaClientCertFQDNSan: dellplugin,dellplugin-events
+      odimraServerCertFQDNSan: dellplugin,dellplugin-events    
+    ```
+    
 13. Move odimra_kafka_client.key, odimra_kafka_client.crt, odimra_server.key and odimra_server.crt stored in odimCertsPath to a different folder.
 
     <blockquote> NOTE: odimCertsPath is the absolute path of the directory where certificates required by the services of Resource Aggregator for ODIM are present. Refer to the "Odim-controller configuration parameters" section in this document for more information on odimCertsPath. </blockquote>
