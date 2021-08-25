@@ -276,35 +276,35 @@ The following table lists the software components and their versions that are co
       python3 -m pip install --upgrade pip
       ```
    
-   9.  ```
+   9. ```
       sudo -H pip3 install ansible==2.9.6 --proxy=${http_proxy}
       ```
    
-   9. ```
-      sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
-      ```
-   
    10. ```
+       sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
+       ```
+       
+   11. ```
        sudo -H pip3 install netaddr==0.7.19 --proxy=${http_proxy}
        ```
    
-   11. ```
+   12. ```
        sudo -H pip3 install pbr==5.4.4 --proxy=${http_proxy}
        ```
    
-   12. ```
+   13. ```
        sudo -H pip3 install hvac==0.10.0 --proxy=${http_proxy}
        ```
    
-   13. ```
+   14. ```
        sudo -H pip3 install jmespath==0.9.5 --proxy=${http_proxy}
        ```
    
-   14. ```
+   15. ```
        sudo -H pip3 install ruamel.yaml==0.16.10 --proxy=${http_proxy}
        ```
    
-   15. ```
+   16. ```
        sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
        ```
    
@@ -1011,7 +1011,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
  If you want to run curl commands on a different server, follow the instructions in [Running curl commands on a different server](#Running-curl-commands-on-a-different-server).
 
 
-6. Change the password of the default administrator account of Resource Aggregator for ODIM:
+5. Change the password of the default administrator account of Resource Aggregator for ODIM:
 
    Username: **admin**
 
@@ -1042,7 +1042,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    - Your password must contain at least one uppercase letter \(A-Z\), one lowercase letter \(a-z\), one digit \(0-9\), and one special character \(~!@\#$%^&\*-+\_|\(\)\{\}:;<\>,.?/\).
      The default password is updated to the new password in the database.
 
-7. To configure log rotation, perform the following procedure on each cluster node: 
+6. To configure log rotation, perform the following procedure on each cluster node: 
    1. Navigate to the `/etc/logrotate.d` directory. 
 
       ```
