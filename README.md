@@ -4,7 +4,7 @@
 # Table of contents
 
 1. [Introduction](#introduction)
-   - [Creating Resource Aggregator for ODIM defects](#creating-resource-aggregator-for-odim-defects)
+   - [Filing Resource Aggregator for ODIM defects](#filing-resource-aggregator-for-odim-defects)
    - [Resource Aggregator for ODIM Deployment overview](#resource-aggregator-for-odim-deployment-overview)
    - [Deployment considerations](#deployment-considerations)
   
@@ -14,7 +14,6 @@
    - [Pulling the Docker images of all the Kubernetes microservices](#pulling-the-docker-images-of-all-the-kubernetes-microservices)
    - [Building Docker images of all the services](#building-docker-images-of-all-the-services)
    - [Generating an encrypted node password](#generating-an-encrypted-node-password)
-   - [Configuring password authentication on cluster nodes](#configuring-password-authentication-on-cluster-nodes)
    - [Configuring log path for odim-controller](#log-path-for-odim-controller)
 4. [Deploying Resource Aggregator for ODIM and the plugins](#deploying-resource-aggregator-for-odim-and-the-plugins)
    - [Deploying the resource aggregator services](#deploying-the-resource-aggregator-services)
@@ -93,20 +92,17 @@ Resource Aggregator for ODIM comprises the following two key components:
    
    Resource Aggregator for ODIM allows third parties to easily develop and integrate their plugins into its framework. For more information, see [Resource Aggregator for Open Distributed Infrastructure Management™ Plugin Developer's Guide](https://github.com/ODIM-Project/ODIM/blob/development/plugin-redfish/README.md).
 
-
-
-## Creating Resource Aggregator for ODIM defects
+## Filing Resource Aggregator for ODIM defects 
 
 **Important**: In case of any unforeseen issues you experience while deploying or using Resource Aggregator for ODIM, log on to the following website and file your defect by clicking **Create**.
+
+**Prerequisite**: You must have valid LFN Jira credentials to create defects.
 
 - Website: https://jira.lfnetworking.org/secure/Dashboard.jspa
 - Discussion Forums: https://odim.slack.com/archives/C01DG9MH479
 - Documentation:
-  - https://github.com/ODIM-Project/ODIM#readme
-  - https://github.com/ODIM-Project/ODIM/blob/main/docs/README.md
-  - https://github.com/ODIM-Project/ODIM/blob/main/docs/troubleshooting.md 
-
-
+  - Deployment Document- https://github.com/ODIM-Project/ODIM#readme
+  - Additional documents - https://github.com/ODIM-Project/ODIM/blob/main/docs
 
 ## Resource Aggregator for ODIM deployment overview
 
@@ -198,7 +194,7 @@ The following table lists the software components and their versions that are co
 |Java JRE|11|
 |Kafka|2.5.0|
 |Redis|6.2.5|
-|Ubuntu LTS|20.04|
+|Ubuntu LTS|18.04|
 |ZooKeeper|3.5.7|
 |Docker|19.03.8, build afacb8b7f0|
 |Ansible|2.9.6|
@@ -217,8 +213,7 @@ The following table lists the software components and their versions that are co
 2. [Pull the Docker images of all the Kubernetes microservices](#Pulling-the-Docker-images-of-all-the-Kubernetes-microservices)
 3. [Build the Docker images of all the services](#building-docker-images-of-all-the-services)
 4. [Generate an encrypted node password using the odim-vault tool](#generating-an-encrypted-node-password)
-5. [Configure password authentication on cluster nodes](#configuring-password-authentication-on-cluster-nodes)
-6. [Configure log path for odim-controller](#log-path-for-odim-controller)
+5. [Configure log path for odim-controller](#log-path-for-odim-controller)
 
 ## Setting up the environment
 
@@ -232,7 +227,7 @@ The following table lists the software components and their versions that are co
     - To add 5,000 servers or less, you require nodes having 32 GB (32768 MB) RAM, 16 CPU cores and 32 threads, and 200GB HDD each
 
 
-1. Download and install Ubuntu 20.04 LTS on the deployment node and all the cluster nodes. 
+1. Download and install Ubuntu 18.04 LTS on the deployment node and all the cluster nodes. 
     During installation, configure the IP addresses of cluster nodes to reach the management VLANs where devices are connected. Ensure there is no firewall or switches blocking the connections and ports.
 
    <blockquote>
@@ -254,58 +249,63 @@ The following table lists the software components and their versions that are co
       ```
 
    2. ```
-      sudo apt-get install -y sshpass=1.06-1 apt-transport-https=2.0.6
-      openjdk-16-jre-headless=16.0.1+9-1~20.04
-      ca-certificates=20210119~20.04.1 curl=7.68.0-1ubuntu2.6
-      software-properties-common=0.98.9.5
-      gnupg-agent=2.2.19-3ubuntu2.1
-      python3.8=3.8.10-0ubuntu1~20.04
-      python-setuptools=44.0.0-2
-      python3-pip=20.0.2-5ubuntu1.6
+      sudo apt-get install sshpass=1.06-1 -y
+      ```
+      
+   3. ```
+      sudo apt-get install python3.8=3.8.0-3~18.04.1 -y
       ```
    
-   3.  ```
-       sudo -E apt-add-repository ppa:ansible/ansible -y
-       ```
-       
-   4.  ```
-       python3 -m pip install --upgrade pip
-       ```
+   4. ```
+      sudo apt-get install python3-pip=9.0.1-2.3~ubuntu1.18.04.5 -y
+      ```
    
-   5.  ```
-       sudo -H pip3 install ansible==2.9.6 --proxy=${http_proxy}
-       ```
+   5. ```
+      sudo apt-get install software-properties-common=0.96.24.32.14 -y
+      ```
    
-   6.  ```
-       sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
-       ```
+   6. ```
+      sudo -E apt-add-repository ppa:ansible/ansible -y
+      ```
    
-   7.  ```
+   7. ```
+      sudo apt-get install openjdk-11-jre-headless=11.0.11+9-0ubuntu2~18.04 -y
+      ```
+   
+   8. ```
+      python3 -m pip install --upgrade pip
+      ```
+   
+   9.  ```
+      sudo -H pip3 install ansible==2.9.6 --proxy=${http_proxy}
+      ```
+   
+   9. ```
+      sudo -H pip3 install jinja2==2.11.1 --proxy=${http_proxy}
+      ```
+   
+   10. ```
        sudo -H pip3 install netaddr==0.7.19 --proxy=${http_proxy}
        ```
    
-   8.  ```
+   11. ```
        sudo -H pip3 install pbr==5.4.4 --proxy=${http_proxy}
        ```
    
-   9.  ```
+   12. ```
        sudo -H pip3 install hvac==0.10.0 --proxy=${http_proxy}
        ```
    
-   10. ```
+   13. ```
        sudo -H pip3 install jmespath==0.9.5 --proxy=${http_proxy}
        ```
    
-   11. ```
+   14. ```
        sudo -H pip3 install ruamel.yaml==0.16.10 --proxy=${http_proxy}
        ```
    
-   12. ```
+   15. ```
        sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
-       ```
-       
-   13. ```
-       sudo -H pip3 install pycryptodome==3.4.3 --proxy=${http_proxy}
        ```
    
 4. [Download and install go](#downloading-and-installing-go) on the deployment node.
@@ -459,7 +459,7 @@ The following table lists the software components and their versions that are co
     | update                | 1.0         | update.tar                   |
     | kafka                 | 1.0         | kafka.tar                    |
     | zookeeper             | 1.0         | zookeeper.tar                |
-    | etcd                  | 1.0         | etcd.tar                     |
+    | etcd                  | 1.16        | etcd.tar                     |
     | redis                 | 1.0         | redis.tar                    |
     | stakater/reloader     | v0.0.76     | stakater_reloader.tar        |
     | busybox               | 1.33        | busybox.tar                  |
@@ -542,31 +542,11 @@ Resource Aggregator for ODIM uses the odim-vault tool to encrypt and decrypt pas
     scripts/nodePasswordFile
     ```
 
-## Configuring password authentication on cluster nodes
 
-1. Log in to your cluster nodes.
-
-2. Open the `/etc/ssh/sshd_config` file on each cluster node. 
-
-   ```
-   sudo vi /etc/ssh/sshd_config
-   ```
-
-3. Remove the commenting symbol `#` for the following line:
-
-   ```
-   PasswordAuthentication yes
-   ```
-
-4. Restart `sshd` service using the following command:
-
-   ```
-   sudo systemctl restart sshd
-   ```
 
 ## Log path for odim-controller
 
-You can provide a desired file path for the odim-controller logs by setting ODIM_CONTROLLER_LOG_PATH environment variable. Upon the execution of odim-controller, the log file will then be stored as `{ODIM_CONTROLLER_LOG_PATH}/odim-controller.log`
+You can provide a desired file path for the odim-controller logs by setting ODIM_CONTROLLER_LOG_PATH environment variable. Upon the execution of odim-controller, the log file will then be stored as `{ODIM_CONTROLLER_LOG_PATH}/odim-controller.log`.
 
 If the environment variable is not set, the log file will be stored in the current directory where odim-controller was executed.
 
@@ -1124,7 +1104,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 1. Create a directory called `plugins` on the deployment node.
    
    ```
-   mkdir plugins
+   mkdir -p ~/plugins
    ```
    
 4. In the `plugins` directory, create a directory called `urplugin`.
@@ -1151,7 +1131,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     ip/jrKjQdzKIU1JvT4ZQ6gbCe2XJtCKPRgqOQv6g3aIAYtG+hpVgel3k67TB723h9dN2cABWZgE+b9CAxbIXj3qZZFWrUMMuPkT4fwtW8fTlhdR+phmOvnnSw5bvUrXyl5Se1IczwtMXfhqk7U8eqpJnZ6xWNR8Q1K7baDv1QvZwej/v3bqHRTC93pDL+3SvE8VCyrIgbMVdfvv3+mJKvs2F7hXoTJiwjRfKGyzdP0yRIHAFOB3m/xnv6ZIRm8Ak6+sx18NRq8RH20bktzhZ45fT+iX4twMJG1lI0KRJ3j/PL+IqY4MmYzv/72fQhMznL39Rjr9LR6mB/JGI0ww0sMUCFr6obzQfQWv1so+Ck694fNJMQPXQS64VcqVDuISXSd4cqkdMx9zBmfDbgzMQQVwgjDgt4nC1w8/wGSfMtkms8rSJrBa18hKCWi+jfhASbNM84udKc0kQsQJlsnjcdsL84zrE8iUqqXC/fK2cQbNL31H5C+qEfJqdNTauQSskkK3cpNWh1FVw736WBYYJSja59q5QwMniXldwcvRglEIELsjKgjbuOnQoIZaVTcbheaa2b1XAiRKTKuPmweysyV3fbuR0jgSJTmdTehrtYG9omjUbg/L7WFjC43JWq8suWi5uch+jHtGG5mZJFFdkE37pQd3wzHBSa+/9Yq9/ZSY=
     ```
 
-7. On the deployment node, copy the Dell plugin configuration file and the hook script to `~/plugins/urplugin`.
+7. On the deployment node, copy the UR plugin configuration file and the hook script to `~/plugins/urplugin`.
    ```
    cp ~/ODIM/odim-controller/helmcharts/urplugin/urplugin-config.yaml ~/plugins/urplugin
    ```
@@ -1169,10 +1149,6 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     **Sample urplugin-config.yaml file**
 
     ```
-    odimra:
-      namespace: odim
-      groupID: 2021
-      haDeploymentEnabled: true
     urplugin:
       urPluginRootServiceUUID: e3473202-8706-4077-bd7d-d43d8d323a5b
       username: admin
@@ -1181,23 +1157,17 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
       odimPassword: ip/jrKjQdzKIU1JvT4ZQ6gbCe2XJtCKPRgqOQv6g3aIAYtG+hpVgel3k67TB723h9dN2cABWZgE+b9CAxbIXj3qZZFWrUMMuPkT4fwtW8fTlhdR+phmOvnnSw5bvUrXyl5Se1IczwtMXfhqk7U8eqpJnZ6xWNR8Q1K7baDv1QvZwej/v3bqHRTC93pDL+3SvE8VCyrIgbMVdfvv3+mJKvs2F7hXoTJiwjRfKGyzdP0yRIHAFOB3m/xnv6ZIRm8Ak6+sx18NRq8RH20bktzhZ45fT+iX4twMJG1lI0KRJ3j/PL+IqY4MmYzv/72fQhMznL39Rjr9LR6mB/JGI0ww0sMUCFr6obzQfQWv1so+Ck694fNJMQPXQS64VcqVDuISXSd4cqkdMx9zBmfDbgzMQQVwgjDgt4nC1w8/wGSfMtkms8rSJrBa18hKCWi+jfhASbNM84udKc0kQsQJlsnjcdsL84zrE8iUqqXC/fK2cQbNL31H5C+qEfJqdNTauQSskkK3cpNWh1FVw736WBYYJSja59q5QwMniXldwcvRglEIELsjKgjbuOnQoIZaVTcbheaa2b1XAiRKTKuPmweysyV3fbuR0jgSJTmdTehrtYG9omjUbg/L7WFjC43JWq8suWi5uch+jHtGG5mZJFFdkE37pQd3wzHBSa+/9Yq9/ZSY=
       logPath: /var/log/urplugin_logs
     ```
-
+    
 6. Update the following parameters in the plugin configuration file: 
 
     - **odimUsername**: The username of the default administrator account of Resource Aggregator for ODIM.
 
-    - **odimPassword**:  The encrypted password of the default administrator account of Resource Aggregator for ODIM. To generate the encrypted password, run the following command:
-
-      ```
-      echo -n '<odimra_password>' | openssl pkeyutl -encrypt -inkey \ 
-      ~/ODIM/odim-controller/scripts/certs/<deploymentid>/odimra_rsa.private \ 
-      -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512|openssl base64 -A
-      ```
+    - **odimPassword**:  The encrypted password of the default administrator account of Resource Aggregator for ODIM. To generate the encrypted password, see step 3 of this procedure.
 
     - **urPluginRootServiceUUID**: RootServiceUUID to be used by the URP service.
-
+    
     Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
-
+    
 7. Generate Helm package for URP on the deployment node.
 
     1. Navigate to `odim-controller/helmcharts/urplugin`.
@@ -1217,7 +1187,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 8. Save the URP Docker image on the deployment node at `~/plugins/urplugin`.
 
       ```
-     sudo docker save urplugin:1.0 -o ~/plugins/urplugin/urplugin.tar
+     docker save urplugin:1.0 -o ~/plugins/urplugin/urplugin.tar
      ```
 
 9. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
@@ -1236,7 +1206,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     | ---------------------------- | ------------------------------------------------------------ |
     | connectionMethodConf         | The connection method associated with URP: ConnectionMethodVariant: `Compute:BasicAuth:URP_v1.0.0`<br> |
     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br>Add these values to the existing comma-separated list.<br> |
-    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br> Add these values to the existing comma-separated list.<br> |
+    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying URP: `urplugin`, `api`.<br>Add these values to the existing comma-separated list.<br> |
     | odimPluginPath               | The path of the directory where the URP Helm package, the `urplugin` image, and the modified `urplugin-config.yaml` are copied. |
 
 Example:
@@ -1294,7 +1264,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 1. Create a directory called `plugins` on the deployment node.
    ```
-   mkdir plugins
+   mkdir -p ~/plugins
    ```
 
 2. In the `plugins` directory, create a directory called `dellplugin`.
@@ -1336,7 +1306,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    - **lbHost**: IP address of the cluster node where the Dell plugin will be installed for one node cluster configuration. For three node cluster configuration,  lbHost is the virtual IP address configured in Nginx and Keepalived.
    - **lbPort**: Default port is 30084 for one node cluster configuration. For three node cluster configuration, lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
    
-     <blockquote>Note:  Proxy service with lbport is created for the service configured with eventlistenernodeport in the same configuration file.</blockquote>
+     <blockquote>Note: The lbport is used as proxy port for eventlistenernodeport, which is used for subscribing to events.</blockquote>
    - **dellPluginRootServiceUUID**: RootServiceUUID to be used by the Dell plugin service.
    
    Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
@@ -1440,17 +1410,16 @@ The plugin you want to add is successfully deployed.
 
     -   `{port}` is the API server port configured in Nginx. The default port is `30080`. If you have changed the default port, use that as the port.
 
-    The following ports will be used during the addition of plugins and need to open in the system to be used by Resource Aggregator for ODIM:
+    The following ports (except container ports) must be free:
     
-    | Port name                  | Ports                                                        |
-    | -------------------------- | ------------------------------------------------------------ |
-    | Container ports            | 45000, 45101-45201, 9092, 9082, 6380, 6379, 8500, 8300, 8302, 8301, 8600, 2181<br> |
-    | API node port              | 30080                                                        |
-    | Plugin event listener port | 30083                                                        |
-    | Kafka node port            | 30092 for a one-node cluster configuration.30092, 30093, and 30094 for a three-node cluster configuration.<br>     |
-    | GRF plugin port            | 45001                                                        |
-    | URP port                   | 45007                                                        |
-    | Dell port                  | 45005                                                        |
+    | Port name                                                    | Ports                                                        |
+    | ------------------------------------------------------------ | ------------------------------------------------------------ |
+    | Container ports (access restricted only to the Kubernetes cluster network) | 45000 - API service port<br />45101-45201 - Resource Aggregator for ODIM service ports<br />9082, 9092 - Kafka ports<br />6379 - Redis port<br />26379 - Redis Sentinel port<br />2181 - Zookeeper port<br>2379, 2380 - etcd ports |
+    | API node port (for external access)                          | 30080                                                        |
+    | Kafka node port (for external access)                        | 30092 for a one-node cluster configuration. 30092, 30093, and 30094 for a three-node cluster configuration.<br> |
+    | GRF plugin port<br />EventListenerNodePort<br />lbport       | 45001 - Port to be used while adding GRF plugin.<br />30081 - Port used for event subscriptions in one-node cluster configuration. <br />lbport - For three-node cluster configuration, specify lbport as per your requirement. For one-node cluster configuration, same as EventListenerNodePort<br /> |
+    | UR plugin port                                               | 45007 - Port to be used while adding UR plugin.              |
+    | Dell plugin port<br />EventListenerNodePort<br />lbport      | 45005 - Port to be used while adding Dell plugin.<br />30084 - Port used for event subscriptions in one-node cluster configuration. <br />lbport - For three-node cluster configuration, specify lbport as per your requirement. For one-node cluster configuration, same as EventListenerNodePort<br /> |
     
     Provide a JSON request payload specifying:
     
@@ -1490,7 +1459,7 @@ The plugin you want to add is successfully deployed.
     }
     ```
     
-   **Sample request payload for adding Dell:** 
+    **Sample request payload for adding Dell:** 
    
    ```
    {
@@ -2226,7 +2195,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
    ​	`sudo apt-cache madison <package name>`
 	
    1. ```
-      sudo apt-get install -y apt-transport-https=2.0.6 ca-certificates=20210119~20.04.1 curl=7.68.0-1ubuntu2.6
+      sudo apt-get install -y apt-transport-https=2.0.6 ca-certificates=20210119~18.04.1 curl=7.68.0-1ubuntu2.6
       ```
 	  
    2. ```
@@ -2242,7 +2211,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
       ```
    
    5. ```
-      sudo apt-get install docker.io=20.10.7-0ubuntu1~20.04.1
+      sudo apt-get install docker.io=20.10.7-0ubuntu1~18.04.1
       ```
    
 2. Configure overlay storage for Docker:
@@ -2675,16 +2644,9 @@ To update the `odimra-server.crt` and `odimra_kafka_client.crt` files, do the fo
     
 ## Resource Aggregator for ODIM default ports
 
-The following table lists all the default ports used by the resource aggregator, plugins, and third-party services.
-| Port name | Ports |
-|-----|----|
-|Container ports| 45000, 45101-45201, 9092, 9082, 6380, 6379, 8500, 8300, 8302, 8301, 8600, 2181<br>|
-|API node port|30080|
-|Plugin event listener port|30083|
-|Kafka node port|30092 for a one-node cluster configuration.30092, 30093, and 30094 for a three-node cluster configuration.<br>|
-|GRF plugin port|45001|
-|URP port|45007|
-|Dell port|45005|
+Default ports used by the resource aggregator, plugins, and third-party services can be found in the table in the [Adding a plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework) section.
+
+
 
 ## Deploying the GRF plugin
 
@@ -2694,7 +2656,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 1. Create a directory called `plugins` on the deployment node.
    ```
-   mkdir plugins
+   mkdir -p ~/plugins
    ```
 
 3. In the `plugins` directory, create a directory called `grfplugin`.
@@ -2738,7 +2700,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
    - **lbHost**: IP address of the cluster node where the GRF plugin will be installed for one node cluster configuration.  For three node cluster configuration,  \(haDeploymentEnabled is true\), lbHost is the virtual IP address configured in Nginx and Keepalived.
    - **lbPort**: Default port is 30081 for one node cluster configuration. For three node cluster configuration, \(haDeploymentEnabled is true\), lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
 
-     <blockquote>Note: Proxy service with lbport is created for the service configured with eventlistenernodeport in the same configuration file.</blockquote>
+     <blockquote>Note: The lbport is used as proxy port for eventlistenernodeport, which is used for subscribing to events.</blockquote>
    - **grfPluginrootServiceUUID**: RootServiceUUID to be used by the GRF plugin service.
 
    Other parameters can have default values. Optionally, you can update them with values based on your requirements. For more information on each parameter, see [Plugin configuration parameters](#plugin-configuration-parameters).
@@ -2761,7 +2723,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 7. Save the GRF plugin Docker image on the deployment node at `~/plugins/grfplugin`.
 
     ```
-    sudo docker save grfplugin:1.0 -o ~/plugins/grfplugin/grfplugin.tar
+    docker save grfplugin:1.0 -o ~/plugins/grfplugin/grfplugin.tar
     ```
 
 8. Save the proxy configuration file `install/templates/grfplugin_proxy_server.conf.j2` to the ODIM plugin path.
@@ -2786,7 +2748,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
     | ---------------------------- | ------------------------------------------------------------ |
     | connectionMethodConf         | The connection method associated with the GRF plugin:<br/> ConnectionMethodVariant: `Compute:BasicAuth:GRF_v1.0.0`<br/>Check if it is there already before updating. If yes, do not add it again.<br/> |
     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the GRF plugin:grfplugin, grfplugin-events<br/>Add these values to the existing comma-separated list.<br/> |
-    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the GRF plugin: grfplugin, grfplugin-eventsAdd these values to the existing comma-separated list.<br> |
+    | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the GRF plugin: grfplugin, grfplugin-events. <br />Add these values to the existing comma-separated list.<br> |
     | odimPluginPath               | The path of the directory where the GRF Helm package, the `grfplugin` image, and the modified `grfplugin-config.yaml` are copied. |
 
 Example:
@@ -3263,14 +3225,14 @@ These checks run in parallel and take approximately 9 minutes to complete.
 ## GitHub action workflow details
 
 1. build_unittest.yml
-   - Brings up a Ubuntu 20.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
    - Installs Go 1.13.8 package
    - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380
    - Checks out the PR code into the Go module directory
    - Builds/compiles the code
    - Runs the unit tests
 2. build_deploy_test.yml
-   - Brings up a Ubuntu 20.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
    - Checks out the PR code
    - Builds and deploys the following docker containers:
      - ODIMRA 
