@@ -7,7 +7,7 @@
 - [Support for URL Encoding](#support-for-url-encoding)
 - [List of supported APIs](#list-of-supported-apis)
   * [Viewing the list of supported Redfish services](#viewing-the-list-of-supported-redfish-services)
-- [HTTP request methods, responses, and status codes](#http-request-methods--responses--and-status-codes)
+- [HTTP request methods, responses, and status codes](#http-request-methods-responses-and-status-codes)
 - [Authentication and authorization](#authentication-and-authorization)
   * [Authentication methods for Redfish APIs](#authentication-methods-for-redfish-apis)
   * [Role-based authorization](#role-based-authorization)
@@ -609,7 +609,7 @@ Transfer-Encoding:chunked
 
 
 
-#  HTTP request methods, responses, and status codes
+#  HTTP request methods responses and status codes
 
 Following are the Redfish-defined HTTP methods that you can use to implement various actions:
 
