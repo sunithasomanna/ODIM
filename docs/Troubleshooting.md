@@ -125,9 +125,9 @@ This section covers issues you might experience while deploying or using Resourc
 
 9. **The plugin pod is in “CrashLoopBackOff” state after adding the plugin using the command  `python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin <plugin name>`** 
    1. Run `kubectl describe pod <pod name> -n odim`.
-   2. If permission denied error log is displayed at the end of the output, go to the location of stored plugin images and check the permission of the plugin tar file.
-   3. If permission is a mismatch compared to other plugins, change the permissions with `chmod` command for the tar file. 
-   4. Remove and add the plugin again using `python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin <plugin name>`.
+   2. If permission denied error log is displayed at the end of the output, go to the location of stored plugin images and ensure the plugin tar file has read permissions. If required, use the `chmod` command for changing permissions.
+   3. Remove the plugin and add the plugin again using the command:
+      `python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin <plugin name>`.
 
 ## Other Frequently Asked Questions
 
