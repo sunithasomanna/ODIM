@@ -133,6 +133,7 @@ This section covers issues you might experience while deploying or using Resourc
       `python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin <plugin name>`.
    
 10. **When you restart Nginx, the service fails to start with the following error:** 
+
     **`nginx: [emerg] bind() to <VIP>:<nginx_port> failed (99: Cannot assign requested address)`**
 
     You must restart Nginx systemd service ONLY on the leader node \(cluster node where Keepalived priority is set to the highest number). Restarting Nginx systemd service on the follower nodes (cluster nodes having lower Keepalived priority numbers) will result in the above error.
