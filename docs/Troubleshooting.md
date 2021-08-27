@@ -139,7 +139,7 @@ This section covers issues you might experience while deploying or using Resourc
 
       `python3 odim-controller.py --config /home/${USER}/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml --add plugin --plugin <plugin name>`.
 
-10. **When you restart Nginx, the service fails to start with the following error:** 
+10. **When I restart Nginx, the service fails to start with the following error:** 
 
     **`nginx: [emerg] bind() to <VIP>:<nginx_port> failed (99: Cannot assign requested address)`**
 
@@ -231,7 +231,19 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ------
 
-**5. How do I check the logs of third party services (Kafka, Zookeeper, Redis, etcd)?**
+**5. How do I check the logs of Resource Aggregator for ODIM services?**
+
+1. On the master node, run the following command to check on which node the service is deployed:
+
+   ```
+   kubectl logs -n odim -o wide
+   ```
+
+2. Navigate to log path configured on that node for the service log file.
+
+------
+
+**6. How do I check the logs of third party services (Kafka, Zookeeper, Redis, etcd)?**
 
 1. On the master node, run the following command to get the name of the pod:
 
