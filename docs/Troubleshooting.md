@@ -237,7 +237,13 @@ Navigate to the default log path `/var/log/odimra` or to the path specified in t
 
 ------
 
-**6. How do I check the logs of third party services (Kafka, Zookeeper, Redis, etcd)?**
+**6. How do I check the logs of plugin services?**
+
+Navigate to the default log path `/var/log/<plugin>` or to the path specified in the `logPath` parameter in  `<plugin>-config.yaml` file.
+
+------
+
+**7. How do I check the logs of third party services (Kafka, Zookeeper, Redis, etcd)?**
 
 1. On the master node, run the following command to get the name of the pod:
 
