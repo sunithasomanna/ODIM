@@ -233,13 +233,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 **5. How do I check the logs of Resource Aggregator for ODIM services?**
 
-1. On the master node, run the following command to check on which node the service is deployed:
-
-   ```
-   kubectl logs -n odim -o wide
-   ```
-
-2. Navigate to log path configured on that node for the service log file.
+Navigate to the default log path `/var/log/odimra` or to the path specified in the `appsLogPath` parameter in `kube_deploy_nodes.yaml` file on that node for the service log file.
 
 ------
 
