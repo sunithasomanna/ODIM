@@ -1304,7 +1304,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 5. Update the following parameters in the plugin configuration file: 
 
    - **lbHost**: IP address of the cluster node where the Dell plugin will be installed for one node cluster configuration. For three node cluster configuration,  lbHost is the virtual IP address configured in Nginx and Keepalived.
-   - **lbPort**: Default port is 30084 for one node cluster configuration. For three node cluster configuration, lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
+   - **lbPort**: Default port is 30084 for one node cluster configuration. For three node cluster configuration, lbport must be assigned with a free port (preferably above 45000) available on all cluster nodes. This port is used as nginx proxy port for the plugin.
    
      <blockquote>Note: The lbport is used as proxy port for eventlistenernodeport, which is used for subscribing to events.</blockquote>
    - **dellPluginRootServiceUUID**: RootServiceUUID to be used by the Dell plugin service.
@@ -1414,12 +1414,12 @@ The plugin you want to add is successfully deployed.
     
     | Port name                                                    | Ports                                                        |
     | ------------------------------------------------------------ | ------------------------------------------------------------ |
-    | Container ports (access restricted only to the Kubernetes cluster network) | 45000 - API service port<br />45101-45201 - Resource Aggregator for ODIM service ports<br />9082, 9092 - Kafka ports<br />6379 - Redis port<br />26379 - Redis Sentinel port<br />2181 - Zookeeper port<br>2379, 2380 - etcd ports |
+    | Container ports (access restricted only to the Kubernetes cluster network) | 45000 — API service port<br />45101- 45201 — Resource Aggregator for ODIM service ports<br />9082, 9092 — Kafka ports<br />6379 — Redis port<br />26379 — Redis Sentinel port<br />2181 — Zookeeper port<br>2379, 2380 — etcd ports |
     | API node port (for external access)                          | 30080                                                        |
-    | Kafka node port (for external access)                        | 30092 for a one-node cluster configuration. 30092, 30093, and 30094 for a three-node cluster configuration.<br> |
-    | GRF plugin port<br />EventListenerNodePort<br />lbport       | 45001 - Port to be used while adding GRF plugin.<br />30081 - Port used for event subscriptions in one-node cluster configuration. <br />lbport - For three-node cluster configuration, specify lbport as per your requirement. For one-node cluster configuration, same as EventListenerNodePort<br /> |
-    | UR plugin port                                               | 45007 - Port to be used while adding UR plugin.              |
-    | Dell plugin port<br />EventListenerNodePort<br />lbport      | 45005 - Port to be used while adding Dell plugin.<br />30084 - Port used for event subscriptions in one-node cluster configuration. <br />lbport - For three-node cluster configuration, specify lbport as per your requirement. For one-node cluster configuration, same as EventListenerNodePort<br /> |
+    | Kafka node port (for external access)                        | 30092 for a one-node cluster configuration. 30092, 30093, and 30094 for a three-node cluster configuration |
+    | GRF plugin port<br />EventListenerNodePort<br />lbport       | 45001 — Port to be used while adding GRF plugin<br />30081 — Port used for event subscriptions in one-node cluster configuration <br />lbport — For three-node cluster configuration, specify lbport as per your requirement. This port must be assigned with a free port (preferably above 45000) available on all cluster nodes. This port is used as nginx proxy port for the plugin<br />For one-node cluster configuration, it is the same as EventListenerNodePort |
+    | UR plugin port                                               | 45007 — Port to be used while adding UR plugin               |
+    | Dell plugin port<br />EventListenerNodePort<br />lbport      | 45005 — Port to be used while adding Dell plugin<br />30084 — Port used for event subscriptions in one-node cluster configuration <br />lbport — For three-node cluster configuration, specify lbport as per your requirement. This port must be assigned with a free port (preferably above 45000) available on all cluster nodes. This port is used as nginx proxy port for the plugin. <br />For one-node cluster configuration, it is the same as EventListenerNodePort |
     
     Provide a JSON request payload specifying:
     
@@ -1478,7 +1478,7 @@ The plugin you want to add is successfully deployed.
    
    |Parameter|Type|Description|
    |---------|----|-----------|
-   |HostName|String \(required\)<br> |It is the plugin service name and the port specified in the Kubernetes environment. For default plugin ports, see [Resource Aggregator for ODIM default ports](#resource-aggregator-for-odim-default-ports).<br>|
+   |HostName|String \(required\)<br> |It is the plugin service name and the port specified in the Kubernetes environment. For default plugin ports, see [Resource Aggregator for ODIM default ports](#resource-aggregator-for-odim-default-ports).|
    |UserName|String \(required\)<br> |The plugin username. See default administrator account usernames of all the plugins in "Default plugin credentials".<br>|
    |Password|String \(required\)<br> |The plugin password. See default administrator account passwords of all the plugins in "Default plugin credentials".<br> |
    |ConnectionMethod|Array \(required\)<br> |Links to the connection methods that are used to communicate with this endpoint: `/redfish/v1/AggregationService/AggregationSources`.<br><blockquote>NOTE: Ensure that the connection method information for the plugin you want to add is updated in the odim-controller configuration file.<br></blockquote>To know which connection method to use, do the following:<br>    1.  Perform HTTP `GET` on: `/redfish/v1/AggregationService/ConnectionMethods`.<br>You will receive a list of links to available connection methods.<br>    2.  Perform HTTP `GET` on each link. Check the value of the `ConnectionMethodVariant` property in the JSON response. It displays the details of a plugin. Choose a connection method having the details of the plugin of your choice. For available connection method variants, see the following "Connection method variants" table.<br>|
@@ -2195,11 +2195,11 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
    ​	`sudo apt-cache madison <package name>`
 	
    1. ```
-      sudo apt-get install -y apt-transport-https=2.0.6 ca-certificates=20210119~18.04.1 curl=7.68.0-1ubuntu2.6
+      sudo apt-get install -y apt-transport-https=1.6.12ubuntu0.2 ca-certificates=20210119~18.04.1 curl=7.58.0-2ubuntu3.12
       ```
 	  
    2. ```
-      sudo apt-get install -y gnupg-agent=2.2.19-3ubuntu2.1 software-properties-common=0.98.9.5 
+      sudo apt-get install -y gnupg-agent=2.2.4-1ubuntu1.3 software-properties-common=0.96.24.32.14
       ```
 	  
    3. ```
@@ -2211,7 +2211,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
       ```
    
    5. ```
-      sudo apt-get install docker.io=20.10.7-0ubuntu1~18.04.1
+      sudo apt-get install -y docker-ce=5:19.03.12~3-0~ubuntu-bionic docker-ce-cli=5:19.03.12~3-0~ubuntu-bionic containerd.io --allow-downgrades
       ```
    
 2. Configure overlay storage for Docker:
@@ -2385,7 +2385,7 @@ The following table lists all the configuration parameters required to deploy a 
 | username              | Username of the plugin.                                      |
 | password              | The encrypted password of the plugin.                        |
 | lbHost                | If there is only one cluster node, the lbHost is the IP address of the cluster node. If there is more than one cluster node \(haDeploymentEnabled is true\), lbHost is the virtual IP address configured in Nginx and Keepalived.<br> |
-| lbPort                | If it is a one-cluster configuration, the lbPort must be same as eventListenerNodePort. <br>If there is more than one cluster node \(haDeploymentEnabled is true\), lbPort is the Nginx API node port configured in the Nginx plugin configuration file. |
+| lbPort                | If it is a one-cluster configuration, the lbPort must be same as eventListenerNodePort. <br>If there is more than one cluster node \(haDeploymentEnabled is true\), lbport must be assigned with a free port (preferably above 45000) available on all cluster nodes. This port is used as nginx proxy port for the plugin. |
 | logPath               | The path where the plugin logs are stored. The default path is `/var/log/<plugin_name>_logs`<br>**Example**: `/var/log/grfplugin\_logs` |
 
 ## Resource Aggregator for ODIM deployment names
@@ -2698,7 +2698,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 5. Update the following parameters in the plugin configuration file:
 
    - **lbHost**: IP address of the cluster node where the GRF plugin will be installed for one node cluster configuration.  For three node cluster configuration,  \(haDeploymentEnabled is true\), lbHost is the virtual IP address configured in Nginx and Keepalived.
-   - **lbPort**: Default port is 30081 for one node cluster configuration. For three node cluster configuration, \(haDeploymentEnabled is true\), lbPort is the Nginx API node port configured in the Nginx plugin configuration file.
+   - **lbPort**: Default port is 30081 for one node cluster configuration. For three node cluster configuration, \(haDeploymentEnabled is true\), lbport must be assigned with a free port (preferably above 45000) available on all cluster nodes. This port is used as nginx proxy port for the plugin.
 
      <blockquote>Note: The lbport is used as proxy port for eventlistenernodeport, which is used for subscribing to events.</blockquote>
    - **grfPluginrootServiceUUID**: RootServiceUUID to be used by the GRF plugin service.
