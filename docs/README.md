@@ -248,7 +248,7 @@ for event subscriptions, credentials, and tasks. It also hosts a message bus cal
 
 This layer hosts a message broker which acts as a communication channel between the upper layers and the
 plugin layer. It supports common messaging architecture and real-time streaming. Resource Aggregator for
-ODIM uses Kafka as the event message bus.
+ODIM uses Kafka and Redis Stream as the event message bus.
 The services and the event message bus layers host Redis data store.
 
 - **Plugin layer**
