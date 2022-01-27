@@ -373,7 +373,8 @@ The following table lists the software components and their versions that are co
    |quay.io/calico/pod2daemon-flexvol| v3.19.2 |quay.io/calico/pod2daemon-flexvol.tar |
    |quay.io/calico/cni| v3.19.2 |quay.io/calico/cni.tar |
    |quay.io/calico/kube-controllers| v3.19.2 |quay.io/calico/kube-controllers.tar |
-   |k8s.gcr.io/k8s-dns-node-cache|1.17.1 |k8s.gcr.io_k8s-dns-node-cache.tar |
+   |k8s.gcr.io/k8s-dns-node-cache| 1.15.13 |k8s.gcr.io/k8s-dns-node-cache.tar |
+   |k8s.gcr.io/dns/k8s-dns-node-cache|1.17.1 |k8s.gcr.io_k8s-dns-node-cache.tar |
    |k8s.gcr.io/pause|3.4.1 |k8s.gcr.io_pause.tar |
    |nginx|1.19 |nginx.tar |
    |k8s.gcr.io/coredns/coredns|v1.8.0 |k8s.gcr.io/coredns/coredns.tar |
@@ -382,17 +383,9 @@ The following table lists the software components and their versions that are co
    |calico/node|v3.15.1 |calico/node.tar |
    |calico/cni|v3.15.1 | calico/cni.tar                                           |
    |calico/kube-controllers|v3.15.1 | calico/kube-controllers.tar                              |
-   | k8s.gcr.io/kube-proxy                                | v1.18.5 | k8s.gcr.io/kube-proxy.tar                                |
-   | k8s.gcr.io/kube-controller-manager                   | v1.18.5 | k8s.gcr.io/kube-controller-manager.tar                   |
-   | k8s.gcr.io/kube-apiserver                            | v1.18.5 | k8s.gcr.io/kube-apiserver.tar                            |
-   | k8s.gcr.io/kube-scheduler                            |v1.18.5 | k8s.gcr.io/kube-scheduler.tar                            |
    |k8s.gcr.io/cluster-proportional-autoscaler-amd64| 1.8.1   | k8s.gcr.io/cluster-proportional-autoscaler-amd64.tar     |
    | lachlanevenson/k8s-helm                              |v3.2.3 |lachlanevenson/k8s-helm.tar |
-   | k8s.gcr.io/k8s-dns-node-cache                        |1.15.13 |k8s.gcr.io/k8s-dns-node-cache.tar |
-   | k8s.gcr.io/pause                                     |3.3 |k8s.gcr.io/pause.tar |
-   | k8s.gcr.io/pause                                     |3.2 |k8s.gcr.io/pause.tar |
    | coredns/coredns                                      |1.6.7 |coredns/coredns.tar |
-   | quay.io/coreos/etcd                                  |v3.4.3 |quay.io/coreos/etcd.tar |
    
 2. Verify the images are successfully pulled using the following command.
    ```
