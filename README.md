@@ -261,11 +261,11 @@ The following table lists the software components and their versions that are co
       ```
    
    4. ```
-      sudo apt-get install python3-pip=9.0.1-2.3~ubuntu1.20.04.5 -y
+      sudo apt-get install python3-pip=20.0.2-5ubuntu1.6 -y
       ```
    
    5. ```
-      sudo apt-get install software-properties-common=0.96.24.32.14 -y
+      sudo apt-get install software-properties-common=0.99.9.8 -y
       ```
    
    6. ```
@@ -310,6 +310,9 @@ The following table lists the software components and their versions that are co
    
    16. ```
        sudo -H pip3 install pyyaml==5.3.1 --proxy=${http_proxy}
+       ```
+   17. ```
+       sudo -H pip3 install pycryptodome==3.4.3 --proxy=${http_proxy}
        ```
    
 4. [Download and install go](#downloading-and-installing-go) on the deployment node.
@@ -462,7 +465,7 @@ The following table lists the software components and their versions that are co
     ```
     docker save -o <image_name.tar> <image_name>:<version>
     ```
-    Example: `docker save -o api.tar api:1.0`
+    Example: `docker save -o api.tar api:2.0`
 
     | **Docker image name** | **Version** | **Docker image bundle name** |
     | :-------------------- | ----------- | ---------------------------- |
@@ -482,6 +485,7 @@ The following table lists the software components and their versions that are co
     | stakater/reloader     | v0.0.76     | stakater_reloader.tar        |
     | busybox               | 1.33        | busybox.tar                  |
     | dellplugin            | 1.0         | dellplugin.tar               |
+    | lenovoplugin          | 1.0         | lenovoplugin.tar             |
     | urplugin              | 1.0         | urplugin.tar                 |
     | grfplugin             | 1.0         | grfplugin.tar                |
     | telemetry             | 1.0         | telemetry.tar                |
@@ -2271,11 +2275,11 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
    ​	`sudo apt-cache madison <package name>`
 	
    1. ```
-      sudo apt-get install -y apt-transport-https=1.6.12ubuntu0.2 ca-certificates=20210119~20.04.1 curl=7.58.0-2ubuntu3.14
+      sudo apt-get install -y apt-transport-https=1.6.12ubuntu0.2 ca-certificates=20210119~20.04.2 curl=7.68.0-1ubuntu2.7
       ```
 	  
    2. ```
-      sudo apt-get install -y gnupg-agent=2.2.4-1ubuntu1.3 software-properties-common=0.96.24.32.14
+      sudo apt-get install -y gnupg-agent=2.2.19-3ubuntu2.1 software-properties-common=0.99.9.8
       ```
 	  
    3. ```
@@ -2287,7 +2291,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
       ```
    
    5. ```
-      sudo apt-get install -y docker-ce=5:19.03.12~3-0~ubuntu-bionic docker-ce-cli=5:19.03.12~3-0~ubuntu-bionic containerd.io --allow-downgrades
+      sudo apt-get install -y docker-ce=5:20.10.123-0ubuntu-focal docker-ce-cli=5:20.10.123-0ubuntu-focal containerd.io --allow-downgrades
       ```
    
 2. Configure overlay storage for Docker:
