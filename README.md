@@ -196,18 +196,17 @@ The following table lists the software components and their versions that are co
 |Java JRE|11|
 |Kafka|2.5.0|
 |Redis|6.2.5|
-|Ubuntu LTS|20.04|
+|Ubuntu LTS|18.04|
 |ZooKeeper|3.5.7|
-|Docker|20.10.11|
+|Docker|19.03.8, build afacb8b7f0|
 |Ansible|2.9.6|
-|Kubernetes|1.21.5|
-|Kubespray|2.17.0|
-|Helm charts|3.7.2|
+|Kubespray|2.14.0|
+|Helm charts|3.0.0|
 |Nginx|1.14.0-0ubuntu1.7|
-|Keepalived|1:1.3.9-1ubuntu0.20.04.2|
+|Keepalived|1:1.3.9-1ubuntu0.18.04.2|
 |Stakater/Reloader|v0.0.76|
-|Redfish Schema|2021.2|
-|Redfish Specification|1.14.0|
+|Redfish Schema|2021.1|
+|Redfish Specification|1.11.1|
 
 
 # Predeployment procedures
@@ -231,7 +230,7 @@ The following table lists the software components and their versions that are co
     - To add 5,000 servers or less, you require nodes having 32 GB (32768 MB) RAM, 16 CPU cores and 32 threads, and 200GB HDD each
 
 
-1. Download and install `ubuntu-20.04.3-live-server-amd64.iso` on the deployment node and all the cluster nodes. 
+1. Download and install [Ubuntu 18.04 LTS](https://old-releases.ubuntu.com/releases/18.04.4/ubuntu-18.04-server-amd64.iso) on the deployment node and all the cluster nodes. 
     During installation, configure the IP addresses of cluster nodes to reach the management VLANs where devices are connected. Ensure there is no firewall or switches blocking the connections and ports.
 
    <blockquote>
@@ -257,11 +256,11 @@ The following table lists the software components and their versions that are co
       ```
       
    3. ```
-      sudo apt-get install python3.8=3.8.0-3~20.04.1 -y
+      sudo apt-get install python3.8=3.8.0-3~18.04.1 -y
       ```
    
    4. ```
-      sudo apt-get install python3-pip=9.0.1-2.3~ubuntu1.20.04.5 -y
+      sudo apt-get install python3-pip=9.0.1-2.3~ubuntu1.18.04.5 -y
       ```
    
    5. ```
@@ -273,7 +272,7 @@ The following table lists the software components and their versions that are co
       ```
    
    7. ```
-      sudo apt-get install openjdk-11-jre-headless=11.0.13+8-0ubuntu1~20.04 -y
+      sudo apt-get install openjdk-11-jre-headless=11.0.11+9-0ubuntu2~18.04 -y
       ```
    
    8. ```
@@ -362,34 +361,20 @@ The following table lists the software components and their versions that are co
    
    |Docker image name|Version|Docker image file name|
    |-----|----|-----|
-   |k8s.gcr.io/kube-apiserver|v1.21.5 |k8s.gcr.io_kube-apiserver.tar |
-   |k8s.gcr.io/kube-controller-manager|v1.21.5 |k8s.gcr.io_kube-controller-manager.tar |
-   |k8s.gcr.io/kube-proxy| v1.21.5 |k8s.gcr.io_kube-proxy.tar |
-   |k8s.gcr.io/kube-scheduler| v1.21.5 |k8s.gcr.io_kube-scheduler.tar |
-   |quay.io/calico/node| v3.19.2 |quay.io/calico/node.tar |
-   |quay.io/calico/pod2daemon-flexvol| v3.19.2 |quay.io/calico/pod2daemon-flexvol.tar |
-   |quay.io/calico/cni| v3.19.2 |quay.io/calico/cni.tar |
-   |quay.io/calico/kube-controllers| v3.19.2 |quay.io/calico/kube-controllers.tar |
-   |k8s.gcr.io/k8s-dns-node-cache|1.17.1 |k8s.gcr.io_k8s-dns-node-cache.tar |
-   |k8s.gcr.io/pause|3.4.1 |k8s.gcr.io_pause.tar |
+   |calico/cni|v3.15.1 |calico_cni.tar |
+   |calico/kube-controllers|v3.15.1 |calico_kube-controllers.tar |
+   |calico/node|v3.15.1 |calico_node.tar |
+   |coredns/coredns|1.6.7 |coredns_coredns.tar |
+   |k8s.gcr.io/cluster-proportional-autoscaler-amd64|1.8.1 |k8s.gcr.io_cluster-proportional-autoscaler-amd64.tar |
+   |k8s.gcr.io/k8s-dns-node-cache|1.15.13 |k8s.gcr.io_k8s-dns-node-cache.tar |
+   |k8s.gcr.io/kube-apiserver|v1.18.5 |k8s.gcr.io_kube-apiserver.tar |
+   |k8s.gcr.io/kube-controller-manager|v1.18.5 |k8s.gcr.io_kube-controller-manager.tar |
+   |k8s.gcr.io/kube-proxy|v1.18.5 |k8s.gcr.io_kube-proxy.tar |
+   |k8s.gcr.io/kube-scheduler|v1.18.5 |k8s.gcr.io_kube-scheduler.tar |
+   |k8s.gcr.io/pause|3.2 |k8s.gcr.io_pause.tar |
+   |lachlanevenson/k8s-helm|v3.2.3 |lachlanevenson_k8s-helm.tar |
    |nginx|1.19 |nginx.tar |
-   |k8s.gcr.io/coredns/coredns|v1.8.0 |k8s.gcr.io/coredns/coredns.tar |
-   |quay.io/coreos/etcd|v3.4.13 |quay.io/coreos/etcd.tar |
-   |k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64|1.8.3 |k8s.gcr.io/cpa/cluster-proportional-autoscaler-amd64.tar |
-   |calico/node|v3.15.1 |calico/node.tar |
-   |calico/cni|v3.15.1 | calico/cni.tar                                           |
-   |calico/kube-controllers|v3.15.1 | calico/kube-controllers.tar                              |
-   | k8s.gcr.io/kube-proxy                                | v1.18.5 | k8s.gcr.io/kube-proxy.tar                                |
-   | k8s.gcr.io/kube-controller-manager                   | v1.18.5 | k8s.gcr.io/kube-controller-manager.tar                   |
-   | k8s.gcr.io/kube-apiserver                            | v1.18.5 | k8s.gcr.io/kube-apiserver.tar                            |
-   | k8s.gcr.io/kube-scheduler                            |v1.18.5 | k8s.gcr.io/kube-scheduler.tar                            |
-   |k8s.gcr.io/cluster-proportional-autoscaler-amd64| 1.8.1   | k8s.gcr.io/cluster-proportional-autoscaler-amd64.tar     |
-   | lachlanevenson/k8s-helm                              |v3.2.3 |lachlanevenson/k8s-helm.tar |
-   | k8s.gcr.io/k8s-dns-node-cache                        |1.15.13 |k8s.gcr.io/k8s-dns-node-cache.tar |
-   | k8s.gcr.io/pause                                     |3.3 |k8s.gcr.io/pause.tar |
-   | k8s.gcr.io/pause                                     |3.2 |k8s.gcr.io/pause.tar |
-   | coredns/coredns                                      |1.6.7 |coredns/coredns.tar |
-   | quay.io/coreos/etcd                                  |v3.4.3 |quay.io/coreos/etcd.tar |
+   |quay.io/coreos/etcd|v3.4.3 |quay.io_coreos_etcd.tar |
    
 2. Verify the images are successfully pulled using the following command.
    ```
@@ -466,19 +451,19 @@ The following table lists the software components and their versions that are co
 
     | **Docker image name** | **Version** | **Docker image bundle name** |
     | :-------------------- | ----------- | ---------------------------- |
-    | account-session       | 2.0         | account-session.tar          |
-    | aggregation           | 2.0         | aggregation.tar              |
-    | api                   | 2.0         | api.tar                      |
-    | events                | 2.0         | events.tar                   |
-    | fabrics               | 2.0         | fabrics.tar                  |
-    | managers              | 2.0         | managers.tar                 |
-    | systems               | 2.0         | systems.tar                  |
-    | task                  | 2.0         | task.tar                     |
-    | update                | 2.0         | update.tar                   |
+    | account-session       | 1.0         | account-session.tar          |
+    | aggregation           | 1.0         | aggregation.tar              |
+    | api                   | 1.0         | api.tar                      |
+    | events                | 1.0         | events.tar                   |
+    | fabrics               | 1.0         | fabrics.tar                  |
+    | managers              | 1.0         | managers.tar                 |
+    | systems               | 1.0         | systems.tar                  |
+    | task                  | 1.0         | task.tar                     |
+    | update                | 1.0         | update.tar                   |
     | kafka                 | 1.0         | kafka.tar                    |
     | zookeeper             | 1.0         | zookeeper.tar                |
     | etcd                  | 1.16        | etcd.tar                     |
-    | redis                 | 2.0         | redis.tar                    |
+    | redis                 | 1.0         | redis.tar                    |
     | stakater/reloader     | v0.0.76     | stakater_reloader.tar        |
     | busybox               | 1.33        | busybox.tar                  |
     | dellplugin            | 1.0         | dellplugin.tar               |
@@ -634,8 +619,6 @@ Upon each execution of odim-controller, the following information is logged:
 - User and the groups, user belongs to
 - Options passed to odim-controller
 - Complete output of the operation
-
-
 
 # Deploying Resource Aggregator for ODIM and the Plugins
 
@@ -951,9 +934,9 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
 		kubectl get pods -n kube-system -o wide
         ```
     
-        Example output:
+        The following output is displayed.
     
-        <img src="docs/images/kuberenetes_pods_verification.png" alt="screenshot" style="zoom:60%;" /> 
+        ![screenshot](docs/images/kuberenetes_pods_verification.png)
 
 
 3. Deploy the resource aggregator services: 
@@ -976,7 +959,8 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
 
         Example output:
 
-        <img src="docs/images/all_services_verification.png" alt="screenshot" style="zoom:55%;" />
+        ![screenshot](docs/images/all_services_verification.png)
+
         If the services are not successfully deployed, reset the deployment and try deploying again. 
         To reset, run the following command:
 
@@ -988,7 +972,8 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
 
         For a three-node cluster deployment, resetting deployment removes the virtual IP configured through Keepalived. After resetting the deployment, restart the Keepalived service. Also, ensure the parameters in the `kube_deploy_nodes.yaml `are not NULL. Update such parameters to `""` or as per your requirement.
         **For example**: After resetting the deployment, update the odimCertsPath parameter to `""` or to your actual certificate path in the `kube_deploy_nodes.yaml` file. 
-    <blockquote>NOTE: Save the RootServiceUUID in the kube_deploy_nodes.yaml file in the path ~/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml.
+        
+<blockquote>NOTE: Save the RootServiceUUID in the kube_deploy_nodes.yaml file in the path ~/ODIM/odim-controller/scripts/kube_deploy_nodes.yaml.
             If the services are not successfully deployed and you want to reset the deployment, you can use the saved RootServiceUUID.</blockquote>	
 
 
@@ -2271,7 +2256,7 @@ NOTE: Before performing the following steps, ensure the `http_proxy`, `https_pro
    ​	`sudo apt-cache madison <package name>`
 	
    1. ```
-      sudo apt-get install -y apt-transport-https=1.6.12ubuntu0.2 ca-certificates=20210119~20.04.1 curl=7.58.0-2ubuntu3.14
+      sudo apt-get install -y apt-transport-https=1.6.12ubuntu0.2 ca-certificates=20210119~18.04.1 curl=7.58.0-2ubuntu3.14
       ```
 	  
    2. ```
@@ -2960,8 +2945,8 @@ Example:
         -   Add the new controller node details under the following sections:
             
             - etcd
-            - kube_control_plane
-            - kube_node
+            - kube-master
+            - kube-node
             - hosts
 
         ```
@@ -2999,7 +2984,7 @@ Example:
     
         ```
         ansible-playbook -K -i ${K8S_INVENTORY_FILE} \
-        --become --become-user=root --limit=etcd,kube_control_plane \
+        --become --become-user=root --limit=etcd,kube-master \
         -e ignore_assert_errors=yes cluster.yml
         ```
     
@@ -3141,8 +3126,8 @@ Example:
     2. Edit `$\{K8S\_INVENTORY\_FILE\}` to add the removed worker node as a new controller node with required details under the following sections. 
 
         - etcd
-        - kube_control_plane
-        - kube_node
+        - kube-master
+        - kube-node
         - hosts
         
         ```
@@ -3180,7 +3165,7 @@ Example:
 
         ```
         ansible-playbook -K -i ${K8S_INVENTORY_FILE} \
-        --become --become-user=root --limit=etcd,kube_control_plane \
+        --become --become-user=root --limit=etcd,kube-master \
         -e ignore_assert_errors=yes cluster.yml
         ```
 
@@ -3298,14 +3283,14 @@ These checks run in parallel and take approximately 9 minutes to complete.
 ## GitHub action workflow details
 
 1. build_unittest.yml
-   - Brings up a Ubuntu 20.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
    - Installs Go 1.17.2 package
    - Installs and configures Redis 5.0.8 with two instances running on ports 6379 and 6380
    - Checks out the PR code into the Go module directory
    - Builds/compiles the code
    - Runs the unit tests
 2. build_deploy_test.yml
-   - Brings up a Ubuntu 20.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
+   - Brings up a Ubuntu 18.04 VM hosted on GitHub infrastructure with preinstalled packages mentioned in the link: https://github.com/actions/virtual-environments/blob/master/images/linux/Ubuntu1804-README.md
    - Checks out the PR code
    - Builds and deploys the following docker containers:
      - ODIMRA 
