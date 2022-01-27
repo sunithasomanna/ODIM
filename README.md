@@ -495,7 +495,9 @@ The following table lists the software components and their versions that are co
 
 ## Updating additional package versions
 
-While deploying Resource Aggregator for ODIM, verify the versions of the following packages and update them if required:
+While deploying Resource Aggregator for ODIM, verify the versions of the following packages and update them if required.
+
+<blockquote> Note: Verify the Keepalived and Nginx package versions only in case of a three-node cluster deployment. </blockquote>
 
 #### linux-headers
 
