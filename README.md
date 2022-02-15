@@ -720,7 +720,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
         haDeploymentEnabled: True
         connectionMethodConf:
         - ConnectionMethodType: Redfish
-          ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+          ConnectionMethodVariant: Compute:BasicAuth:GRF_v3.0.0
         etcHostsEntries:
       
         appsLogPath: /var/log/odimra
@@ -871,7 +871,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      haDeploymentEnabled: True
      connectionMethodConf:
      - ConnectionMethodType: Redfish
-       ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+       ConnectionMethodVariant: Compute:BasicAuth:GRF_v3.0.0
      - ConnectionMethodType: Redfish
        ConnectionMethodVariant: Storage:BasicAuth:STG_v1.0.0
      etcHostsEntries: ""
@@ -1293,9 +1293,9 @@ Example:
            odimPluginPath: /home/bruce/plugins
             connectionMethodConf:
             - ConnectionMethodType: Redfish
-              ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+              ConnectionMethodVariant: Compute:BasicAuth:GRF_v3.0.0
             - ConnectionMethodType: Redfish
-              ConnectionMethodVariant: Compute:BasicAuth:URP_v1.0.0
+              ConnectionMethodVariant: Compute:BasicAuth:URP_v3.0.0
                odimraKafkaClientCertFQDNSan: urplugin,api
                odimraServerCertFQDNSan: urplugin,api
 
@@ -1433,7 +1433,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
     | Parameter                    | Value                                                        |
     | ---------------------------- | ------------------------------------------------------------ |
-    | connectionMethodConf         | The connection method associated with Dell plugin: ConnectionMethodVariant: <br />`Compute:BasicAuth:DELL_v1.0.0`<br> |
+    | connectionMethodConf         | The connection method associated with Dell plugin: ConnectionMethodVariant: <br />`Compute:BasicAuth:DELL_v2.0.0`<br> |
     | odimraKafkaClientCertFQDNSan | The FQDN to be included in the Kafka client certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br />`dellplugin`, `dellplugin-events`<br>Add these values to the existing comma-separated list.<br> |
     | odimraServerCertFQDNSan      | The FQDN to be included in the server certificate of Resource Aggregator for ODIM for deploying the Dell plugin:<br /> `dellplugin`, `dellplugin-events`<br> Add these values to the existing comma-separated list.<br> |
 
@@ -1443,7 +1443,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
        odimPluginPath: /home/bruce/plugins
          connectionMethodConf:
          - ConnectionMethodType: Redfish
-           ConnectionMethodVariant: Compute:BasicAuth:DELL_v1.0.0
+           ConnectionMethodVariant: Compute:BasicAuth:DELL_v2.0.0
          odimraKafkaClientCertFQDNSan: dellplugin,dellplugin-events
          odimraServerCertFQDNSan: dellplugin,dellplugin-events    
        ```
@@ -2997,9 +2997,9 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 Example:
 
-        connectionMethodConf:
+        3connectionMethodConf:
           ConnectionMethodType: Redfish
-          ConnectionMethodVariant: Compute:BasicAuth:GRF_v1.0.0
+          ConnectionMethodVariant: Compute:BasicAuth:GRF_v3.0.0
         odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
         odimraServerCertFQDNSan: grfplugin,grfplugin-events
 
