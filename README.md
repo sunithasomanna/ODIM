@@ -2997,7 +2997,7 @@ Kubernetes cluster is set up and the resource aggregator is successfully deploye
 
 Example:
 
-        3connectionMethodConf:
+        connectionMethodConf:
           ConnectionMethodType: Redfish
           ConnectionMethodVariant: Compute:BasicAuth:GRF_v3.0.0
         odimraKafkaClientCertFQDNSan: grfplugin,grfplugin-events
