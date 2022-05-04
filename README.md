@@ -691,16 +691,20 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
       nodes:
         <Node1_Hostname>:
           ip: <Node1_IPAddress>
+          ipv6: <Node1_IPv6Address>
           username: <Node1_Username>
           priority: 100
         <Node2_Hostname>:
           ip: <Node2_IPAddress>
+          ipv6: <Node2_IPv6Address>
           username: <Node2_Username>
           priority: 99
         <Node3_Hostname>:
           ip: <Node3_IPAddress>
+          ipv6: <Node3_IPv6Address>
           username: <Node3_Username>
           priority: 98
+      nwPreference: ipv4
       odimControllerSrcPath:
       odimVaultKeyFilePath:
       odimCertsPath:
@@ -742,6 +746,10 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
         redisOndiskDataPath: /etc/redis/data/ondisk
         redisInmemoryDataPath: /etc/redis/data/inmemory
         
+        resourceRateLimit:
+        requestLimitPerSession:
+        sessionLimitPerUser:
+        
         zookeeperConfPath: /etc/zookeeper/conf
         zookeeperDataPath: /etc/zookeeper/data
         zookeeperJKSPassword: "K@fk@_store1"
@@ -749,6 +757,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
         nginxLogPath: /var/log/nginx
         virtualRouterID: 100
         virtualIP:
+        virtualIPv6:
         
         rootCACert:
         odimraServerCert:
@@ -779,11 +788,13 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    
      - hostnames of node 1, node 2 and node 3
    
-     - IP address of node 1, node 2 and node 3
+     - IP addresses of node 1, node 2 and node 3
    
      - username of node 1, node 2 and node 3
    
      - Priority values of node 1, node 2 and node 3 (mandatory if haDeploymentEnabled is set to true)
+   
+   - nwPreference (default value is ipv4. If `dualStack` based deployment is selected, resource aggregator API service can be reached via both IPv4 and IPv6 addresses)
    
    - `odimControllerSrcPath`
    
@@ -801,13 +812,15 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    
    - `etcHostsEntries`
    
-   - `apiProxyPort` (mandatory if haDeploymentEnabled is set to true)
+   - `apiProxyPort` (mandatory if `haDeploymentEnabled` is set to true)
    
-   - `nginxLogPath` (mandatory if haDeploymentEnabled is set to true)
+   - `nginxLogPath` (mandatory if `haDeploymentEnabled` is set to true)
    
-   - `virtualRouterID` (mandatory if haDeploymentEnabled is set to true)
+   - `virtualRouterID` (mandatory if `haDeploymentEnabled` is set to true)
    
-   - `virtualIP` (mandatory if haDeploymentEnabled is set to true)
+   - `virtualIP` (mandatory if `haDeploymentEnabled` is set to true)
+   
+   - virtualIPv6 (mandatory if `haDeploymentEnabled` is set to true and `nwPreference` is set to `dualStack`)
    
    Other parameters can either be empty or have default values. Optionally, you can update them with values based on your requirements. 
    
@@ -842,16 +855,20 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
    nodes:
      knode1:
        ip: 10.18.24.100
+       ipv6: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
        username: user
        priority: 100
      knode2:
        ip: 10.18.24.101
+       ipv6: 2001:0db8:85a3:0000:0000:8a2e:0371:7335
        username: user
        priority: 99
      knode3:
        ip: 10.18.24.102
+       ipv6: 2001:0db8:85a3:0000:0000:8a2e:0372:7336
        username: user
        priority: 98
+   nwPreference: ipv4
    odimControllerSrcPath: /home/user/ODIM/odim-controller
    odimVaultKeyFilePath: /home/user/ODIM/odim-controller/scripts/odimVaultKeyFile
    odimCertsPath: ""
@@ -895,6 +912,10 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      redisOndiskDataPath: /etc/redis/data/ondisk
      redisInmemoryDataPath: /etc/redis/data/inmemory
      
+     resourceRateLimit: 1000
+     requestLimitPerSession: 100
+     sessionLimitPerUser: 10
+   
      zookeeperConfPath: /etc/zookeeper/conf
      zookeeperDataPath: /etc/zookeeper/data
      zookeeperJKSPassword: "K@fk@_store1"
@@ -902,6 +923,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      nginxLogPath: /var/log/nginx
      virtualRouterID: 100
      virtualIP: 10.18.24.103
+     virtualIPv6:2001:0db8:85a3:0000:0000:8a2e:0373:7337
      
      rootCACert:
      odimraServerCert:
@@ -2645,8 +2667,9 @@ The following table lists all the configuration parameters required by odim-cont
 |noProxy|List of IP addresses and FQDNs for which proxy must not be used. It must begin with `127.0.0.1,localhost,localhost.localdomain,10.96.0.0/12,` followed by the IP addresses of the cluster nodes.<br>If there is no proxy available in your environment, you can replace it with `""` (empty double quotation marks).<br>|
 |nodePasswordFilePath|The absolute path of the file containing the encoded password of the nodes \(encoded using the odim-vault tool\) - `/home/<username\>/ODIM/odim-controller/scripts/nodePasswordFile`<br>|
 |nodes:|List of hostnames, IP addresses, and usernames of the nodes that are part of the Kubernetes cluster you want to set up.<br> <blockquote>NOTE: For one-node cluster configuration, information of only the controller node is required.<br></blockquote>|
-|Node\_Hostname|Hostname of a cluster node. To know the hostname, run the following command on each node:<br>`hostname`|
-|ip|IP address of a cluster node.|
+|Node<n>_Hostname|Hostname of a cluster node. To know the hostname, run the following command on each node:<br>`hostname`|
+|ip|IPv4 address of cluster node(s).|
+|ipv6|IPv6 addresses of cluster node(s).<br />NOTE: The parameter `ipv6` (for all nodes) is optional. It can be empty if the you set the `nwPreference` parameter to its default value `ipv4`.|
 |username|Username of a cluster node.<br> <blockquote>NOTE: Ensure that the username is same for all the nodes.<br></blockquote>|
 |priority|An integer indicating the priority to be assigned to the Keepalived instance on a particular cluster node. A cluster node having the highest number as the priority value becomes the leader node of the cluster and the Virtual IP gets attached to it.<br/>For example, if there are three cluster nodes having the priority numbers as one, two, and three, the cluster node with the priority value of three becomes the leader node.|
 |odimControllerSrcPath|The absolute path of the downloaded odim-controller source code - `/home/<username\>/ODIM/odim-controller`.|
@@ -2664,7 +2687,7 @@ The following table lists all the configuration parameters required by odim-cont
 |haDeploymentEnabled|Default value is `True`. It deploys third-party services as a three-instance cluster.<br />NOTE: For three-node cluster deployments, always set it to `True`.|
 |connectionMethodConf|Parameters of type array required to configure the supported connection methods. <br><blockquote>NOTE: To deploy a plugin after deploying the resource aggregator services, add its connection method information in the array and update the file using odim-controller `--upgrade` option.<br></blockquote>|
 |kafkaNodePort|The port to be used for accessing the Kafka services from external services. Default port is 30092. You can optionally change it.<br><blockquote>NOTE: Ensure that the port is in the range of 30000 to 32767.<br></blockquote>|
-|MessageBusType|Event message bus type. The value is either `Kafka` or `RedisStreams` and they are case-sensitive.<br />NOTE: Resource Aggregator for ODIM supports `RedisStreams`. URP, GRF, Lenovo, Dell and Cisco ACI plugins don't support `RedisStreams`.|
+|MessageBusType|Event message bus type. The value is either `Kafka` or `RedisStreams` and they are case-sensitive.<br />NOTE: Resource Aggregator for ODIM supports `RedisStreams`. The URP, GRF, Lenovo, Dell and Cisco ACI plugins don't support `RedisStreams`.|
 |MessageBusQueue|Event message bus queue name. Allowed characters for the value are alphabets, numbers, period, underscore, and hyphen. <br />NOTE: Do not include blank spaces.|
 |etcHostsEntries|List of FQDNs of the external servers and plugins to be added to the `/etc/hosts` file in each of the service containers of Resource Aggregator for ODIM. The external servers are the servers that you want to add into the resource inventory.<br> <blockquote>NOTE: It must be in the YAML multiline format as shown in the "etcHostsEntries template".<br>|
 |appsLogPath|The path where the logs of the Resource Aggregator for ODIM services must be stored. Default path is `/var/log/odimra`.<br>|
@@ -2672,8 +2695,8 @@ The following table lists all the configuration parameters required by odim-cont
 |odimraServerCertIPSan|List of IP addresses to be included in the server certificate of Resource Aggregator for ODIM. It is required for deploying plugins.<br> <blockquote>NOTE: It must be comma-separated values of type String.<br></blockquote>|
 |odimraKafkaClientCertFQDNSan|List of FQDNs to be included in the Kafka client certificate of Resource Aggregator for ODIM. It is required for deploying plugins.<br> <blockquote>NOTE: When you add a plugin, add the FQDN of the new plugin to the existing comma-separated list of FQDNs.<br></blockquote>|
 |odimraKafkaClientCertIPSan|List of IP addresses to be included in the Kafka client certificate of Resource Aggregator for ODIM. It is required for deploying plugins.|
-|apiProxyPort|Any free port on the cluster node having high priority. It must be available on all the other cluster nodes. Preferred port is above 45000.<br/>Ensure that this port is not used as any other service port.<br/>**NOTE**: You can reach the resource aggregator API server at:<br/>`https://<VIP>:<nginx_api_port>`.<br/>|
-|apiNodePort|The port to be used for accessing the API service of Resource Aggregator for ODIM. Default port is 30080. You can optionally use a different port.<br> <blockquote>NOTE: Ensure that the port is in the range of 30000 to 32767.<br></blockquote>|
+|apiProxyPort|For IPv4 APIs, any free port on the cluster node having high priority. It must be available on all the other cluster nodes.<br/>Preferred port is above 45000. Ensure that this port is not used as any other service port.<br/>For IPv6 APIs, `apiNodePort` is used.<br />NOTE: This field is mandatory only when `haDeploymentEnabled` is set to true (three-node deployment).|
+|apiNodePort|The port to be used for accessing the API service of Resource Aggregator for ODIM.<br/>Default port is 30080. Optionally, you can use a different port. NOTE: Ensure that the port is in the range of 30000 to 32767.|
 |etcdDataPath|The path to persist etcd data.|
 |etcdConfPath|The path to store etcd configuration data.|
 |kafkaConfPath|The path to store Kafka configuration data.|
@@ -2681,12 +2704,16 @@ The following table lists all the configuration parameters required by odim-cont
 |kafkaJKSPassword|The password of the Kafka keystore.|
 |redisOndiskDataPath|The path to persist on disk Redis data.|
 |redisInmemoryDataPath|The path to persist in-memory Redis data.|
+|resourceRateLimit|These resources include the log service entries that take more retrieval time from the BMC servers.<br/>NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
+|requestLimitPerSession|The number of API requests sent per login session can be<br/>limited.<br />NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
+|sessionLimitPerUser|The number of sessions per user can be limited.<br />NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
 |zookeeperConfPath|The path to store Zookeeper configuration data.|
 |zookeeperDataPath|The path to persist Zookeeper data.|
 |zookeeperJKSPassword|The password of the ZooKeeper keystore.|
 |nginxLogPath|The path where Nginx logs are stored.|
 |virtualRouterID|A unique number acting as the virtual router ID. It must be in the range of 0 to 250. It is same on all the cluster nodes, however for every new deployment in same network, the virtual router ID value must be different.<br/>|
-|virtualIP|Any free Virtual IP address to be attached to the leader node of a cluster. It acts as the IP address of the cluster. Ensure that the chosen virtual IP address is not associated with any cluster node.<br/>The northbound client applications reach the resource aggregator API service through this virtual IP address.<br/>|
+|virtualIP|Any free Virtual IP address to be attached to the leader node of a cluster. It acts as the IP address of the cluster. Ensure that the chosen virtual IP address is not associated with any cluster node.<br/>The northbound client applications reach the resource aggregator API service through this virtual IP address.<br/>NOTE: NOTE: This parameter is mandatory only when `haDeploymentEnabled` is set to true.|
+|virtualIPv6|Any free virtual IPv6 address to be attached to the leader node of a cluster. It acts as the IPv6 address of the cluster. Ensure the chosen virtual IPv6 address is not associated with the other cluster nodes. The northbound client applications reach the Resource Aggregator for ODIM API service through this virtual IPv6 address.<br />NOTE: This parameter is optional. It can be empty if the you set the `nwPreference` parameter to its default value `ipv4`.|
 |rootCACert|The path of the Resource Aggregator for ODIM root CA certificate. It gets updated automatically during deployment.<br>|
 |odimraKafkaClientCert|The path of the Kafka client certificate. It gets updated automatically during deployment.<br>|
 |odimraKafkaClientKey|The path of the Kafka client key. It gets updated automatically during deployment.<br>|
@@ -2735,7 +2762,8 @@ To run curl commands on a different server, perform the following steps to provi
    ```
 
 <blockquote> NOTE: 
-- To avoid using the `--cacert` flag in every curl command, add `rootCA.crt` in the `ca-certificates.crt` file available in this path: `/etc/ssl/certs/ca-certificates.crt`. You can access the base URL using a REST client. To access it using a REST client, add the rootCA.crt file of HPE Resource Aggregator for ODIM to the browser where the REST client is launched.</blockquote>
+- To avoid using the `--cacert` flag in every curl command, add `rootCA.crt` in the `ca-certificates.crt` file available in this path: `/etc/ssl/certs/ca-certificates.crt`. You can access the base URL using a REST client. To access it using a REST client, add the rootCA.crt file of Resource Aggregator for ODIM to the browser where the REST client is launched.</blockquote>
+
 
 
 ## Plugin configuration parameters
