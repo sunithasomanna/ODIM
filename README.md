@@ -912,7 +912,10 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      redisOndiskDataPath: /etc/redis/data/ondisk
      redisInmemoryDataPath: /etc/redis/data/inmemory
      
-     resourceRateLimit: 1000
+     resourceRateLimit:
+     - /redfish/v1/Systems/{id}/LogServices/SL/Entries:10000
+     - /redfish/v1/Systems/{id}/LogServices/IML/Entries:8000
+     - /redfish/v1/Managers/{id}/LogServices/IEL/Entries:7000
      requestLimitPerSession: 100
      sessionLimitPerUser: 10
    
@@ -2666,7 +2669,7 @@ The following table lists all the configuration parameters required by odim-cont
 |httpsProxy|HTTPS Proxy to be set in all the nodes for connecting to external network. If there is no proxy available in your environment, you can replace it with `""` (empty double quotation marks).<br>|
 |noProxy|List of IP addresses and FQDNs for which proxy must not be used. It must begin with `127.0.0.1,localhost,localhost.localdomain,10.96.0.0/12,` followed by the IP addresses of the cluster nodes.<br>If there is no proxy available in your environment, you can replace it with `""` (empty double quotation marks).<br>|
 |nodePasswordFilePath|The absolute path of the file containing the encoded password of the nodes \(encoded using the odim-vault tool\) - `/home/<username\>/ODIM/odim-controller/scripts/nodePasswordFile`<br>|
-|nodes:|List of hostnames, IP addresses, and usernames of the nodes that are part of the Kubernetes cluster you want to set up.<br> <blockquote>NOTE: For one-node cluster configuration, information of only the controller node is required.<br></blockquote>|
+|nodes:|List of hostnames, IP addresses, and usernames of the nodes that are part of the Kubernetes cluster you want to set up.<br> NOTE: For one-node cluster configuration, information of only the controller node is required.|
 |Node<n>_Hostname|Hostname of a cluster node. To know the hostname, run the following command on each node:<br>`hostname`|
 |ip|IPv4 address of cluster node(s).|
 |ipv6|IPv6 addresses of cluster node(s).<br />NOTE: The parameter `ipv6` (for all nodes) is optional. It can be empty if the you set the `nwPreference` parameter to its default value `ipv4`.|
@@ -2704,9 +2707,9 @@ The following table lists all the configuration parameters required by odim-cont
 |kafkaJKSPassword|The password of the Kafka keystore.|
 |redisOndiskDataPath|The path to persist on disk Redis data.|
 |redisInmemoryDataPath|The path to persist in-memory Redis data.|
-|resourceRateLimit|These resources include the log service entries that take more retrieval time from the BMC servers.<br/>NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
-|requestLimitPerSession|The number of API requests sent per login session can be<br/>limited.<br />NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
-|sessionLimitPerUser|The number of sessions per user can be limited.<br />NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
+|resourceRateLimit|[*Optional*] Resources can be limited for a specific time (in milliseconds). These resources include the log service entries that take more retrieval time from the BMC servers.<br/>NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
+|requestLimitPerSession|[*Optional*] Number of concurrent API requests sent per login session can be limited.<br />NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
+|sessionLimitPerUser|[*Optional*] Number of active sessions per user can be limited.<br />NOTE: For more information, see the "Rate limiting" section in the Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide.|
 |zookeeperConfPath|The path to store Zookeeper configuration data.|
 |zookeeperDataPath|The path to persist Zookeeper data.|
 |zookeeperJKSPassword|The password of the ZooKeeper keystore.|
