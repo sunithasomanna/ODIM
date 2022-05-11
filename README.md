@@ -926,7 +926,7 @@ Ensure all the [Predeployment procedures](#predeployment-procedures) are complet
      nginxLogPath: /var/log/nginx
      virtualRouterID: 100
      virtualIP: 10.18.24.103
-     virtualIPv6:2001:0db8:85a3:0000:0000:8a2e:0373:7337
+     virtualIPv6: 2001:0db8:85a3:0000:0000:8a2e:0373:7337
      
      rootCACert:
      odimraServerCert:
