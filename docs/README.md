@@ -11656,9 +11656,9 @@ curl -i -X PATCH \
 
 
 
-# Audit Logging
+# Audit Logs
 
-Audit logs has information on each API and is stored in the api.log file in odimra logs.  Each log consists of a priority value followed by the date and time of the log, hostname from which the APIs were sent, user account and role details, API request method and resource, response body, response code and the message.
+Audit logs provide information on each API and is stored in the `api.log` file in `odimra` logs.  Each log consists of a priority value, date and time of the log, hostname from which the APIs are sent, user account and role details, API request method and resource, response body, response code, and the message.
 
 **Samples**
 
@@ -11668,11 +11668,11 @@ Audit logs has information on each API and is stored in the api.log file in odim
 
 - <107> 2009-11-10T23:00:00Z 192.168.260.290 [account@1 user="admin" roleID="Administrator"][request@1 method="GET" resource="/redfish/v1/Systems" requestBody=""][response@1 responseCode=404] Operation failed
 
-  <blockquote> Note: <110> and <107> are priority values. </107> is the audit information log and <107> is the audit error log. </blockquote>
+  <blockquote> Note: <110> and <107> are priority values. </110> is the audit information log and <107> is the audit error log. </blockquote>
 
-# Security Logging
+# Security Logs
 
-Security logging gives information on the successful and failed user authentication and authorization attempts. The logs are stored in api.log and account_session.log file in odimra logs.
+Security logs provide information on the successful and failed user authentication and authorization attempts. The logs are stored in `api.log` and `account_session.log` files in `odimra` logs. Each log consists of a priority value, date and time of the log, user account and role details, and the message.
 
 **Samples**
 
