@@ -16,108 +16,57 @@
 
 # Unmanaged Racks Plugin (URP) 
 
-This folder contains implementation of Unamanaged Racks Plugin(URP) for ODIMRA. 
-Plugin exposes narrowed obligatory REST API described by Plugin Developer’s Guide (PDG).
-In addition URP exposes following REST endpoints:
+This folder contains implementation of URP for Resource Aggregator for ODIM. 
+The plugin exposes narrowed obligatory REST APIs described by *[Redfish Plugin Developer's Readme](https://github.com/ODIM-Project/ODIM/blob/development/plugin-redfish/README.md)*.
+In addition, URP exposes following REST endpoints:
 
-* `GET /ODIM/v1/Chassis` - return collection of unmanaged Chassis(RackGroups/Racks)
-* `GET /ODIM/v1/Chassis/{id}` - return instance of unmanaged Chassis(RackGroups/Racks)
-* `POST /ODIM/v1/Chassis` - creates new unmanaged Chassis(RackGroups/Racks) 
-* `DELETE /ODIM/v1/Chassis/{id}` - deletes existing unmanaged Chassis(RackGroups/Racks)
-* `PATCH /ODIM/v1/Chassis/{id}` - updates existing unmanaged Chassis(RackGroups/Racks)
+* `GET` on `/ODIM/v1/Chassis`—Returns collection of unmanaged Chassis (RackGroups/Racks)
+* `GET` on `/ODIM/v1/Chassis/{id}`—Returns instance of unmanaged Chassis (RackGroups/Racks)
+* `POST` on `/ODIM/v1/Chassis`—Creates new unmanaged Chassis (RackGroups/Racks) 
+* `DELETE` on `/ODIM/v1/Chassis/{id}` —Deletes existing unmanaged Chassis (RackGroups/Racks)
+* `PATCH` on `/ODIM/v1/Chassis/{id}` —Updates existing unmanaged Chassis (RackGroups/Racks)
 
-Full specification of URP is available here: https://wiki.odim.io/display/HOME/Plugin+for+Unmanaged+Racks.
+Full specification of URP is available at https://wiki.odim.io/display/HOME/Plugin+for+Unmanaged+Racks.
 
-Please be aware this plugin is still under development, and some features might be missing.
-
-
-
-## URP deployment instructions
-
-For deploying the Unmanaged Racks plugin and adding the plugin to the Resource Aggregator for ODIM framework, refer to the "Deploying the Unmanaged Rack Plugin" section in the [Resource Aggregator for Open Distributed Infrastructure Management™ Readme](https://github.com/ODIM-Project/ODIM/blob/main/README.md).
+> **NOTE**: This plugin is still under development, and some features might be missing.
 
 
 
-## Create RackGroup
+## URP deployment 
 
-```
-POST https://{odim_host}:{port}/redfish/v1/Chassis
-Authorization:Basic YWRtaW46T2QhbTEyJDQ=
+For deploying URP and adding the plugin to the Resource Aggregator for ODIM framework, see the *Deploying the Unmanaged Rack Plugin* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ Getting Started Readme](https://github.com/ODIM-Project/ODIM/blob/main/README.md)*.
 
-{
-  "ChassisType": "RackGroup",
-  "Description": "My RackGroup",
-  "Links": {
-    "ManagedBy": [
-      {
-        "@odata.id": "/redfish/v1/Managers/675560ae-e903-41d9-bfb2-561951999999"
-      }
-    ]
-  },
-  "Name": "RG2"
-}
-```
-## Create Rack
-```
-POST https://{odim_host}:{port}/redfish/v1/Chassis
-Authorization:Basic YWRtaW46T2QhbTEyJDQ=
 
-{
-  "ChassisType": "Rack",
-  "Description": "rack no 1",
-  "Links": {
-    "ManagedBy": [
-      {
-        "@odata.id": "/redfish/v1/Managers/675560ae-e903-41d9-bfb2-561951999999"
-      }
-    ],
-    "ContainedBy": [
-       {"@odata.id":"/redfish/v1/Chassis/1be678f0-86dd-58ac-ac38-16bf0f6dafee"}
-    ]
-  },
 
-  "Name": "RACK#1"
-}
+## Create rack group
 
-```
+For instructions, see the *Creating a rack group* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference Readme](https://github.com/ODIM-Project/ODIM/blob/development/docs/README.md)*.
+
+
+
+## Create rack
+
+For instructions, see the *Creating a rack* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference Readme](https://github.com/ODIM-Project/ODIM/blob/development/docs/README.md)*.
+
+
+
 ## Attach selected Chassis under Rack
-```
-PATCH https://{odim_host}:{port}/redfish/v1/Chassis/3061416c-5144-5d96-9ec8-69d670a89a8b
-Authorization:Basic YWRtaW46T2QhbTEyJDQ=
-Content-Type: application/json
+For instructions, see the *Attaching chassis to a rack* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference Readme](https://github.com/ODIM-Project/ODIM/blob/development/docs/README.md)*.
 
-{
-  "Links": {
-    "Contains": [
-      {
-        "@odata.id": "/redfish/v1/Chassis/46db63a9-2dcb-43b3-bdf2-54ce9c42e9d9:1"
-      }
-    ]
-  }
-}
-```
+
 
 ## Detach Chassis from Rack
-```
-PATCH https://{odim_host}:{port}/redfish/v1/Chassis/3061416c-5144-5d96-9ec8-69d670a89a8b
-Authorization:Basic YWRtaW46T2QhbTEyJDQ=
-Content-Type: application/json
 
-{
-  "Links": {
-    "Contains": []
-  }
-}
-```
+For instructions, see the *Detaching chassis from a rack* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference Readme](https://github.com/ODIM-Project/ODIM/blob/development/docs/README.md)*.
+
+
 
 ## Delete Rack
-```
-DELETE https://{odim_host}:{port}/redfish/v1/Chassis/3061416c-5144-5d96-9ec8-69d670a89a8b
-Authorization:Basic YWRtaW46T2QhbTEyJDQ=
-```
+
+For instructions, see the *Deleting a rack* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference Readme](https://github.com/ODIM-Project/ODIM/blob/development/docs/README.md)*.
+
+
 
 ## Delete RackGroup
-```
-DELETE https://{odim_host}:{port}/redfish/v1/Chassis/1be678f0-86dd-58ac-ac38-16bf0f6dafee
-Authorization:Basic YWRtaW46T2QhbTEyJDQ=
-```
+
+For instructions, see the *Deleting a rack group* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference Readme](https://github.com/ODIM-Project/ODIM/blob/development/docs/README.md)*.

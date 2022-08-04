@@ -1,5 +1,3 @@
-
-
 # Redfish-plugin  
 
 Redfish-plugin communicates with redfish compliant BMC.  
@@ -10,27 +8,22 @@ This is an independent module which provides two primary communication channels:
 
 This guide provides a set of guidelines for developing API and EMB functions to work within the Resource Aggregator for ODIM™ environment. It ensures consistency around API semantics for all plugins.
 
-To ensure continued adoption of open technologies, the APIs for the plugins are based on the [OpenAPI specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md). Messaging is based on the now-evolving [OpenMessaging specifications](https://github.com/openmessaging/specification/blob/master/domain_architecture.md) under Linux Foundation.
-
 
 
 
 ## API accessibility
 
-The plugin layer uses JSON as the primary data format for communication. Standardizing on a well-known data-interchange format ensures consistency among plugins and simplifies the task for plugin developers. The API service uses [HATEOAS \(Hypermedia as the Engine of Application State\)](https://restfulapi.net/hateoas/) principles to link resources using the `href` key.
+The plugin layer uses JSON as the primary data format for communication. Standardizing on a well-known data-interchange format ensures consistency among plugins and simplifies the task for plugin developers. The API service uses [HATEOAS (Hypermedia as the Engine of Application State)](https://restfulapi.net/hateoas/) principles to link resources using the `href` key.
 
 The API service under the plugin layer can use basic authentication or token-based authentication for securing the platform. Token-based authentication is applicable to the authentication information flowing from the aggregator to the plugin where the aggregator is authenticated.
 
-<blockquote>
-Note: Data flows from the plugin to the aggregator via the EMB. The plugin gets authenticated by the EMB using TLS certificates.
-</blockquote>
-
+>**NOTE**: Data flows from the plugin to the aggregator via the EMB. The plugin gets authenticated by the EMB using TLS certificates.
 
 The plugin currently uses credentials of the client for authenticating the same.
 
 Data on the wire is encrypted using TLS and is not sent out as clear text. For this, the plugin exposes a CA signed certificate for the clients to authenticate itself. The plugins communicate with the aggregator, if required, using the northbound aggregator API. This may be needed to gather resource information that are not directly managed by the particular plugin. 
 
-API operations must adhere to the standard Restful API rules—Ensure that the API operations are not idempotent and concurrent. APIs can, in selective cases, implement capabilities to use subresources, filtering, sorting, and other value additions effectively. Return codes are fully in compliance with HTTP. A core objective of the plugin layer is to be able to perform many different operations using the primary HTTP operations —GET, PUT, POST, and DELETE.
+API operations must adhere to the standard Restful API rules—Ensure that the API operations are not idempotent and concurrent. APIs can, in selective cases, implement capabilities to use sub-resources, filtering, sorting, and other value additions effectively. Return codes are fully in compliance with HTTP. A core objective of the plugin layer is to be able to perform many different operations using the primary HTTP operations —GET, PUT, POST, and DELETE.
 
 The primary media type for plugin content is `Application/json`. The future releases may have other media types and custom media types.
 
@@ -80,7 +73,7 @@ In the context of ODIM™, the aggregator receives Redfish messages from its nor
 
 Certificate is required for enabling secure communication from and to a plugin for the following scenarios:
 
--   where a plugin acts as server:
+-   where a plugin acts as server.
 
 -   ODIM connects to the plugin to perform control operation.
 
@@ -250,7 +243,7 @@ Support for a new message bus will need a new concrete implementation for this i
 
 ### Message payloads
 
-The current version of ODIM™ uses the JSON schema of the resource as the primary payload across the platform. Events originating from a southbound resource reaches the listener process on the plugin. The plugin then translates the notification into a Redfish Event schema in a JSON object model and also adds server address to event structure JSON before publishing it on the EMB. The listener on the aggregator layer receives this JSON object before sending it to the appropriate northbound listener who originally subscribed to this notification.
+The current version of Resource Aggregator for ODIM uses the JSON schema of the resource as the primary payload across the platform. Events originating from a southbound resource reaches the listener process on the plugin. The plugin then translates the notification into a Redfish Event schema in a JSON object model and also adds server address to event structure JSON before publishing it on the EMB. The listener on the aggregator layer receives this JSON object before sending it to the appropriate northbound listener who originally subscribed to this notification.
 
 Event structure to post on message bus:
 
@@ -459,7 +452,7 @@ When adding a new subscription, follow these guidelines:
 |-------|--------|
 |Operation| `POST` |
 |URI| `/ODIM/v1/Startup/` |
-|Description| Posts a new representation to the StartUp resource. `POST` allows the system to keep track of state information sent through each start-up and potential rollbacks of plugin.<br> The value given in the Location parameter for each resource should be used to do a `GET` request to verify if the subscription is present. If the location is not present in the device or the subscription details are different compared to that specified in this request, we must delete the subscription and resubscribe with new details. The attributes in the following body is for Redfish-based subscriptions. Other device types like Fabric and Storage schema will have other attributes. Also keep in mind the differences in implementation across device types and the optional/mandatory attributes.<br> If the subscription is altered, the ID in the URI sent back will be updated accordingly.<br> |
+|Description| Posts a new representation to the StartUp resource. `POST` allows the system to keep track of state information sent through each start-up and potential rollbacks of plugin.<br> The value given in the Location parameter for each resource should be used to do a `GET` request to verify if the subscription is present. If the location is not present in the device or the subscription details are different compared to that specified in this request, we must delete the subscription and re-subscribe with new details. The attributes in the following body is for Redfish-based subscriptions. Other device types like Fabric and Storage schema will have other attributes. Also keep in mind the differences in implementation across device types and the optional/mandatory attributes.<br> If the subscription is altered, the ID in the URI sent back will be updated accordingly.<br> |
 |Payload|Application/json|
 |Response Code| `200 (Success), 401 (unauthorized)` |
 |Authentication|Yes|
@@ -566,11 +559,7 @@ When adding a new subscription, follow these guidelines:
 
 
 
-
-
-
-
-## The plugin service details
+## Plugin service details
 
 The Plugin service is an in-memory process started as a docker instance as part of the overall host start-up process. This service hosts the API server, event synchronizer, load balancers, worker threads, EMB publishers and, subscribers among other entities as the implementation decides.
 
@@ -584,7 +573,7 @@ Information on parameters needed by the plugin service on start-up are available
 
 -   Firmware version host IP address and port
 
--   TLS configuration that specifies TLS version and cipher suites to be used.
+-   TLS configuration that specifies TLS version and cipher suites to be used
 
 -   Certificate paths
 
@@ -594,7 +583,8 @@ Information on parameters needed by the plugin service on start-up are available
 
 -   Rules for converting south bound messages to ODIM format \(optionally\).
 
-NOTE: Plugins that need to share state amongst themselves will need special handling. This might apply in scenarios such as:
+> **NOTE**: Plugins that need to share state amongst themselves will need special handling. This might apply in scenarios such as:
+
 -  Multiple plugin instances managing the same resource type should not poll the same resource simultaneously.
 - Multiple plugin instances should not try to create/delete/update same sub-resource simultaneously.
 - The aggregator should be able to authenticate/authorize with all instances of a plugin with a single token.
@@ -602,9 +592,9 @@ NOTE: Plugins that need to share state amongst themselves will need special hand
 
 ## Deployment guidelines
 
-The plugin layer, and all the components of ODIM™ are built in a deployment-agnostic manner. ODIM™ and all its components, including the plugin layer, must be deployed in an environment regardless of any underlying virtualization mechanism – KVM, ESX, or containers or its absence thereof. Any plugin expecting a tighter dependency on the underlying infrastructure must identify it as part of its specifications. The open-source version has packages to run on Docker. This is not a mandatory requirement. Individual projects may choose to have their own deployment platforms and strategies.
+The plugin layer and all the components of Resource Aggregator for ODIM are built in a deployment-agnostic manner. Resource Aggregator for ODIM and all its components, including the plugin layer, must be deployed in an environment regardless of any underlying virtualization mechanism – KVM, ESX, or containers or its absence. Any plugin expecting a tighter dependency on the underlying infrastructure must identify it as part of its specifications. The open-source version has packages to run on Docker. This is not a mandatory requirement. Individual projects may choose to have their own deployment platforms and strategies.
 
-The plugin component must provide access to the source code and build/deploy instructions on the source repository publicly hosted on GitHub. Deployers can use this information to deploy ODIM™ and its components within their existing framework as a virtual machine or a container or a bare metal service. The individual services required by a plugin \(For example, API server\) are part of the build instructions provided by the plugin layer.
+The plugin component must provide access to the source code and build/deploy instructions on the source repository publicly hosted on GitHub. Users can use this information to deploy Resource Aggregator for ODIM and its components within their existing framework as a virtual machine or a container or a bare metal service. The individual services required by a plugin \(For example, API server\) are part of the build instructions provided by the plugin layer.
 
 As an example, for a containerized version, the deployment looks as follows:
 
@@ -612,29 +602,24 @@ Three artifacts are required by the deployment tool. A GitHub repository (owned 
 
 -   The plugin code and artifacts are available from GitHub. The Docker file indicates how to build a containerized image of the plugin and its associated processes.
 
--   The deployer provides an operating environment that uses Docker Containers for virtualization.
+-   The user provides an operating environment that uses Docker Containers for virtualization.
 
 -   The repository provides scripts and documentation to deploy the Docker images.
 
 
 
-## Pseudo code for API implementation
+## Pseudo codes for API implementation
 
-<aside class="notice">
-NOTE:
-
--   Translate protocol name in the URL from ODIM to the device protocol. The device might support Redfish or any other protocol. Plugin will do the translation required when you do any operation on the resource. Example:
-
-    `/ODIM/v1/Systems to /redfish/v1/Systems/` 
-
--   When any request comes to plugin, do the following:
-
-         -  Check if header has auth token or basic auth. If the header does not have auth token or basic auth, return an unauthorized error.
-        
-         -  Check if auth token is valid or basic auth has valid user name and password. If auth token is not valid or basic auth does not have valid user name and password, return an unauthorized error.
+>**NOTE**:
 
 
-</aside>
+-   Translate protocol name in the URL from Resource Aggregator for ODIM to the device protocol. The device might support Redfish or any other protocol. Plugin will do the translation required when you do any operation on the resource. 
+**Example**: `/ODIM/v1/Systems to /redfish/v1/Systems/` 
+-   When a request comes to plugin, do the following:
+
+    -  Check if the header has auth token or basic auth. If the header does not have auth token or basic auth, return an unauthorized error.
+    
+     -  Check if auth token is valid or basic auth has valid user name and password. If auth token is invalid or basic auth does not have valid user name and password, return an unauthorized error.
 
 **The main function pseudo code**
 
@@ -826,9 +811,7 @@ Func GetManagerCollection (context) {
 **URL:** `/ODIM/v1/Systems/` 
 
 
-<aside class="notice">
-NOTE: All the system and its child URIs use same pseudo code.
-</aside>
+>**NOTE**: All systems and their child URIs use the same pseudo code.
 
 **Method:** `GET` 
 
