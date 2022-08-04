@@ -34,7 +34,7 @@ Full specification of URP is available at https://wiki.odim.io/display/HOME/Plug
 
 ## URP deployment 
 
-For deploying URP and adding the plugin to the Resource Aggregator for ODIM framework, see the *Deploying the Unmanaged Rack Plugin* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ Getting Started Readme](https://github.com/ODIM-Project/ODIM/blob/main/README.md)*.
+For deploying URP and adding the plugin to the Resource Aggregator for ODIM framework, see the *Deploying the Unmanaged Rack Plugin* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ Getting Started Readme](https://github.com/ODIM-Project/ODIM/blob/development/README.md)*.
 
 
 
