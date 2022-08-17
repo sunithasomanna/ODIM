@@ -1465,7 +1465,7 @@ Topics covered in this section include:
     Example output of the Dell plugin pod details:
     
     ```
-    NAME 			READY 	STATUS 		RESTARTS    AGE
+    NAME 				READY 	STATUS 		RESTARTS        AGE
     dellplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	   	4d22h
     ```
 
@@ -1614,7 +1614,7 @@ Topics covered in this section include:
     Example output of the Lenovo plugin pod details:
 
     ```
-    NAME 				READY 	STATUS 		RESTARTS    AGE
+    NAME 				READY 	STATUS 		RESTARTS   AGE
     lenovoplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	  4d22h
     ```
 
