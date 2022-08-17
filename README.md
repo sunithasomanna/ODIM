@@ -381,7 +381,7 @@ The following table lists the software components and versions that are compatib
    |quay.io/calico/cni| v3.19.2 |quay.io_calico_cni.tar |
    |quay.io/calico/kube-controllers| v3.19.2 |quay.io_calico_kube-controllers.tar |
    |k8s.gcr.io/dns/k8s-dns-node-cache|1.17.1 |k8s.gcr.io_dns_k8s-dns-node-cache.tar |
-   |k8s.gcr.io/pause|3.4.1 |k8s.gcr.io_pause.tar |
+   |k8s.gcr.io/pause|3.6 |k8s.gcr.io_pause.tar |
    |nginx|1.19 |nginx.tar |
    |k8s.gcr.io/coredns/coredns|v1.8.0 |k8s.gcr.io_coredns_coredns.tar |
    |quay.io/coreos/etcd|v3.4.13 |quay.io_coreos_etcd.tar |
@@ -483,7 +483,7 @@ The following table lists the software components and versions that are compatib
     | busybox               | 1.33        | busybox.tar                  |
     | dellplugin            | 2.0         | dellplugin.tar               |
     | lenovoplugin          | 1.0         | lenovoplugin.tar             |
-    | urplugin              | 3.0         | urplugin.tar                 |
+    | urplugin              | 3.1         | urplugin.tar                 |
     | grfplugin             | 3.0         | grfplugin.tar                |
     | telemetry             | 2.0         | telemetry.tar                |
     
@@ -1171,12 +1171,12 @@ Topics covered in this section include:
 3. Log in to the deployment node and generate an encrypted password of Resource Aggregator for ODIM to be used in the `urplugin-config.yaml` file:
 
     ```
-echo -n '<ODIMRA password>' |openssl pkeyutl -encrypt -inkey <odimCertsPath>/odimra_rsa.private -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512|openssl base64 -A
+    echo -n '<ODIMRA password>' |openssl pkeyutl -encrypt -inkey <odimCertsPath>/odimra_rsa.private -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512|openssl base64 -A
     ```
     
     In this command, replace:
-
-    -  <ODIMRA password> with the password of Resource Aggregator for ODIM \(default administrator account password\).
+    
+-  <ODIMRA password> with the password of Resource Aggregator for ODIM \(default administrator account password\).
     -  <odimCertsPath> with the path you specified for the `<odimCertsPath>` parameter in the `kube_deploy_nodes.yaml` file.
     
     Example output:
@@ -1238,13 +1238,13 @@ echo -n '<ODIMRA password>' |openssl pkeyutl -encrypt -inkey <odimCertsPath>/odi
 
 8. Save the URP Docker image on the deployment node at `~/plugins/urplugin`.
 
-      ```
-     docker save urplugin:3.0 -o ~/plugins/urplugin/urplugin.tar
+     ```
+     docker save urplugin:3.1 -o ~/plugins/urplugin/urplugin.tar
      ```
 
 9. Navigate to the `/ODIM/odim-controller/scripts` directory on the deployment node.
 
-      ```
+     ```
      cd ~/ODIM/odim-controller/scripts
      ```
 
@@ -1262,6 +1262,7 @@ echo -n '<ODIMRA password>' |openssl pkeyutl -encrypt -inkey <odimCertsPath>/odi
     | odimPluginPath               | The path of the directory where the URP Helm package, the `urplugin` image, and the modified `urplugin-config.yaml` are copied. |
 
     **Example**:
+    
     
     ```
     odimPluginPath: /home/bruce/plugins
