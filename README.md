@@ -395,7 +395,7 @@ The following table lists the software components and versions that are compatib
    
    You get an output similar to the following sample:
    
-   <img src="docs/images/kubernetes_images.png" alt="Cluster node" style="zoom:80%;" />
+   <img src="docs/images/kubernetes_images.png" alt="Cluster node" style="zoom:70%;" />
    
 3. Save each Docker image to a tar archive:
 
@@ -443,7 +443,7 @@ The following table lists the software components and versions that are compatib
 	   ```
 	   If the images are built successfully, you get an output similar to the following sample:
 	   
-	   <img src="docs/images/odimra_images.png" style="zoom:95%;"   >
+	   <img src="docs/images/odimra_images.png" style="zoom:55%;"   >
 	   
 	7. Pull the reloader and busybox images:
 	   
@@ -1171,13 +1171,13 @@ Topics covered in this section include:
 3. Log in to the deployment node and generate an encrypted password of Resource Aggregator for ODIM to be used in the `urplugin-config.yaml` file:
 
     ```
-    echo -n '<ODIMRA password>' |openssl pkeyutl -encrypt -inkey <odimCertsPath>/odimra_rsa.private -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512|openssl base64 -A
+    echo -n '{ODIMRA password}' |openssl pkeyutl -encrypt -inkey {odimCertsPath}/odimra_rsa.private -pkeyopt rsa_padding_mode:oaep -pkeyopt rsa_oaep_md:sha512|openssl base64 -A
     ```
     
     In this command, replace:
     
-    -  ODIMRA password with the password of Resource Aggregator for ODIM (default administrator account password).
-    -  odimCertsPath with the path you specified for the `<odimCertsPath>` parameter in the `kube_deploy_nodes.yaml` file.
+    -  {ODIMRA password} with the password of Resource Aggregator for ODIM (default administrator account password).
+    -  {odimCertsPath} with the path you specified for the `<odimCertsPath>` parameter in the `kube_deploy_nodes.yaml` file.
     
     Example output:
     
