@@ -96,9 +96,10 @@ Resource Aggregator for ODIM comprises the following two key components:
 
     -  Generic Redfish plugin for ODIM (GRF plugin): This plugin can be used for any Redfish-compliant device
     -  Dell plugin for ODIM: Plugin for managing Dell servers
-   -  Plugin for unmanaged racks \(URP): This plugin acts as a resource manager for unmanaged racks.
-   -  Cisco ACI plugin: Plugin for managing Cisco ACI servers
-   -  Integration of additional third-party plugins
+    -  Plugin for unmanaged racks \(URP): This plugin acts as a resource manager for unmanaged racks.
+    -  Lenovo plugin: Plugin for managing Lenovo servers
+    -  Cisco ACI plugin: Plugin for managing Cisco ACI servers
+    -  Integration of additional third-party plugins
    
    Resource Aggregator for ODIM allows third parties to easily develop and integrate their plugins into its framework. For more information, see *[Resource Aggregator for Open Distributed Infrastructure Management™ Plugin Developer's Guide](https://github.com/ODIM-Project/ODIM/blob/development/plugin-redfish/README.md)*.
    
@@ -120,6 +121,7 @@ Deploying Resource Aggregator for ODIM in a data center involves installing the 
     - Tasks
     - Update
     - Telemetry
+    - License
 -   The plugin microservices such as the Dell plugin, URP, and additional third-party plugins
 -   Third-party services such as Kafka, etcd, Zookeeper, and Redis
 
