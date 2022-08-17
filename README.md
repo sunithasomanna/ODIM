@@ -1465,8 +1465,8 @@ Topics covered in this section include:
     Example output of the Dell plugin pod details:
     
     ```
-    NAME 						READY 	STATUS 		RESTARTS    AGE
-    dellplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	   		4d22h
+    NAME 				READY 	STATUS 		RESTARTS    AGE
+    dellplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	   	4d22h
     ```
 
 18. *[Add the Dell plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework)*. 
@@ -1614,8 +1614,8 @@ Topics covered in this section include:
     Example output of the Lenovo plugin pod details:
 
     ```
-    NAME 							READY 	STATUS 		RESTARTS    AGE
-    lenovoplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	   		4d22h
+    NAME 					READY 	STATUS 		RESTARTS    AGE
+    lenovoplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	   	4d22h
     ```
 
 18. *[Add the Lenovo plugin into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework)*. 
