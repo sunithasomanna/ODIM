@@ -1176,8 +1176,8 @@ Topics covered in this section include:
     
     In this command, replace:
     
--  <ODIMRA password> with the password of Resource Aggregator for ODIM \(default administrator account password\).
-    -  <odimCertsPath> with the path you specified for the `<odimCertsPath>` parameter in the `kube_deploy_nodes.yaml` file.
+    -  ODIMRA password with the password of Resource Aggregator for ODIM (default administrator account password).
+    -  odimCertsPath with the path you specified for the `<odimCertsPath>` parameter in the `kube_deploy_nodes.yaml` file.
     
     Example output:
     
@@ -1310,7 +1310,7 @@ Topics covered in this section include:
     Example output of the URP pod details:
     
     ```
-    NAME 						READY 	STATUS 		RESTARTS    AGE
+    NAME 				READY 	STATUS 		RESTARTS    AGE
     urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	    	4d22h
     ```
 
