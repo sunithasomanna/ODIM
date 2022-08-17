@@ -1311,7 +1311,7 @@ Topics covered in this section include:
     
     ```
     NAME 				READY 	STATUS 		RESTARTS    AGE
-    urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	    	4d22h
+    urplugin-5fc4b6788-2xx97 	1/1 	Running 	0 	    4d22h
     ```
 
 17. *[Add URP into the Resource Aggregator for ODIM framework](#adding-a-plugin-into-the-resource-aggregator-for-odim-framework)*.
