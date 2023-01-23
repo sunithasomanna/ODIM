@@ -231,7 +231,7 @@ Resource Aggregator for ODIM framework comprises the following two components.
     - Integration of additional third-party plugins—Dell, Lenovo and Cisco ACI plugins
 
 
-This guide provides reference information for the northbound APIs exposed by the resource aggregator. These APIs are designed as per DMTF's *[Redfish® Scalable Platforms API (Redfish) specification 1.15.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP0266_1.15.1.pdf)* and are Redfish-compliant.
+This guide provides reference information for the northbound APIs exposed by the resource aggregator. These APIs are designed as per DMTF's *[Redfish® Scalable Platforms API (Redfish) specification 1.16.0](https://www.dmtf.org/sites/default/files/standards/documents/DSP0266_1.16.0.pdf)* and are Redfish-compliant.
 
 The Redfish® standard is a suite of specifications that deliver an industry standard protocol providing a RESTful interface for the simple and secure management of servers, storage, networking, multivendor, converged and hybrid IT infrastructure. Redfish uses JSON and OData.
 
@@ -244,7 +244,7 @@ Resource Aggregator for ODIM framework adopts a layered architecture and has man
 
 **API layer**
 
-This layer hosts a REST server which is open-source and secure. It learns about the southbound resources from the plugin layer and exposes the corresponding Redfish data model payloads to the northbound clients. The northbound clients communicate with this layer through a REST-based protocol that is compliant with DMTF's Redfish® specifications (Schema 2022.1 and Specification 1.15.1).
+This layer hosts a REST server which is open-source and secure. It learns about the southbound resources from the plugin layer and exposes the corresponding Redfish data model payloads to the northbound clients. The northbound clients communicate with this layer through a REST-based protocol that is compliant with DMTF's Redfish® specifications (Schema 2022.2 and Specification 1.16.0).
 The API layer sends user requests to the plugins through the aggregation, the event, and the fabric services.
 
 **Services layer**
@@ -268,7 +268,7 @@ The plugin layer allows developers to create plugins on the tool set of their ch
 
 > **PREREQUISITE**: Ensure that you have the required privileges to access all the services to avoid encountering the HTTP `403 Forbidden` error.
 
-This guide contains sample request and response payloads. For information on response payload parameters, see *[Redfish® Scalable Platforms API (Redfish) schema 2022.1](https://www.dmtf.org/sites/default/files/standards/documents/DSP2046_2022.1.pdf)*.
+This guide contains sample request and response payloads. For information on response payload parameters, see *[Redfish® Scalable Platforms API (Redfish) schema 2022.2](https://www.dmtf.org/sites/default/files/standards/documents/DSP2046_2022.2.pdf)*.
 
 To access the RESTful APIs exposed by the resource aggregator, you need an HTTPS-capable client, such as a web browser with a REST Client plugin extension, or a Desktop REST Client application, or curl (a popular, free command-line utility). 
 
@@ -716,7 +716,7 @@ Date":Fri,15 May 2022 13:55:53 GMT+5m 11s
    "Oem":{
 
    },
-   "RedfishVersion": "1.15.1",
+   "RedfishVersion": "1.16.0",
    "UUID": "a64fc187-e0e9-4f68-82a8-67a616b84b1d"
 }
 ```
@@ -8687,7 +8687,7 @@ curl -i GET \
    ],
    "Members@odata.count":1,
    "Name":"Fabric Collection",
-   "RedfishVersion":"1.15.1",
+   "RedfishVersion":"1.16.0",
    "@odata.type":"#FabricCollection.FabricCollection"
 }
 ```
@@ -8990,7 +8990,7 @@ curl -i GET \
 	],
 	"Members@odata.count": 12,
 	"Name": "AddressPool Collection",
-	"RedfishVersion": "1.15.1",
+	"RedfishVersion": "1.16.0",
 	"@odata.type": "#AddressPoolCollection.AddressPoolCollection"
 }	
 ```
