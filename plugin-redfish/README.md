@@ -2,7 +2,7 @@
 
 # Redfish-plugin  
 
-Redfish-plugin communicates with redfish compliant BMC.  
+Redfish-plugin communicates with Redfish compliant BMC.  
 This is an independent module which provides two primary communication channels:  
 - An API mechanism that is used to exchange control data
 - An Event Message Bus (EMB) that is used to forward event and notifications to Resource Aggregator for ODIM.
@@ -36,7 +36,7 @@ The primary media type for plugin content is `Application/json`. The future rele
 -   `PascalCase` is used for all naming requirements within the plugin. It includes the plugin, the resources it contains, functions it implements, and the variables it defines.
 
          <aside class="notice">
-	     NOTE: `PascalCase` is a naming convention where the first letter of each word is capitalized. It aligns with [DMTF standards for Redfish](http://redfish.dmtf.org/schemas/DSP0266_1.6.1.html), which is another key specification for ODIM™.
+	     NOTE: `PascalCase` is a naming convention where the first letter of each word is capitalized. It aligns with [DMTF standards for Redfish](http://redfish.dmtf.org/schemas/DSP0266_1.16.0.html), which is another key specification for ODIM™.
 	     </aside>
 
 -   The names of all resources must be ‘nouns’.
