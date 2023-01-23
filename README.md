@@ -212,8 +212,8 @@ The following table lists the software components and versions that are compatib
 |Nginx|1.18.0-0ubuntu1.3|
 |Keepalived|1:2.0.19.2|
 |Stakater/Reloader|v0.0.76|
-|Redfish Schema|2022.1|
-|Redfish Specification|1.15.1|
+|Redfish Schema|2022.2|
+|Redfish Specification|1.16.0|
 
 
 
@@ -1072,7 +1072,7 @@ Topics covered in this section include:
          	   "Oem":{
          	
          	   },
-         	   "RedfishVersion":"1.15.1",
+         	   "RedfishVersion":"1.16.0",
          	   "UUID":"0554d6ff-a7e7-4c94-80bd-da19125f95e5"
          	}
    ```
