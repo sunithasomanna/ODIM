@@ -2637,7 +2637,6 @@ To add a server, perform HTTP `POST` on the following URI with the request paylo
 
 -   A link to the connection method having the details of the plugin of your choice
 
-
 **URI:**
 `/redfish/v1/AggregationService/Actions/AggregationSources`
 
@@ -2675,7 +2674,6 @@ For more information such as curl command, sample request, and sample response, 
 
 To configure BIOS settings for a specific server, perform HTTP `PATCH` on the following URI with the request payload having BIOS attributes that you want to configure:
 
-
 `/redfish/v1/Systems/{ComputerSystemId}/Bios/Settings`
 
 
@@ -2684,7 +2682,6 @@ For more information such as curl command, sample request, and sample response, 
 ## Resetting a server
 
 To reset a specific server, perform HTTP `POST` on the following URI with the request payload specifying the type of reset such as `ForceOn`, `ForceOff`, `On`, `ForceRestart`, and more.
-
 
 `/redfish/v1/Systems/{ComputerSystemId}/Actions/ComputerSystem.Reset`
 
@@ -2711,7 +2708,6 @@ For more information such as curl command, sample request, and sample response, 
 ## Searching the inventory for specific servers
 
 To search servers in the inventory based on specific criteria, perform HTTP `GET` on the following URI. Specify the search criteria in the URI.
-
 
 `/redfish/v1/Systems?$filter={searchKeys}%20{conditionKeys}%20{value/regular_expression}%20{logicalOperand}%20{searchKeys}%20{conditionKeys}%20{value}`
 
@@ -2808,6 +2804,8 @@ This action erases the inventory of a specific server and also deletes all the e
 > **NOTE**: You can remove only one server at a time.
 
 For more information such as curl command, sample request, and sample response, see *Deleting a server* section in *[Resource Aggregator for Open Distributed Infrastructure Management™ API Reference and User Guide](https://github.com/ODIM-Project/ODIM/tree/development/docs)*.
+
+
 
 # Using odim-controller command-line interface
 
